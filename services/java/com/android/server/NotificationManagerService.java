@@ -1360,7 +1360,10 @@ public class NotificationManagerService extends INotificationManager.Stub
             boolean queryRemove = false;
             boolean packageChanged = false;
             boolean cancelNotifications = true;
-            
+
+            boolean ScreenOnNotificationLed = Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.SCREEN_ON_NOTIFICATION_LED, 1) == 1;
+
             if (action.equals(Intent.ACTION_PACKAGE_ADDED)
                     || (queryRemove=action.equals(Intent.ACTION_PACKAGE_REMOVED))
                     || action.equals(Intent.ACTION_PACKAGE_RESTARTED)
@@ -1452,7 +1455,7 @@ public class NotificationManagerService extends INotificationManager.Stub
                 }
             } else if (action.equals(Intent.ACTION_USER_PRESENT)) {
                 // turn off LED when user passes through lock screen
-                if (!mDreaming) {
+                if (!ScreenOnNotificationLed && !mDreaming) {
                     if (mLedNotification == null || !isLedNotificationForcedOn(mLedNotification)) {
                         mNotificationLight.turnOff();
                     }
@@ -1936,7 +1939,7 @@ public class NotificationManagerService extends INotificationManager.Stub
         enqueueNotificationInternal(pkg, basePkg, Binder.getCallingUid(), Binder.getCallingPid(),
                 tag, id, notification, idOut, userId);
     }
-    
+
     private final static int clamp(int x, int low, int high) {
         return (x < low) ? low : ((x > high) ? high : x);
     }
@@ -2577,6 +2580,9 @@ public class NotificationManagerService extends INotificationManager.Stub
 
     // lock on mNotificationList
     private void updateLightsLocked() {
+        boolean ScreenOnNotificationLed = Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.SCREEN_ON_NOTIFICATION_LED, 1) == 1;
+
         // handle notification lights
         if (mLedNotification == null) {
             // use most recent light with highest score
@@ -2597,7 +2603,7 @@ public class NotificationManagerService extends INotificationManager.Stub
             enableLed = false;
         } else if (isLedNotificationForcedOn(mLedNotification)) {
             enableLed = true;
-        } else if (mInCall || (mScreenOn && !mDreaming)) {
+        } else if (mInCall || (mScreenOn && (!mDreaming || !ScreenOnNotificationLed))) {
             enableLed = false;
         } else if (QuietHoursUtils.inQuietHours(mContext, Settings.System.QUIET_HOURS_DIM)) {
             enableLed = false;
