@@ -1535,6 +1535,11 @@ public class GlowPadView extends View {
         return replaced;
     }
 
+    public void setArc(float angle, int color) {
+        mArcAngle = angle;
+        mArcPaint.setColor(color);
+    }
+
     public void setHandleDrawable(Drawable handle) {
         Resources res = mContext.getResources();
         if (handle != null) {
