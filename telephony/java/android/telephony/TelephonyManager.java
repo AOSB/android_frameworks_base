@@ -869,7 +869,7 @@ public class TelephonyManager {
             case NETWORK_TYPE_GSM:
                 return "GSM";
             case NETWORK_TYPE_TD_SCDMA:
-                return "TD_SCDMA";
+                return "TD-SCDMA";
             default:
                 return "UNKNOWN";
         }
