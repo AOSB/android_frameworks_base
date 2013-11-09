@@ -3893,6 +3893,16 @@ public final class Settings {
          */
         public static final String NAVIGATION_BAR_BUTTONS = "navigation_bar_buttons";
 
+	/**
+	* Electronic beam animation mode
+	* 0 = off,
+	* 1 = always horizontal,
+	* 2 = always vertical,
+	* 3 = dependent on orientation
+	* @hide
+	*/
+        public static final String SYSTEM_POWER_CRT_MODE = "system_power_crt_mode";
+
         /**
          * Whether to show the battery bar
          * @hide
