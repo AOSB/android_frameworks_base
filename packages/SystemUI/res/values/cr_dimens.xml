@@ -52,6 +52,7 @@
     <!-- AM/PM size in active display -->
     <dimen name="ad_ampm_font_size">32dp</dimen>  
 
+
     <!-- Halo -->
     <dimen name="halo_bubble_size">75dp</dimen>
     <dimen name="halo_number_size">24dp</dimen>
