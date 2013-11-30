@@ -17,8 +17,6 @@
 -->
 <resources>
 
-    <!-- Network stats text size -->
-    <dimen name="network_stats_text_size">9dp</dimen>
 
     <!-- Notification Shortcuts -->
     <dimen name="notification_shortcuts_close_handle_height">28dp</dimen>
@@ -66,4 +64,7 @@
     <dimen name="halo_speech_vpadding_bottom">3dp</dimen>
     <dimen name="halo_content_max_width">250dp</dimen>
  
+    <!-- Network stats text size -->
+    <dimen name="network_stats_text_size">10dp</dimen>
+
 </resources>
