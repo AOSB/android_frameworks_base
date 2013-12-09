@@ -677,6 +677,10 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     Settings.System.NAVIGATION_BAR_WIDTH), false, this,
                     UserHandle.USER_ALL);
 
+	    //LCD DENSITY
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.LCD_DENSITY), false, this,
+                    UserHandle.USER_ALL);
             updateSettings();
         }
 
@@ -6137,3 +6141,4 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         mNavigationBarController.dump(pw, prefix);
     }
 }
+

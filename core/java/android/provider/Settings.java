@@ -2710,6 +2710,12 @@ public final class Settings {
         public static final String LOCKSCREEN_TARGETS = "lockscreen_targets";
 
         /**
+         * Custom LCD density
+         * @hide
+         */
+        public static final String LCD_DENSITY = "lcd_density";
+
+        /**
          * @deprecated Use {@link android.provider.Settings.Global#LOW_BATTERY_SOUND}
          * instead
          * @hide
