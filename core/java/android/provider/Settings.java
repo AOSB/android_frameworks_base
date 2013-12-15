@@ -2857,24 +2857,6 @@ public final class Settings {
         public static final String NAV_BUTTONS = "nav_buttons";
 
 	/**
-         * Wether navigation bar is enabled or not
-         * @hide
-         */
-        public static final String NAVIGATION_BAR_SHOW = "navigation_bar_show";
-
-	/**
-         * Navigation bar height when it is on protrait
-         * @hide
-         */
-        public static final String NAVIGATION_BAR_HEIGHT = "navigation_bar_height";
-
-        /**
-         * Navigation bar height when it is on landscape at the right
-         * @hide
-         */
-        public static final String NAVIGATION_BAR_WIDTH = "navigation_bar_width";
-
-	/**
          * whether which Ram Usage Bar mode is used on recent switcher
          * 0 = none, 1 = only app use, 2 = app and cache use, 3 = app, cache and system use
          * @hide
@@ -3456,6 +3438,62 @@ public final class Settings {
          * @hide
          */
         public static final String PERFORMANCE_PROFILE = "performance_profile";
+
+	/**
+	* Navigation bar button color
+	* @hide
+	*/
+	public static final String NAVIGATION_BAR_BUTTON_TINT = "navigation_bar_button_tint";
+
+	/**
+	* Option To Colorize Navigation bar buttons in different modes
+	* 0 = all, 1 = system icons, 2 = system icons + custom user icons
+	* @hide
+	*/
+	public static final String NAVIGATION_BAR_BUTTON_TINT_MODE = "navigation_bar_button_tint_mode";
+
+	/**
+	* Navigation bar glow color
+	* @hide
+	*/
+	public static final String NAVIGATION_BAR_GLOW_TINT = "navigation_bar_glow_tint";
+
+	/**
+	* Wether navigation bar is enabled or not
+	* @hide
+	*/
+	public static final String NAVIGATION_BAR_SHOW = "navigation_bar_show";
+
+	/**
+	* Wether navigation bar is on landscape on the bottom or on the right
+	* @hide
+	*/
+	public static final String NAVIGATION_BAR_CAN_MOVE = "navigation_bar_can_move";
+
+	/**
+	* Navigation bar height when it is on protrait
+	* @hide
+	*/
+	public static final String NAVIGATION_BAR_HEIGHT = "navigation_bar_height";
+
+	/**
+	* Navigation bar height when it is on landscape at the bottom
+	* @hide
+	*/
+	public static final String NAVIGATION_BAR_HEIGHT_LANDSCAPE = "navigation_bar_height_landscape";
+
+	/**
+	* Navigation bar height when it is on landscape at the right
+	* @hide
+	*/
+	public static final String NAVIGATION_BAR_WIDTH = "navigation_bar_width";
+
+	/**
+	* Custom navigation bar intent and action configuration
+	* @hide
+	*/
+	public static final String NAVIGATION_BAR_CONFIG = "navigation_bar_config";
+
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings

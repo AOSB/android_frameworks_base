@@ -90,7 +90,6 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
     private PopupMenu mPopup;
     private View mRecentsScrim;
     private View mRecentsNoApps;
-    //private View mRecentsRamBar;
     private RecentsScrollView mRecentsContainer;
 
     private boolean mShowing;
@@ -108,7 +107,6 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
     private boolean mFitThumbnailToXY;
     private int mRecentItemLayoutId;
     private boolean mHighEndGfx;
-
     private ImageView mClearRecents;
     private LinearColorBar mRamUsageBar;
 
@@ -478,7 +476,6 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
 
         mRecentsScrim = findViewById(R.id.recents_bg_protect);
         mRecentsNoApps = findViewById(R.id.recents_no_apps);
-	//mRecentsRamBar = findViewById(R.id.recents_ram_bar);
 
         mClearRecents = (ImageView) findViewById(R.id.recents_clear);
         if (mClearRecents != null){
@@ -499,11 +496,11 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
                 ((BitmapDrawable) mRecentsScrim.getBackground()).setTileModeY(TileMode.REPEAT);
             }
         }
-	updateRamBar();
     }
 
     public void setMinSwipeAlpha(float minAlpha) {
         mRecentsContainer.setMinSwipeAlpha(minAlpha);
+		updateRamBar();
     }
 
     private void createCustomAnimations(LayoutTransition transitioner) {
@@ -626,7 +623,6 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
             mRecentTasksLoader.cancelLoadingThumbnailsAndIcons(this);
             onTaskLoadingCancelled();
         }
-	updateRamBar();
     }
 
     public void onTaskLoadingCancelled() {
@@ -635,18 +631,19 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
             mRecentTaskDescriptions = null;
             mListAdapter.notifyDataSetInvalidated();
         }
-	updateRamBar();
+		updateRamBar();
     }
 
     public void refreshViews() {
         mListAdapter.notifyDataSetInvalidated();
         updateUiElements();
         showIfReady();
-	updateRamBar();
+		updateRamBar();
     }
 
     public void refreshRecentTasksList() {
         refreshRecentTasksList(null, false);
+		updateRamBar();
     }
 
     private void refreshRecentTasksList(
@@ -783,7 +780,6 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
             sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_SELECTED);
             setContentDescription(null);
         }
-	updateRamBar();
     }
 
     private void startApplicationDetailsActivity(String packageName) {
@@ -911,7 +907,6 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
         mRecentsContainer.drawFadedEdges(canvas, left, right, top, bottom);
     }
 
-
     @Override
     protected boolean fitSystemWindows(Rect insets) {
         if (mClearRecents != null) {
@@ -926,6 +921,8 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
 
     class FakeClearUserDataObserver extends IPackageDataObserver.Stub {
         public void onRemoveCompleted(final String packageName, final boolean succeeded) {
+        }
+    }
 
     private void updateRamBar() {
         mRamUsageBar = (LinearColorBar) findViewById(R.id.ram_usage_bar);
