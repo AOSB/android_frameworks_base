@@ -3367,7 +3367,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode {
             } else if (uri.equals(Settings.System.getUriFor(
                     Settings.System.LCD_DENSITY))) {
                 mDisplayMetrics.updateDensity();
-                recreateStatusBar(true);
+                recreateStatusBar();
             }
 
         }
