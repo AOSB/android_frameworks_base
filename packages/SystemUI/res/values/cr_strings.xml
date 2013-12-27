@@ -49,4 +49,7 @@ wn on the screen). [CHAR LIMIT=NONE] -->
     <!-- Screen record notification error title -->
     <string name="screenrecord_notif_error">Unable to record screen</string>
 
+    <!--ScreenShot Trash-->
+    <string name="delete">Delete</string>
+
 </resources>
