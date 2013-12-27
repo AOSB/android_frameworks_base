@@ -34,21 +34,6 @@ wn on the screen). [CHAR LIMIT=NONE] -->
     <!-- [CHAR LIMIT=10] Running services, summary of foreground processes -->
     <string name="service_used_mem"><xliff:g id="memory">%1$s</xliff:g> benutzt</string>
 
-    <!-- Screenrecord Notification Ticker -->
-    <string name="screenrecord_notif_ticker">Bildschirm wurde aufgenommen</string>
-
-    <!-- Screenrecord notification title -->
-    <string name="screenrecord_notif_title">Nehme Bildschirm auf</string>
-
-    <!-- Screenrecord notification action: Stop -->
-    <string name="screenrecord_notif_stop">Stop</string>
-
-    <!-- Screenrecord notification action: Toggle pointer -->
-    <string name="screenrecord_notif_pointer">Pointer umschalten</string>
-
-    <!-- Screen record notification error title -->
-    <string name="screenrecord_notif_error">Bildschirmaufnahme nicht möglich</string>
-
     <!--ScreenShot Trash-->
     <string name="delete">Löschen</string>
 
