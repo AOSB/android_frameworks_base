@@ -49,9 +49,6 @@ wn on the screen). [CHAR LIMIT=NONE] -->
     <!-- Screen record notification error title -->
     <string name="screenrecord_notif_error">Unable to record screen</string>
 
-    <!--ScreenShot Trash-->
-    <string name="delete">Delete</string>
-
     <!-- App sidebar -->
     <string name="default_folder_text">Folder</string>
     <string name="title_activity_sidebar_configuration">Appbar content setup</string>
