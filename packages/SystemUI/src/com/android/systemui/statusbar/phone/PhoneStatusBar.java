@@ -373,9 +373,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode {
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.STATUS_BAR_BATTERY_SHOW_PERCENT), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.LCD_DENSITY),
-                    false, this, UserHandle.USER_ALL);
-            resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.STATUS_BAR_CLOCK), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.STATUS_BAR_SIGNAL_TEXT), false, this);
@@ -3416,11 +3413,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode {
                 if (mQuickAccessLayoutLinked && mRibbonQS != null) {
                     mRibbonQS.setupQuickSettings();
                 }
-            } else if (uri.equals(Settings.System.getUriFor(
-                    Settings.System.LCD_DENSITY))) {
-                mDisplayMetrics.updateDensity();
-                recreateStatusBar();
-            }
+	    }
 
 	    final ContentResolver cr = mContext.getContentResolver();
 
