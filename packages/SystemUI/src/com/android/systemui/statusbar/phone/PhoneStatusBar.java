@@ -3423,6 +3423,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode {
                 if (mQuickAccessLayoutLinked && mRibbonQS != null) {
                     mRibbonQS.setupQuickSettings();
                 }
+	    }
 
 	    final ContentResolver cr = mContext.getContentResolver();
 
