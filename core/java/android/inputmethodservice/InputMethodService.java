@@ -895,7 +895,14 @@ public class InputMethodService extends AbstractInputMethodService {
      * is currently running in fullscreen mode.
      */
     public void updateFullscreenMode() {
-        boolean isFullscreen = mShowInputRequested && (onEvaluateFullscreenMode() || onEvaluateSplitView());
+
+        //mHaloEnabled = Settings.System.getInt(getContentResolver(),Settings.System.HALO_ENABLED, 0);
+	//mHaloEnabled = Settings.System.getInt(getContentResolver(), Settings.System.HALO_ENABLED, 0) == 1;
+
+        int mHaloEnabled = (Settings.System.getInt(getContentResolver(), Settings.System.HALO_ENABLED, 0));
+
+	boolean isFullscreen = (mHaloEnabled != 1) ? (onEvaluateFullscreenMode() || onEvaluateSplitView()) : mShowInputRequested && onEvaluateFullscreenMode();
+
         boolean changed = mLastShowInputRequested != mShowInputRequested;
         if (mIsFullscreen != isFullscreen || !mFullscreenApplied) {
             changed = true;
