@@ -132,7 +132,13 @@ public class NotificationPanelView extends PanelView {
             boolean swipeFlipJustFinished = false;
             boolean swipeFlipJustStarted = false;
             ContentResolver resolver =  mContext.getContentResolver();
-            boolean mFullScreenDetection  = Settings.System.getBoolean(resolver, Settings.System.SWIPE_TO_SWITCH_SCREEN_DETECTION, false);
+            String mFullScreenD = Settings.System.getString(resolver, Settings.System.SWIPE_TO_SWITCH_SCREEN_DETECTION);
+	    boolean mFullScreenDetection = false;
+		
+	    if(mFullScreenD != null){
+		   mFullScreenDetection = "1".equals(mFullScreenD);		   
+	    }
+
             switch (event.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
                     mGestureStartX = event.getX(0);
