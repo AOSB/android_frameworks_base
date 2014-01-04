@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <!-- Content description of the halo button in the notification panel for accessibility (not sho
+wn on the screen). [CHAR LIMIT=NONE] -->        
+    <string name="accessibility_halo">Erstelle Benachrichtungen Halo.</string>        
+                                
+    <!-- HALO -->
+    <string name="halo_dismiss">Benachrichtigungen wegschmeissen</string>        
+    <string name="halo_hide">Verstecken</string>        
+    <string name="halo_clear_all">Werfe alle Benachrichtigungen weg</string>        
+    <string name="halo_silence">Verstecke &amp; stumm bis geweckt</string>        
+    <string name="halo_tutorial1">Das ist HALO</string>        
+    <string name="halo_tutorial2">Beweg mich: 2x-tippen &amp; ziehen</string>        
+    <string name="halo_tutorial3">Tasks durchsuchen: Horizontal ziehen</string>        
+    <string name="halo_battery_plugged">LADEN</string>        
+    <string name="halo_battery_unplugged">ÜBRIG</string>        
+    <string name="halo_battery_full">VOLL</string>        
+    <string name="halo_aeroplane1">FLUGMODUS</string>        
+    <string name="halo_aeroplane2">STUMM</string>        
+    <string name="halo_wifi_on">WI-FI AN</string>        
+    <string name="halo_wifi_off">WI-FI AUS</string>        
+    <string name="halo_signal_bars_4">VOLL</string>        
+    <string name="halo_signal_bars_3">DREI BALKEN</string>        
+    <string name="halo_signal_bars_2">ZWEI BALKEN</string>        
+    <string name="halo_signal_bars_1">EIN BALKEN</string>        
+    <string name="halo_signal_bars_none">KEINE BALKEN</string>
+
+    <!-- Recents Ram Bar -->
+    <string name="memory">RAM</string>
+    <!-- [CHAR LIMIT=10] Running services, summary of background processes -->
+    <string name="service_free_mem"><xliff:g id="memory">%1$s</xliff:g> frei</string>
+    <!-- [CHAR LIMIT=10] Running services, summary of foreground processes -->
+    <string name="service_used_mem"><xliff:g id="memory">%1$s</xliff:g> benutzt</string>
+
+    <!-- Screenrecord Notification Ticker -->
+    <string name="screenrecord_notif_ticker">Bildschirm wurde aufgenommen</string>
+
+    <!-- Screenrecord notification title -->
+    <string name="screenrecord_notif_title">Nehme Bildschirm auf</string>
+
+    <!-- Screenrecord notification action: Stop -->
+    <string name="screenrecord_notif_stop">Stop</string>
+
+    <!-- Screenrecord notification action: Toggle pointer -->
+    <string name="screenrecord_notif_pointer">Pointer umschalten</string>
+
+    <!-- Screen record notification error title -->
+    <string name="screenrecord_notif_error">Bildschirmaufnahme nicht möglich</string>
+
+    <!--ScreenShot Trash-->
+    <string name="delete">Löschen</string>
+
+    <!-- App sidebar -->
+    <string name="default_folder_text">Ordner</string>
+    <string name="title_activity_sidebar_configuration">Appbar Inhalt Einrichtung</string>
+    <string name="action_save">Speichern</string>
+    <string name="toast_items_saved">Appbaritems wurden gespeichert.</string>
+    <string name="content_setup_instructions">Items zur Appbar hinzufügen mit Drag and Drop.\n\nKombinier mehrere Items zu Ordner indem du sie übereinander ziehst.\n\nZum entfernen einfach aus der \@appbar rausziehen.</string>
+    <string name="content_setup_dismiss">Fortsetzen</string>
+
+</resources>
