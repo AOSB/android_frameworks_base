@@ -4350,23 +4350,18 @@ public final class Settings {
          */
         public static final String DOUBLE_TAP_SLEEP_GESTURE = "double_tap_sleep_gesture";
 
-        /**
-	      *
-	      * @hide
-	      */
+	/**
+	*
+	* @hide
+	*/
         public static final String SYSTEMUI_NAVRING_AMOUNT = "systemui_navring_amount";
 
-        /**
-	      *
-	      * @hide
-	      */
-        public static final String SYSTEMUI_NAVRING_LONG_ENABLE = "systemui_navring_long_enable";
 
-        /**
-	      * Custom navring actions
-	      *
-	      * @hide
-	      */
+	/**
+	* Custom navring actions
+	*
+	* @hide
+	*/
         public static final String[] SYSTEMUI_NAVRING = new String[] {
                 "navring_0",
                 "navring_1",
@@ -4375,11 +4370,11 @@ public final class Settings {
                 "navring_4",
         };
 
-        /**
-	      * Custom navring long press actions
-	      *
-	      * @hide
-	      */
+	/**
+	* Custom navring long press actions
+	*
+	* @hide
+	*/
         public static final String[] SYSTEMUI_NAVRING_LONG = new String[] {
                 "navring_long_0",
                 "navring_long_1",
