@@ -96,11 +96,13 @@ public class NotificationPanelView extends PanelView {
 
     @Override
     public void fling(float vel, boolean always) {
-        GestureRecorder gr = ((PhoneStatusBarView) mBar).mBar.getGestureRecorder();
-        if (gr != null) {
-            gr.tag(
-                "fling " + ((vel > 0) ? "open" : "closed"),
-                "notifications,v=" + vel);
+        if (DEBUG_GESTURES) {
+            GestureRecorder gr = ((PhoneStatusBarView) mBar).mBar.getGestureRecorder();
+            if (gr != null ) {
+                gr.tag(
+                    "fling " + ((vel > 0) ? "open" : "closed"),
+                    "notifications,v=" + vel);
+            }
         }
         super.fling(vel, always);
     }
@@ -331,7 +333,7 @@ public class NotificationPanelView extends PanelView {
             if (f !=  null) {
                 Bitmap backgroundBitmap = BitmapFactory.decodeFile(f.getAbsolutePath());
                 mBackgroundDrawable =
-                    new BitmapDrawable(getContext().getResources(), backgroundBitmap);
+                        new BitmapDrawable(getContext().getResources(), backgroundBitmap);
             }
         }
         if (mBackgroundDrawable != null) {
@@ -350,7 +352,7 @@ public class NotificationPanelView extends PanelView {
             if (f !=  null) {
                 Bitmap backgroundBitmap = BitmapFactory.decodeFile(f.getAbsolutePath());
                 mBackgroundDrawableLandscape =
-                    new BitmapDrawable(getContext().getResources(), backgroundBitmap);
+                        new BitmapDrawable(getContext().getResources(), backgroundBitmap);
             }
         }
         if (mBackgroundDrawableLandscape != null) {
