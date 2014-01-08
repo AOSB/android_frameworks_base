@@ -75,4 +75,10 @@
     <dimen name="folder_width">290dp</dimen>
     <dimen name="folder_height">480dp</dimen>
     <dimen name="setup_sidebar_width">90dp</dimen>
+
+    <!-- tablet navigation bar constants -->
+    <dimen name="navigation_tablet_key_padding">25dip</dimen>
+    <dimen name="navigation_tablet_key_width">128dip</dimen>
+    <dimen name="navigation_tablet_key_padding_land">42dip</dimen>
+    <dimen name="navigation_tablet_key_width_land">162dip</dimen>
 </resources>
