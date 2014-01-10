@@ -567,6 +567,18 @@ public class AOKPSearchPanelView extends FrameLayout implements
         }
     }
 
+    public static boolean getBoolean(ContentResolver cr, String name, boolean def) {
+	    String v = Settings.System.getString(cr, name);
+	    try {
+		if(v != null)
+		    return "1".equals(v);
+		else
+		    return def;
+	    } catch (NumberFormatException e) {
+		return def;
+	    }
+    }
+
     public void updateSettings() {
 
         for (int i = 0; i < 5; i++) {
@@ -578,7 +590,7 @@ public class AOKPSearchPanelView extends FrameLayout implements
                     mContentResolver, Settings.System.SYSTEMUI_NAVRING_ICON[i]);
         }
 
-        mBoolLongPress = (Settings.System.getBoolean(mContentResolver,
+        mBoolLongPress = (getBoolean(mContentResolver,
                 Settings.System.SYSTEMUI_NAVRING_LONG_ENABLE, false));
 
         mNavRingAmount = Settings.System.getInt(mContentResolver,
