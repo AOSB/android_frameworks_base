@@ -95,10 +95,10 @@ public class LteTile extends QuickSettingsTile {
             case Phone.NT_MODE_LTE_CMDA_EVDO_GSM_WCDMA:
             case Phone.NT_MODE_LTE_ONLY:
             case Phone.NT_MODE_LTE_WCDMA:
-                tm.toggleLTE(false);
+                tm.toggleLTE();
                 break;
             default:
-                tm.toggleLTE(true);
+                tm.toggleLTE();
                 break;
         }
     }
