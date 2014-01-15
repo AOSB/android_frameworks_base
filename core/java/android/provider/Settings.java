@@ -3207,12 +3207,6 @@ public final class Settings {
         public static final String NON_INTRUSIVE_INCALL = "non_intrusive_incall";
 
         /**
-         * Vibrate when expanding notifications
-         * @hide
-         */
-        public static final String VIBRATE_NOTIF_EXPAND = "vibrate_notif_expand";
-
-        /**
          * Boolean value whether to link ringtone and notification volumes
          *
          * @hide

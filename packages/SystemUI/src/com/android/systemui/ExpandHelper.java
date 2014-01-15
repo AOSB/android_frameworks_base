@@ -22,11 +22,8 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.database.ContentObserver;
-import android.os.Handler;
 import android.os.Vibrator;
 import android.util.Log;
-import android.provider.Settings;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -79,7 +76,6 @@ public class ExpandHelper implements Gefingerpoken, OnClickListener {
     private int mExpansionStyle = NONE;
     private boolean mWatchingForPull;
     private boolean mHasPopped;
-    private boolean mVibrate;
     private View mEventSource;
     private View mCurrView;
     private View mCurrViewTopGlow;
@@ -112,17 +108,6 @@ public class ExpandHelper implements Gefingerpoken, OnClickListener {
     private int mGravity;
 
     private View mScrollView;
-
-    private ContentObserver mObserver = new ContentObserver(new Handler()) {
-        @Override
-        public void onChange(boolean selfChange) {
-            updateSettings();
-        }
-
-        public void onChange(boolean selfChange, android.net.Uri uri) {
-            updateSettings();
-        }
-    };
 
     private OnScaleGestureListener mScaleGestureListener
             = new ScaleGestureDetector.SimpleOnScaleGestureListener() {
@@ -464,9 +449,7 @@ public class ExpandHelper implements Gefingerpoken, OnClickListener {
                     final float pull = Math.abs(ev.getY() - mInitialTouchY);
                     if (mHasPopped || pull > mPopLimit) {
                         if (!mHasPopped) {
-                            if (mVibrate) {
-                                vibrate(mPopDuration);
-                            }
+                            vibrate(mPopDuration);
                             mHasPopped = true;
                         }
                     }
@@ -624,19 +607,5 @@ public class ExpandHelper implements Gefingerpoken, OnClickListener {
         }
         mVibrator.vibrate(duration);
     }
-
-    public void onAttachToWindow() {
-        mContext.getContentResolver().registerContentObserver(Settings.AOKP.getUriFor(Settings.AOKP.VIBRATE_NOTIF_EXPAND),
-                false, mObserver);
-        updateSettings();
-    }
-
-    public void onDetachedFromWindow() {
-        mContext.getContentResolver().unregisterContentObserver(mObserver);
-    }
-
-    private void updateSettings() {
-        mVibrate = Settings.AOKP.getBoolean(mContext.getContentResolver(),
-                Settings.AOKP.VIBRATE_NOTIF_EXPAND, true);
-    }
 }
+
