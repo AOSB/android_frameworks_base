@@ -18,6 +18,7 @@ package com.android.systemui.statusbar.phone;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.content.ContentResolver;
 import android.content.res.Configuration;
 import android.database.ContentObserver;
 import android.graphics.Bitmap;
@@ -150,14 +151,25 @@ public class NotificationPanelView extends PanelView {
             boolean flip = false;
             boolean swipeFlipJustFinished = false;
             boolean swipeFlipJustStarted = false;
+            ContentResolver resolver =  mContext.getContentResolver();
+            String mFullScreenD = Settings.System.getString(resolver, Settings.System.SWIPE_TO_SWITCH_SCREEN_DETECTION);
+	    boolean mFullScreenDetection = false;
+		
+	    if(mFullScreenD != null){
+		   mFullScreenDetection = "1".equals(mFullScreenD);		   
+	    }
 
             switch (event.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
                     mGestureStartX = event.getX(0);
                     mGestureStartY = event.getY(0);
-		    mTrackingSwipe = isFullyExpanded() &&
-		    // Pointer is at the handle portion of the view?
-		    mGestureStartY > getHeight() - mHandleBarHeight - getPaddingBottom();
+                    if (mFullScreenDetection) {
+                        mTrackingSwipe = isFullyExpanded();
+                    } else {
+                        mTrackingSwipe = isFullyExpanded() &&
+                        // Pointer is at the handle portion of the view?
+                        mGestureStartY > getHeight() - mHandleBarHeight - getPaddingBottom();
+                    }
                     mOkToFlip = getExpandedHeight() == 0;
                     if (event.getX(0) > getWidth() * (1.0f - STATUS_BAR_SETTINGS_RIGHT_PERCENTAGE) &&
                             Settings.System.getIntForUser(getContext().getContentResolver(),

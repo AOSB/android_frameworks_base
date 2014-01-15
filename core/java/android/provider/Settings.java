@@ -3742,6 +3742,13 @@ public final class Settings {
         public static final String PERFORMANCE_PROFILE = "performance_profile";
 
         /**
+         * Wether to allow full screen swipe detection on notification drawer
+         * for swipe to switch or not
+         * @hide
+         */
+        public static final String SWIPE_TO_SWITCH_SCREEN_DETECTION = "full_swipe_to_switch_detection";
+
+        /**
 	* @hide
 	* Show Wifi network name in notification drawer
 	* 0 - don't show
