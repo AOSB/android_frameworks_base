@@ -90,18 +90,6 @@ public class MusicTile extends QuickSettingsTile {
     }
 
     private void updateTile() {
-        final ImageView background =
-                (ImageView) mTile.findViewById(R.id.background);
-        if (background != null) {
-            if (mMetadata.bitmap != null) {
-                background.setImageDrawable(new BitmapDrawable(mMetadata.bitmap));
-                background.setColorFilter(
-                    Color.rgb(123, 123, 123), android.graphics.PorterDuff.Mode.MULTIPLY);
-            } else {
-                background.setImageDrawable(null);
-                background.setColorFilter(null);
-            }
-        }
         if (mActive) {
             mDrawable = R.drawable.ic_qs_media_pause;
             mLabel = mMetadata.trackTitle != null
