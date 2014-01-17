@@ -45,5 +45,4 @@
 
     <!-- label for item that takes screenrecord in the phone options dialog -->
     <string name="global_action_screenrecord">Screen Record</string>
-
 </resources>
