@@ -3437,11 +3437,11 @@ public final class Settings {
          */
         public static final String POWER_MENU_SCREENSHOT_ENABLED = "power_menu_screenshot_enabled";
 
-        /**
-         * Whether power menu screenrecord is enabled
+	/**
+         * Show ScreenRecord in Power Menu
          * @hide
          */
-        public static final String POWER_MENU_SCREENRECORD_ENABLED = "power_menu_screenrecord_enabled";
+        public static final String SCREENRECORD_IN_POWER_MENU = "screenrecord_in_power_menu";
 
         /**
          * Whether power menu expanded desktop is enabled
