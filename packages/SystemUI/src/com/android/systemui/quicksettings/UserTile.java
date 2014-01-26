@@ -58,7 +58,6 @@ import com.android.systemui.statusbar.phone.QuickSettingsController;
 public class UserTile extends QuickSettingsTile {
 
     private static final String TAG = "UserTile";
-    private static final String INTENT_EXTRA_NEW_LOCAL_PROFILE = "newLocalProfile";
     private Drawable userAvatar;
     private AsyncTask<Void, Void, Pair<String, Drawable>> mUserInfoTask;
 
@@ -71,26 +70,16 @@ public class UserTile extends QuickSettingsTile {
                 mQsc.mBar.collapseAllPanels(true);
                 final UserManager um =
                         (UserManager) mContext.getSystemService(Context.USER_SERVICE);
-                int numUsers = um.getUsers(true).size();
-                if (numUsers <= 1) {
-                    final Cursor cursor = mContext.getContentResolver().query(
-                            Profile.CONTENT_URI, null, null, null, null);
-                    if (cursor.moveToNext() && !cursor.isNull(0)) {
-                        Intent intent = new Intent(Intent.ACTION_VIEW, ContactsContract.Profile.CONTENT_URI);
-                        startSettingsActivity(intent);
-                    } else {
-                        Intent intent = new Intent(Intent.ACTION_INSERT, Contacts.CONTENT_URI);
-                        intent.putExtra(INTENT_EXTRA_NEW_LOCAL_PROFILE, true);
-                        startSettingsActivity(intent);
-                    }
-                    cursor.close();
-                } else {
+                if (um.getUsers(true).size() > 1) {
                     try {
                         WindowManagerGlobal.getWindowManagerService().lockNow(
                                 null);
                     } catch (RemoteException e) {
                         Log.e(TAG, "Couldn't show user switcher", e);
                     }
+                } else {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, ContactsContract.Profile.CONTENT_URI);
+                    startSettingsActivity(intent);
                 }
             }
         };
