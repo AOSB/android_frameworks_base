@@ -3530,6 +3530,32 @@ public final class Settings {
          */
         public static final String POWER_MENU_EXPANDED_DESKTOP_ENABLED = "power_menu_expanded_desktop_enabled";
 
+       /**
+        * Whether power saver is enabled
+         * @hide
+         */
+        public static final String POWER_SAVER_ENABLED = "power_saver_enabled";
+
+        /**
+         * @hide
+         */
+        public static final String POWER_SAVER_CPU = "power_saver_cpu";
+
+        /**
+         * @hide
+         */
+        public static final String POWER_SAVER_CPU_DEFAULT = "power_saver_cpu_default";
+
+        /**
+         * @hide
+         */
+        public static final String POWER_SAVER_GPS = "power_saver_gps";
+
+        /**
+         * @hide
+         */
+        public static final String POWER_SAVER_MOBILE_DATA = "power_saver_mobile_data";
+
         /**
          * Whether power menu profiles switcher is enabled
          * @hide
