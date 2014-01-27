@@ -220,8 +220,6 @@ public abstract class BaseStatusBar extends SystemUI implements
     protected AppSidebar mAppSidebar;
     protected int mSidebarPosition;
 
-    protected ActiveDisplayView mActiveDisplayView;
-
     @ChaosLab(name="GestureAnywhere", classification=Classification.NEW_FIELD)
     protected GestureAnywhereView mGestureAnywhereView;
 
