@@ -2302,6 +2302,12 @@ public final class Settings {
         public static final String ALARM_ALERT = "alarm_alert";
 
         /**
+         * Defines the custom path to use for UI sound effects (null for default)
+         * @hide
+         */
+        public static final String CUSTOM_SOUND_EFFECTS_PATH = "custom_sound_effects_path";
+
+        /**
          * A {@link Uri} that will point to the current default alarm alert at
          * any given time.
          *
