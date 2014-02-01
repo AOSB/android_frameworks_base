@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:androidprv="http://schemas.android.com/apk/prv/res/android"
         package="com.android.systemui"
-        android:sharedUserId="android.uid.system"
+        android:sharedUserId="android.uid.systemui"
         coreApp="true">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -295,13 +295,6 @@
             android:name=".statusbar.sidebar.SidebarContentProvider"
             android:authorities="org.chameleonos.sidebar.contentprovider" >
         </provider>
-
-        <service android:name=".powersaver.PowerSaverService"
-            android:exported="true" >
-            <intent-filter>
-                <android name="android.intent.action.POWER_SAVER_SERVICE_UPDATE"/>
-            </intent-filter>
-        </service>
 
     </application>
 </manifest>
