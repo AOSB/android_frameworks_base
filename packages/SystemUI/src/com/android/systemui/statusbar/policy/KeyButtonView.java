@@ -20,6 +20,7 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
@@ -58,6 +59,7 @@ public class KeyButtonView extends ImageView {
     long mUpTime;
     int mTouchSlop;
     Drawable mGlowBG;
+    int mGlowBgId;
     int mGlowWidth, mGlowHeight;
     float mGlowAlpha = 0f, mGlowScale = 1f;
     @ViewDebug.ExportedProperty(category = "drawing")
@@ -102,6 +104,10 @@ public class KeyButtonView extends ImageView {
             mGlowHeight = mGlowBG.getIntrinsicHeight();
         }
 
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.KeyButtonView,
+                defStyle, 0);
+
+        mGlowBgId = a.getResourceId(R.styleable.KeyButtonView_glowBackground, 0);
         setClickable(true);
         mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
         mSinglePressTimeout = 200;
@@ -133,6 +139,12 @@ public class KeyButtonView extends ImageView {
         mHasDoubleAction = mActions != null && mActions.doubleTapAction != null;
         setLongClickable(mHasLongAction);
         Log.e("ROMAN", "hasLongAction: " + mHasLongAction);
+    }
+
+    public void updateResources() {
+        if (mGlowBgId != 0) {
+            mGlowBG = mContext.getResources().getDrawable(mGlowBgId);
+        }
     }
 
     @Override
