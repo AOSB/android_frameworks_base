@@ -200,8 +200,24 @@ public class RecentsVerticalScrollView extends ScrollView
                 public void run() {
                     dismissChild(child);
                 }
-            }, delayCounter * 150);
+            }, delayCounter * 0);
         }
+    }
+
+    /**
+     * Returns the child count of mLinearLayout
+     * @return
+     */
+    public int getLinearLayoutChildCount() {
+        return mLinearLayout.getChildCount();
+    }
+
+    /**
+     * Returns the child of mLinearLayout at the given index
+     * @return
+     */
+    public View getLinearLayoutChildAt(int index) {
+        return mLinearLayout.getChildAt(index);
     }
 
     public boolean onInterceptTouchEvent(MotionEvent ev) {

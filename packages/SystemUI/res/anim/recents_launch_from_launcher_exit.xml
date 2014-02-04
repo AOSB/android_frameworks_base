@@ -20,9 +20,9 @@
 <set xmlns:android="http://schemas.android.com/apk/res/android"
      android:shareInterpolator="false"
      android:zAdjustment="top">
-  <alpha android:fromAlpha="1.0" android:toAlpha="0.0"
+  <!--alpha android:fromAlpha="1.0" android:toAlpha="0.0"
          android:fillEnabled="true"
          android:fillBefore="true" android:fillAfter="true"
          android:interpolator="@android:interpolator/decelerate_cubic"
-         android:duration="250"/>
+         android:duration="250"/-->
 </set>

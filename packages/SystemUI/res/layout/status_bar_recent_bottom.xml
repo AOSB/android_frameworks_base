@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/status_bottom_title"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="bottom"
+    android:orientation="vertical" 
+    android:src="#00000000">
+
+        <ImageView
+            android:id="@+id/recents_clear"
+            android:clickable="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="center"
+	    android:layout_gravity="center|bottom"
+	    android:gravity="bottom"
+	    android:src="@drawable/ic_recents_clear"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+</LinearLayout>
