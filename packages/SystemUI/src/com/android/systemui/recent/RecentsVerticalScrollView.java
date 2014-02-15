@@ -188,20 +188,33 @@ public class RecentsVerticalScrollView extends ScrollView
 
     @Override
     public void removeAllViewsInLayout() {
+        smoothScrollTo(0, 0);
         int count = mLinearLayout.getChildCount();
-        int scrollY = getScrollY();
-        for (int i = 0, delayCounter = 0; i < count; i++) {
+        for (int i = 0; i < count; i++) {
             final View child = mLinearLayout.getChildAt(i);
-            if (child.getBottom() > scrollY) {
-                delayCounter++;
-            }
             postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     dismissChild(child);
                 }
-            }, delayCounter * 150);
+            }, i * 150);
         }
+    }
+
+    /**
+     * Returns the child count of mLinearLayout
+     * @return
+     */
+    public int getLinearLayoutChildCount() {
+        return mLinearLayout.getChildCount();
+    }
+
+    /**
+     * Returns the child of mLinearLayout at the given index
+     * @return
+     */
+    public View getLinearLayoutChildAt(int index) {
+        return mLinearLayout.getChildAt(index);
     }
 
     public boolean onInterceptTouchEvent(MotionEvent ev) {

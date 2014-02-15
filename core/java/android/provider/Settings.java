@@ -4557,6 +4557,36 @@ public final class Settings {
         public static final String SCREEN_RECORDER_RECORD_AUDIO = "screen_recorder_record_audio";
 
         /**
+         * Custom Recent enabled
+         * @hide
+         */
+        public static final String RECENTS_CUSTOM_UI_MODE = "recents_custom_ui_mode";
+
+        /**
+         * Custom Recent Large Thumbs
+         * @hide
+         */
+        public static final String LARGE_RECENT_THUMBS = "large_recent_thumbs";
+
+        /**
+         * Custom Recent Color
+         * @hide
+         */
+        public static final String RECENTS_PANEL_COLOR = "recents_panel_color";
+
+        /**
+         * show clear all recents button
+         * @hide
+         */
+        public static final String SHOW_CLEAR_RECENTS_BUTTON = "clear_recents_button";
+
+        /**
+         * location of the clear all rectents button
+         * @hide
+         */
+        public static final String CLEAR_RECENTS_BUTTON_LOCATION = "clear_recents_button_location";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *

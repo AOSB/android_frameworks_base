@@ -24,10 +24,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.os.UserHandle;
+import android.provider.Settings;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.WindowManagerGlobal;
 
 import com.android.systemui.R;
 import com.android.systemui.statusbar.StatusBarPanel;
@@ -92,6 +97,7 @@ public class RecentsActivity extends Activity {
                 R.anim.recents_return_to_launcher_enter,
                 R.anim.recents_return_to_launcher_exit);
         mForeground = false;
+        mRecentsPanel.saveLockedTasks();
         super.onPause();
     }
 
@@ -154,6 +160,7 @@ public class RecentsActivity extends Activity {
                     | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
             startActivityAsUser(homeIntent, new UserHandle(UserHandle.USER_CURRENT));
             mRecentsPanel.show(false);
+            RecentTasksLoader.getInstance(this).cancelPreloadingFirstTask();
         }
     }
 
@@ -188,8 +195,15 @@ public class RecentsActivity extends Activity {
                 WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
                 WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        setContentView(R.layout.status_bar_recent_panel);
-        mRecentsPanel = (RecentsPanelView) findViewById(R.id.recents_root);
+
+        // Check If Custom UI Enabled
+        int RecentCustomEnabled = (Settings.System.getInt(getContentResolver(), Settings.System.RECENTS_CUSTOM_UI_MODE, 0));
+        if(RecentCustomEnabled == 1){
+             setContentView(R.layout.status_bar_recent_panel_aosb);
+        }else{
+             setContentView(R.layout.status_bar_recent_panel);
+        }
+	mRecentsPanel = (RecentsPanelView) findViewById(R.id.recents_root);
         mRecentsPanel.setOnTouchListener(new TouchOutsideListener(mRecentsPanel));
         mRecentsPanel.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -199,6 +213,7 @@ public class RecentsActivity extends Activity {
         recentTasksLoader.setRecentsPanel(mRecentsPanel, mRecentsPanel);
         mRecentsPanel.setMinSwipeAlpha(
                 getResources().getInteger(R.integer.config_recent_item_min_alpha) / 100f);
+        mRecentsPanel.setColor();
 
         if (savedInstanceState == null ||
                 savedInstanceState.getBoolean(WAS_SHOWING)) {

@@ -31,6 +31,7 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Process;
 import android.os.UserHandle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -102,13 +103,25 @@ public class RecentTasksLoader implements View.OnTouchListener {
         int iconSize = (int) (defaultIconSize * mIconDpi / res.getDisplayMetrics().densityDpi);
         mDefaultIconBackground = new ColorDrawableWithDimensions(0x00000000, iconSize, iconSize);
 
-        // Render the default thumbnail background
-        int thumbnailWidth =
-                (int) res.getDimensionPixelSize(com.android.internal.R.dimen.thumbnail_width);
-        int thumbnailHeight =
-                (int) res.getDimensionPixelSize(com.android.internal.R.dimen.thumbnail_height);
-        int color = res.getColor(R.drawable.status_bar_recents_app_thumbnail_background);
+        boolean largeThumbs = Settings.System.getIntForUser(context.getContentResolver(),
+                Settings.System.LARGE_RECENT_THUMBS, 0, UserHandle.USER_CURRENT) == 1;
+        boolean HorizontalRecent = Settings.System.getIntForUser(context.getContentResolver(),
+                Settings.System.RECENTS_CUSTOM_UI_MODE, 0, UserHandle.USER_CURRENT) == 1;
 
+	// Render the default thumbnail background
+        int thumbnailWidth = res.getDimensionPixelSize(com.android.internal.R.dimen.thumbnail_width);
+	//int thumbnailHeight = res.getDimensionPixelSize(com.android.internal.R.dimen.thumbnail_height);
+	if (largeThumbs || HorizontalRecent) {
+		thumbnailWidth = thumbnailWidth * 2;
+	}else if(largeThumbs && HorizontalRecent){
+		thumbnailWidth = thumbnailWidth * 3;
+	}
+	//dynamic height
+	int height = res.getDisplayMetrics().heightPixels;
+	int width = res.getDisplayMetrics().widthPixels;
+	int thumbnailHeight = (height > width ? width : height) * thumbnailWidth / (height > width ? height : width);
+        int color = res.getColor(R.drawable.status_bar_recents_app_thumbnail_background);
+        // Render the default/custom thumbnail background
         mDefaultThumbnailBackground =
                 new ColorDrawableWithDimensions(color, thumbnailWidth, thumbnailHeight);
     }

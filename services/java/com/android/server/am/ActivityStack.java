@@ -720,10 +720,20 @@ final class ActivityStack {
         int w = mThumbnailWidth;
         int h = mThumbnailHeight;
         if (w < 0) {
-            mThumbnailWidth = w =
-                res.getDimensionPixelSize(com.android.internal.R.dimen.thumbnail_width);
-            mThumbnailHeight = h =
-                res.getDimensionPixelSize(com.android.internal.R.dimen.thumbnail_height);
+            boolean largeThumbs = Settings.System.getIntForUser(mContext.getContentResolver(),
+                    Settings.System.LARGE_RECENT_THUMBS, 0, UserHandle.USER_CURRENT) == 1;
+            boolean HorizontalRecent = Settings.System.getIntForUser(mContext.getContentResolver(),
+                    Settings.System.RECENTS_CUSTOM_UI_MODE, 0, UserHandle.USER_CURRENT) == 1;
+
+            mThumbnailWidth = w = res.getDimensionPixelSize(com.android.internal.R.dimen.thumbnail_width);
+	    if (largeThumbs || HorizontalRecent) {
+			mThumbnailWidth = w = mThumbnailWidth * 2;
+	    }else if(largeThumbs && HorizontalRecent){
+			mThumbnailWidth = w = mThumbnailWidth * 3;
+	    }
+	    int height = res.getDisplayMetrics().heightPixels;
+	    int width = res.getDisplayMetrics().widthPixels;
+	    mThumbnailHeight = h = (height > width ? width : height) * mThumbnailWidth / (height > width ? height : width);
         }
 
         if (w > 0) {

@@ -278,6 +278,13 @@ public abstract class BaseStatusBar extends SystemUI implements
         }
     };
 
+    private ContentObserver mShowNavObserver = new ContentObserver(mHandler) {
+        @Override
+        public void onChange(boolean selfChange) {
+            android.os.Process.killProcess(android.os.Process.myPid());
+        }
+    };
+
     private SettingsObserver mSettingsObserver = new SettingsObserver(mHandler);
 
     private RemoteViews.OnClickHandler mOnClickHandler = new RemoteViews.OnClickHandler() {
@@ -339,6 +346,10 @@ public abstract class BaseStatusBar extends SystemUI implements
                 mProvisioningObserver);
 
         mSettingsObserver.observe();
+
+	mContext.getContentResolver().registerContentObserver(
+                Settings.System.getUriFor(Settings.System.LARGE_RECENT_THUMBS), true,
+                mShowNavObserver, UserHandle.USER_ALL);
 
         mBarService = IStatusBarService.Stub.asInterface(
                 ServiceManager.getService(Context.STATUS_BAR_SERVICE));

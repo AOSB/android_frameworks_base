@@ -81,4 +81,10 @@
     <dimen name="navigation_tablet_key_width">128dip</dimen>
     <dimen name="navigation_tablet_key_padding_land">42dip</dimen>
     <dimen name="navigation_tablet_key_width_land">162dip</dimen>
+
+    <!-- Custom Recents -->
+    <dimen name="custom_status_bar_recents_thumbnail_width">192dp</dimen>
+    <dimen name="custom_status_bar_recents_thumbnail_height">305dp</dimen>
+    <dimen name="custom_status_bar_recents_thumbnail_left_margin">10dp</dimen>
+    <dimen name="custom_status_bar_recents_thumbnail_right_margin">10dp</dimen>
 </resources>
