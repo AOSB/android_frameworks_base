@@ -3209,6 +3209,12 @@ public final class Settings {
         */
         public static final String COMBINED_BAR_AUTO_HIDE = "combined_bar_auto_hide";
 
+        /**
+	*
+	* SMOOTH PROGRESS BAR interpolator
+	* @hide
+	*/
+        public static final String PROGRESSBAR_INTERPOLATOR = "progressbar_interpolator";
 
 	/**
 	*
