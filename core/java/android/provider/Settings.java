@@ -1549,14 +1549,14 @@ public final class Settings {
         }
 
         /**
-* @hide
-* Methods to handle storing and retrieving arraylists
-*
-* @param cr The ContentResolver to access.
-* @param name The name of the setting to modify.
-* @param value The new value for the setting.
-* @return true if the value was set, false on database errors
-*/
+        * @hide
+        * Methods to handle storing and retrieving arraylists
+        *
+        * @param cr The ContentResolver to access.
+        * @param name The name of the setting to modify.
+        * @param value The new value for the setting.
+        * @return true if the value was set, false on database errors
+        */
         public static boolean putArrayList(ContentResolver cr, String name, ArrayList<String> list) {
             return putArrayListForUser(cr, name, list, UserHandle.myUserId());
         }
@@ -2718,7 +2718,7 @@ public final class Settings {
          */
         public static final String LOCKSCREEN_DISABLED = "lockscreen.disabled";
 
-	/**
+        /**
          * Whether to display notifications on screen when screen is off
          * @hide
          */
@@ -2787,7 +2787,7 @@ public final class Settings {
         public static final String ACTIVE_DISPLAY_EXCLUDED_APPS = "active_display_excluded_apps";
 
 
- 	public static final String ACTIVE_DISPLAY_TIMEOUT = "active_display_timeout";
+       	public static final String ACTIVE_DISPLAY_TIMEOUT = "active_display_timeout";
 
 	/**
 	* Whether to turn off the device when gets pocketed again and was waked up by active display
@@ -2998,6 +2998,12 @@ public final class Settings {
         public static final String QUICK_SETTINGS_TILES = "quick_settings_tiles";
 
         /**
+         * Quick settings quick pull down option
+         * @hide
+         */
+        public static final String QUICK_SETTINGS_QUICK_PULL_DOWN = "quick_settings_quick_pull_down";
+
+        /**
          * Number of QuickSettings tiles per row
          * @hide
          */
@@ -3130,7 +3136,7 @@ public final class Settings {
          */
         public static final String NAV_BUTTONS = "nav_buttons";
 
-	/**
+        /**
          * whether which Ram Usage Bar mode is used on recent switcher
          * 0 = none, 1 = only app use, 2 = app and cache use, 3 = app, cache and system use
          * @hide
@@ -3231,11 +3237,11 @@ public final class Settings {
 	*/
         public static final String PROGRESSBAR_SPEED = "progressbar_speed";
 
-       /**
-	*
-	* SMOOTH PROGRESS BAR Width
-	* @hide
-	*/
+        /**
+        *
+        * SMOOTH PROGRESS BAR Width
+        * @hide
+        */
         public static final String PROGRESSBAR_WIDTH = "progressbar_width";
 
         /**
@@ -3274,10 +3280,10 @@ public final class Settings {
         public static final String PROGRESSBAR_COLOR_3 = "progressbar_color_3";
 
         /**
-	*
-	* SMOOTH PROGRESS BAR Color_4
-	* @hide
-	*/
+        *
+        * SMOOTH PROGRESS BAR Color_4
+        * @hide
+        */
         public static final String PROGRESSBAR_COLOR_4 = "progressbar_color_4";
 
         /**
@@ -3455,7 +3461,7 @@ public final class Settings {
          */
         public static final String LOCKSCREEN_QUICK_UNLOCK_CONTROL = "lockscreen_quick_unlock_control";
 
-	/**
+        /**
          * Should the non-intrsive incall ui be used
          *
          * @hide
@@ -3541,7 +3547,7 @@ public final class Settings {
          */
         public static final String QUIET_HOURS_END = "quiet_hours_end";
 
-	/**
+        /**
          * Configurable LTE or 4G icon - up to per user defined
          * @hide
          */
@@ -3695,31 +3701,31 @@ public final class Settings {
         public static final String QUIET_HOURS_DIM = "quiet_hours_dim";
 
         /**
-	* Enable looking up of phone numbers of nearby places
-	*
-	* @hide
-	*/
+	      * Enable looking up of phone numbers of nearby places
+	      *
+	      * @hide
+	      */
         public static final String ENABLE_FORWARD_LOOKUP = "enable_forward_lookup";
 
         /**
-	* Enable looking up of information of phone numbers not in the contacts
-	*
-	* @hide
-	*/
+	      * Enable looking up of information of phone numbers not in the contacts
+	      *
+	      * @hide
+	      */
         public static final String ENABLE_REVERSE_LOOKUP = "enable_reverse_lookup";
 
         /**
-	* The forward lookup provider
-	*
-	* @hide
-	*/
+        * The forward lookup provider
+        *
+        * @hide
+        */
         public static final String FORWARD_LOOKUP_PROVIDER = "forward_lookup_provider";
 
         /**
-	* The reverse lookup provider
-	*
-	* @hide
-	*/
+        * The reverse lookup provider
+        *
+        * @hide
+        */
         public static final String REVERSE_LOOKUP_PROVIDER = "reverse_lookup_provider";
 
         /**
@@ -4045,10 +4051,10 @@ public final class Settings {
         public static final String UI_FORCE_OVERFLOW_BUTTON = "ui_force_overflow_button";
 
 
-       /**
-         * HALO enabled, should default to 0 (HALO is disabled)
-         * @hide
-         */
+	/**
+	* HALO enabled, should default to 0 (HALO is disabled)
+	* @hide
+	*/
 
         public static final String HALO_ENABLED = "halo_enabled";
 
@@ -4221,23 +4227,23 @@ public final class Settings {
          */
         public static final String DOUBLE_TAP_SLEEP_GESTURE = "double_tap_sleep_gesture";
 
-       /**
-	*
-	* @hide
-	*/
+        /**
+	      *
+	      * @hide
+	      */
         public static final String SYSTEMUI_NAVRING_AMOUNT = "systemui_navring_amount";
 
-       /**
-	*
-	* @hide
-	*/
+        /**
+	      *
+	      * @hide
+	      */
         public static final String SYSTEMUI_NAVRING_LONG_ENABLE = "systemui_navring_long_enable";
 
         /**
-	* Custom navring actions
-	*
-	* @hide
-	*/
+	      * Custom navring actions
+	      *
+	      * @hide
+	      */
         public static final String[] SYSTEMUI_NAVRING = new String[] {
                 "navring_0",
                 "navring_1",
@@ -4247,10 +4253,10 @@ public final class Settings {
         };
 
         /**
-	* Custom navring long press actions
-	*
-	* @hide
-	*/
+	      * Custom navring long press actions
+	      *
+	      * @hide
+	      */
         public static final String[] SYSTEMUI_NAVRING_LONG = new String[] {
                 "navring_long_0",
                 "navring_long_1",
@@ -4296,7 +4302,7 @@ public final class Settings {
          */
         public static final String NAVIGATION_BAR_BUTTONS = "navigation_bar_buttons";
 
-	/**
+        /**
 	* Electronic beam animation mode
 	* 0 = off,
 	* 1 = always horizontal,
@@ -4306,10 +4312,10 @@ public final class Settings {
 	*/
         public static final String SYSTEM_POWER_CRT_MODE = "system_power_crt_mode";
 
-         /**
-         * Allows blurring the lockscreen background
-         * @hide
-         */
+	/**
+	* Allows blurring the lockscreen background
+	* @hide
+	*/
         public static final String LOCKSCREEN_BLUR_RADIUS = "lockscreen_blur_radius";
 
         /**
@@ -4659,6 +4665,15 @@ public final class Settings {
             TELO_RADIO_LTE,
             TELO_RADIO_2G_SCREENOFF,
             TELO_RADIO_GO3G_UNLOCK,
+        };
+
+        /**
+         * Settings to reset on user choice. They will fall back to their default value (0).
+         *
+         * @hide
+         */
+        public static final String[] SETTINGS_TO_RESET = {
+            QUICK_SETTINGS_QUICK_PULL_DOWN
         };
 
         // Settings moved to Settings.Secure
