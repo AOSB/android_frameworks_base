@@ -72,4 +72,6 @@
   <java-symbol type="anim" name="animcontrol_slide_in_left_no_fade" />
   <java-symbol type="array" name="anim_controls_entries" />
 
+  <!-- Error description on theme switch with ligtsensor mode enabled -->
+  <java-symbol type="string" name="theme_auto_switch_mode_error" />
 </resources>
