@@ -76,7 +76,11 @@ public class BatteryController extends BroadcastReceiver {
     // For HALO
     public void removeStateChangedCallbackHalo(BatteryStateChangeCallbackHalo cb_Halo) {
         mChangeCallbacksHalo.remove(cb_Halo);
-    }  
+    }
+
+    public void unregisterController(Context context) {	
+        context.unregisterReceiver(this);
+    }
 
     public void onReceive(Context context, Intent intent) {
         final String action = intent.getAction();
