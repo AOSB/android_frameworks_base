@@ -257,7 +257,6 @@ public class PowerUI extends SystemUI {
                         && (bucket < oldBucket || oldPlugged)
                         && mBatteryStatus != BatteryManager.BATTERY_STATUS_UNKNOWN
                         && bucket < 0) {
-                    showLowBatteryWarning();
 
 		    if(mShowLowBatteryDialogWarning) {
                         showLowBatteryWarning();
