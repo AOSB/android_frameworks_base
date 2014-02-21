@@ -40,7 +40,6 @@ public class PowerSaverService extends Service  {
     private BroadcastReceiver mPowerKeyReceiver;
     private CpuToggle mCpuToggle;
     private GpsToggle mGpsToggle;
-    private MobileDataToggle mMobileDataToggle;
     private boolean mEnabled = true;
     private Context mContext;
     private List<PowerSaverToggle> fEnabledToggles;
@@ -76,8 +75,6 @@ public class PowerSaverService extends Service  {
         fAllToggles.add(mCpuToggle);
         mGpsToggle = new GpsToggle(mContext);
         fAllToggles.add(mGpsToggle);
-        mMobileDataToggle = new MobileDataToggle(mContext);
-        fAllToggles.add(mMobileDataToggle);
 
         updateEnabledToggles();
     }

@@ -3846,11 +3846,6 @@ public final class Settings {
         public static final String POWER_SAVER_GPS = "power_saver_gps";
 
         /**
-         * @hide
-         */
-        public static final String POWER_SAVER_MOBILE_DATA = "power_saver_mobile_data";
-
-        /**
          * Whether power menu profiles switcher is enabled
          * @hide
          */
