@@ -86,10 +86,10 @@
             android:scaleType="centerInside"
             android:adjustViewBounds="true"
             android:visibility="invisible"
-                        android:shadowColor="#40000000"
+            android:shadowColor="#40000000"
             android:shadowDx="0"
             android:shadowDy="2"
-                    android:shadowRadius="5"
+            android:shadowRadius="5"
         />
 
         <TextView android:id="@+id/app_label"
@@ -101,15 +101,15 @@
             android:scrollHorizontally="true"
             android:paddingTop="2dp"
             android:layout_marginTop="13dp"
-                android:layout_marginLeft="5dp"
+            android:layout_marginLeft="5dp"
             android:singleLine="true"
             android:ellipsize="marquee"
-                        android:textSize="12sp"
-                        android:shadowColor="#40000000"
+            android:textSize="12sp"
+            android:shadowColor="#40000000"
             android:shadowDx="0"
             android:shadowDy="2"
-                    android:shadowRadius="5"
-            android:textColor="@color/status_bar_recents_app_label_color"
+            android:shadowRadius="5"
+            android:textAppearance="@style/RecentsAppsLabel"
             android:importantForAccessibility="no"
         />
         </LinearLayout>
