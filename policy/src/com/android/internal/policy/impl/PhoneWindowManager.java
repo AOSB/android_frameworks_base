@@ -281,6 +281,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     int mStatusBarHeight;
     WindowState mNavigationBar = null;
     boolean mHasNavigationBar = false;
+    boolean mOverWriteHasNavigationBar = false;
     boolean mWantsNavigationBar = false;
     boolean mCanHideNavigationBar = false;
     boolean mNavigationBarCanMove = false; // can the navigation bar ever move to the side?
@@ -1524,15 +1525,21 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         // Allow the navigation bar to move on small devices (phones).
         mNavigationBarCanMove = shortSizeDp < 600;
 
-        mHasNavigationBar = res.getBoolean(com.android.internal.R.bool.config_showNavigationBar);
+        final int showByDefault = mContext.getResources().getBoolean(
+                    com.android.internal.R.bool.config_showNavigationBar) ? 1 : 0;
+        mHasNavigationBar = Settings.System.getIntForUser(mContext.getContentResolver(),
+                    Settings.System.NAVIGATION_BAR_SHOW, showByDefault,
+                    UserHandle.USER_CURRENT) == 1;
 
         // Allow a system property to override this. Used by the emulator.
         // See also hasNavigationBar().
-        String navBarOverride = SystemProperties.get("qemu.hw.mainkeys");
+        final String navBarOverride = SystemProperties.get("qemu.hw.mainkeys");
         if ("1".equals(navBarOverride)) {
             mHasNavigationBar = false;
+            mOverWriteHasNavigationBar = true;
         } else if ("0".equals(navBarOverride)) {
             mHasNavigationBar = true;
+            mOverWriteHasNavigationBar = true;
         }
 
         // For demo purposes, allow the rotation of the HDMI display to be controlled.
@@ -1631,10 +1638,11 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 updateEdgeGestureListenerState();
             }
 
-            updateKeyAssignments();
-
-            mWantsNavigationBar = mHasNavigationBar || Settings.System.getInt(resolver,
-                    Settings.System.NAVIGATION_BAR_SHOW, 0) == 1;
+            // update this part later to use broadcast receiver after after navbar actions
+            // can be assigned using AwesomeAction
+            if (mDeviceHardwareKeys != 0) {
+                updateKeyAssignments();
+            }
 
             // Configure rotation lock.
             int userRotation = Settings.System.getIntForUser(resolver,
@@ -1657,10 +1665,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 
             mUserRotationAngles = Settings.System.getIntForUser(resolver,
                     Settings.System.ACCELEROMETER_ROTATION_ANGLES, -1, UserHandle.USER_CURRENT);
-
-	        // Custom nav bar dimensions
-	        mWantsNavigationBar = mHasNavigationBar || Settings.System.getInt(resolver,
-                        Settings.System.NAVIGATION_BAR_SHOW, 0) == 1;
 
             mNavigationBarHeight =
                     Settings.System.getIntForUser(mContext.getContentResolver(),
@@ -1696,6 +1700,12 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             } else {
                 mNavigationBarWidth =
                         Converter.dpToPx(mContext, mNavigationBarWidth);
+            }
+
+            mWantsNavigationBar = Settings.System.getBoolean(resolver, Settings.System.NAVIGATION_BAR_SHOW, mHasNavigationBar);
+
+            if (mWantsNavigationBar != mHasNavigationBar) {
+                resetScreenHelper();
             }
 
             if (!mWantsNavigationBar) {
@@ -1751,6 +1761,15 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         if (updateRotation) {
             updateRotation(true);
         }
+    }
+
+    private void resetScreenHelper() {
+        DisplayMetrics metrics = new DisplayMetrics();
+        WindowManager wm = (WindowManager)mContext.getSystemService(Context.WINDOW_SERVICE);
+        wm.getDefaultDisplay().getMetrics(metrics);
+        int density = metrics.densityDpi;
+        if(mDisplay != null)
+            setInitialDisplaySize(mDisplay, mUnrestrictedScreenWidth, mUnrestrictedScreenHeight, density);
     }
 
     private void enablePointerLocation() {
@@ -6249,7 +6268,10 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     @Override
     public boolean hasNavigationBar() {
         synchronized(mLock) {
-            return mHasNavigationBar;
+            return mOverWriteHasNavigationBar
+                    ? mHasNavigationBar
+                    : mContext.getResources().getBoolean(
+                            com.android.internal.R.bool.config_showNavigationBar);
         }
     }
 
