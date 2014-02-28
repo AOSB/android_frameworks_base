@@ -2,6 +2,12 @@
 
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
+    <!--General String-->
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="dlg_ok">Ok</string>
+    <string name="cancel">Cancel</string>
+
     <!-- Content description of the halo button in the notification panel for accessibility (not sho
 wn on the screen). [CHAR LIMIT=NONE] -->        
     <string name="accessibility_halo">Create notification halo.</string>        
@@ -100,4 +106,19 @@ wn on the screen). [CHAR LIMIT=NONE] -->
 
     <!-- iOS Recents -->
     <string name="whos_going_out">Favorites</string>
+
+    <!-- Notification Reminder Slim Roms -->
+    <string name="quick_settings_reminder">Reminder</string>
+    <string name="quick_settings_reminder_title">Title:</string>
+    <string name="quick_settings_reminder_message">Message:</string>
+    <string name="quick_settings_reminder_time">Reminder Time</string>
+    <string name="quick_settings_reminder_set">Set Time</string>
+    <string name="quick_settings_reminder_update">Update Time</string>
+    <string name="quick_settings_reminder_no_expire">No notification</string>
+    <string name="quick_settings_reminder_dismiss">Clear Reminder</string>
+    <string name="quick_settings_reminder_dismiss_message">Clear current reminder?</string>
+    <string name="quick_settings_reminder_help_title">Touch:</string>
+    <string name="quick_settings_reminder_help_message">Touch here to set a reminder. Long-press to clear the current reminder.</string>
+    <string name="quick_settings_reminder_noti_dismiss">Dismiss</string>
+
 </resources>
