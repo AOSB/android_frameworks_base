@@ -95,7 +95,6 @@
         <TextView android:id="@+id/app_label"
             android:layout_width="@dimen/status_bar_recents_app_label_width"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
             android:fadingEdge="horizontal"
             android:fadingEdgeLength="@dimen/status_bar_recents_text_fading_edge_length"
             android:scrollHorizontally="true"
