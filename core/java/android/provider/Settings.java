@@ -4418,6 +4418,12 @@ public final class Settings {
 	public static final String NAVIGATION_BAR_HEIGHT_LANDSCAPE = "navigation_bar_height_landscape";
 
 	/**
+	* Enable || disable navring
+	* @hide
+	*/
+        public static final String ENABLE_NAVRING = "enable_navring";
+
+	/**
 	* @hide
 	*/
 	public static final String NAVIGATION_BAR_WIDTH = "navigation_bar_width";

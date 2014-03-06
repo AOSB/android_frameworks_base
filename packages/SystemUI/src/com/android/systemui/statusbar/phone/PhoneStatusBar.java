@@ -416,13 +416,17 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                     Settings.System.CUSTOM_RECENT), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.ENABLE_NAVIGATION_BAR), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.ENABLE_NAVRING), false, this);
             updateSettings();
         }
 
         @Override
         public void onChange(boolean selfChange) {
+            updateCustomHeaderStatus();
             updateSettings();
-            toggleNavigationBar(mWantsNavigationBar);
+            checkNavBar();
+            toggleNavigationBarOrNavRing(mWantsNavigationBar, mEnableNavring);
         }
     }
 
@@ -481,6 +485,8 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     private int mStatusBarMode;
     private int mNavigationBarMode;
     private Boolean mScreenOn;
+    private boolean mEnableNavring;
+    private boolean mImeShowing;
     private SearchPanelSwipeView mSearchPanelSwipeView;
 
     private final Runnable mAutohide = new Runnable() {
@@ -653,29 +659,24 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 
         updateShowSearchHoldoff();
 
-        try {
-            boolean showNav = mWindowManagerService.hasNavigationBar()
-                              || mWindowManagerService.wantsNavigationBar();
-            if (DEBUG) Log.v(TAG, "hasNavigationBar=" + showNav);
-            if (showNav && !mRecreating) {
-                mNavigationBarView =
-                    (NavigationBarView) View.inflate(context, R.layout.navigation_bar, null);
+        checkNavBar();
+        if (DEBUG) Log.v(TAG, "hasNavigationBar=" + mWantsNavigationBar);
+        if (mWantsNavigationBar && !mRecreating) {
+            mNavigationBarView =
+                (NavigationBarView) View.inflate(context, R.layout.navigation_bar, null);
 
-                mNavigationBarView.setDisabledFlags(mDisabled);
-                mNavigationBarView.setBar(this);
-                mNavigationBarView.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        checkUserAutohide(v, event);
-                        return false;
-                    }});
-            } else if (!showNav) {
-                mSearchPanelSwipeView = new SearchPanelSwipeView(mContext, this);
-                mWindowManager.addView(mSearchPanelSwipeView, mSearchPanelSwipeView.getGesturePanelLayoutParams());
-                updateSearchPanel();
-            }
-        } catch (RemoteException ex) {
-            // no window manager? good luck with that
+            mNavigationBarView.setDisabledFlags(mDisabled);
+            mNavigationBarView.setBar(this);
+            mNavigationBarView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    checkUserAutohide(v, event);
+                    return false;
+                }});
+        } else if (!mWantsNavigationBar && mEnableNavring && !mRecreating) {
+            mSearchPanelSwipeView = new SearchPanelSwipeView(mContext, this);
+            mWindowManager.addView(mSearchPanelSwipeView, mSearchPanelSwipeView.getGesturePanelLayoutParams());
+            updateSearchPanel();
         }
 
         if (mRecreating) {
@@ -1118,22 +1119,34 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         // we want to freeze the sysui state wherever it is
         mSearchPanelView.setSystemUiVisibility(mSystemUiVisibility);
 
-        if (mNavigationBarView != null) {
+        if (mNavigationBarView != null && mWantsNavigationBar) {
             WindowManager.LayoutParams lp =
                 (android.view.WindowManager.LayoutParams) mNavigationBarView.getLayoutParams();
             lp.flags &= ~WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
             mWindowManager.updateViewLayout(mNavigationBarView, lp);
+        }
+        if (mSearchPanelSwipeView != null && mEnableNavring && !mWantsNavigationBar) {
+            WindowManager.LayoutParams lp =
+                (android.view.WindowManager.LayoutParams) mSearchPanelSwipeView.getLayoutParams();
+            lp.flags &= ~WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
+            mWindowManager.updateViewLayout(mSearchPanelSwipeView, lp);
         }
     }
 
     @Override
     public void hideSearchPanel() {
         super.hideSearchPanel();
-        if (mNavigationBarView != null) {
+        if (mNavigationBarView != null && mWantsNavigationBar) {
             WindowManager.LayoutParams lp =
                 (android.view.WindowManager.LayoutParams) mNavigationBarView.getLayoutParams();
             lp.flags |= WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
             mWindowManager.updateViewLayout(mNavigationBarView, lp);
+        }
+        if (mSearchPanelSwipeView != null && mEnableNavring && !mWantsNavigationBar) {
+            WindowManager.LayoutParams lp =
+                (android.view.WindowManager.LayoutParams) mSearchPanelSwipeView.getLayoutParams();
+            lp.flags |= WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
+            mWindowManager.updateViewLayout(mSearchPanelSwipeView, lp);
         }
     }
 
@@ -2725,8 +2738,9 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 
     @Override
     public void setImeWindowStatus(IBinder token, int vis, int backDisposition) {
+        mImeShowing = (vis & InputMethodService.IME_VISIBLE) != 0;
         boolean altBack = (backDisposition == InputMethodService.BACK_DISPOSITION_WILL_DISMISS)
-            || ((vis & InputMethodService.IME_VISIBLE) != 0);
+            || mImeShowing;
 
         setNavigationIconHints(
                 altBack ? (mNavigationIconHints | NAVIGATION_HINT_BACK_ALT)
@@ -3307,22 +3321,63 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             //OH NO!
         }
         mWantsNavigationBar = Settings.System.getBoolean(resolver, Settings.System.ENABLE_NAVIGATION_BAR, hasNav);
+        mEnableNavring = Settings.System.getBoolean(mContext.getContentResolver(),
+                Settings.System.ENABLE_NAVRING, true);
     }
 
-    private void toggleNavigationBar(boolean show) {
-        if (show) {
-            if (mNavigationBarView != null || mRecreating) return;
-           if (DEBUG) Log.d(TAG, "Enabling navigation bar now");
-            mNavigationBarView = (NavigationBarView) View.inflate(mContext, R.layout.navigation_bar, null);
-            mNavigationBarView.setDisabledFlags(mDisabled);
-            mNavigationBarView.setBar(this);
-            addNavigationBar();
-        } else {
-            if (mNavigationBarView == null) return;
-            if (DEBUG) Log.d(TAG, "Disabling navigation bar now");
-            mWindowManager.removeView(mNavigationBarView);
-            mNavigationBarView = null;
+    private void checkNavBar() {
+        ContentResolver resolver = mContext.getContentResolver();
+        boolean hasNav = true;
+        try {
+            hasNav = mWindowManagerService.hasNavigationBar();
         }
+        catch (RemoteException ex) {
+            //OH NO!
+        }
+        mWantsNavigationBar = Settings.System.getBoolean(resolver, Settings.System.ENABLE_NAVIGATION_BAR, hasNav);
+        mEnableNavring = Settings.System.getBoolean(mContext.getContentResolver(), Settings.System.ENABLE_NAVRING, true);
+    }
+
+    private void toggleNavigationBarOrNavRing(boolean showNavbar, boolean showNavring) {
+        if (showNavbar) {
+            // remove search panel as navbar provides its own
+            if (mSearchPanelSwipeView != null) {
+                if (DEBUG) Log.d(TAG, "Disabling navigation ring now 1");
+                mWindowManager.removeView(mSearchPanelSwipeView);
+                mSearchPanelSwipeView = null;
+            }
+            if (mNavigationBarView == null && !mRecreating) {
+                if (DEBUG) Log.d(TAG, "Enabling navigation bar now 1");
+                mNavigationBarView = (NavigationBarView) View.inflate(mContext, R.layout.navigation_bar, null);
+                mNavigationBarView.setDisabledFlags(mDisabled);
+                mNavigationBarView.setBar(this);
+                mNavigationBarView.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        checkUserAutohide(v, event);
+                        return false;
+                    }});
+                addNavigationBar();
+            }
+        } else {
+            if (mNavigationBarView != null) {
+                if (DEBUG) Log.d(TAG, "Disabling navigation bar now 1");
+                mWindowManager.removeView(mNavigationBarView);
+                mNavigationBarView = null;
+            }
+        }
+        if (showNavring && !showNavbar) {
+            if (DEBUG) Log.d(TAG, "Enabling navigation ring now 1");
+            mSearchPanelSwipeView = new SearchPanelSwipeView(mContext, this);
+            mWindowManager.addView(mSearchPanelSwipeView, mSearchPanelSwipeView.getGesturePanelLayoutParams());
+        } else {
+            if (mSearchPanelSwipeView != null) {
+                if (DEBUG) Log.d(TAG, "Disabling navigation ring now 2");
+                mWindowManager.removeView(mSearchPanelSwipeView);
+                mSearchPanelSwipeView = null;
+            }
+        }
+        updateSearchPanel();
     }
 
     private void resetUserSetupObserver() {
@@ -3432,7 +3487,9 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 
         updateExpandedViewPos(EXPANDED_LEAVE_ALONE);
 
-	updateSettings();
+	    updateSettings();
+
+        checkNavBar();
 
         mRecreating = false;
     }
@@ -3583,7 +3640,9 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     protected boolean shouldDisableNavbarGestures() {
         return !isDeviceProvisioned()
                 || mExpandedVisible
-                || (mDisabled & StatusBarManager.DISABLE_SEARCH) != 0;
+                || (mDisabled & StatusBarManager.DISABLE_SEARCH) != 0
+                || !mEnableNavring
+                || (mImeShowing && mEnableNavring && !mWantsNavigationBar);
     }
 
     private static class FastColorDrawable extends Drawable {
@@ -3712,7 +3771,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 
         @Override
         public void onChange(boolean selfChange, Uri uri) {
-            toggleNavigationBar(mWantsNavigationBar);
+            toggleNavigationBarOrNavRing(mWantsNavigationBar, mEnableNavring);
             if (uri.equals(Settings.System.getUriFor(
                     Settings.System.QUICK_SETTINGS_TILES))
                 || uri.equals(Settings.System.getUriFor(
@@ -3783,8 +3842,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                 mSidebarPosition = sidebarPosition;
                 mWindowManager.updateViewLayout(mAppSidebar, getAppSidebarLayoutParams(sidebarPosition));
             }
-
-	updateCustomHeaderStatus();
 
         }
 
