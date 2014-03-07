@@ -423,11 +423,14 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 
     private void updateNavigationBarState() {
         boolean showNav = true;
+	boolean showNavRing = false;
         try {
               showNav = mWindowManagerService.hasNavigationBar()
                                   || mWindowManagerService.wantsNavigationBar();
+              showNavRing = Settings.System.getBoolean(mContext.getContentResolver(), 
+				Settings.System.ENABLE_NAVRING_SWIPE, false);
         } catch(RemoteException ex) {
-            Log.e("NavBar", "Exception while checking NavigationBar stuff via WindowManagerStuff", ex);
+            Log.e("NavBar", "Exception while checking Navigation Bar||Ring stuff via WindowManagerStuff", ex);
         }
 
         if (DEBUG) Log.v(TAG, "hasNavigationBar=" + showNav);
@@ -465,9 +468,9 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                 }
                 mNavigationBarView = null;
             }
-            if (mSearchPanelSwipeView == null) {
+            if (mSearchPanelSwipeView == null && showNavRing) {
                 mSearchPanelSwipeView = new SearchPanelSwipeView(mContext, this);
-            }
+	    }
             try {
                 mWindowManager.addView(mSearchPanelSwipeView, mSearchPanelSwipeView.getGesturePanelLayoutParams());
             } catch (java.lang.IllegalStateException ex) {
