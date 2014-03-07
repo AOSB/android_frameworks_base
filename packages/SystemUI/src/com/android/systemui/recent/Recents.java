@@ -23,10 +23,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.ContentObserver;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.UserHandle;
 import android.provider.Settings;
@@ -74,14 +71,7 @@ public class Recents extends SystemUI implements RecentsComponent {
                             UserHandle.USER_CURRENT));
                 }
             } else {
-                Bitmap first = null;
-                if (firstTask.getThumbnail() instanceof BitmapDrawable) {
-                    first = ((BitmapDrawable) firstTask.getThumbnail()).getBitmap();
-                } else {
-                    first = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
-                    Drawable d = RecentTasksLoader.getInstance(mContext).getDefaultThumbnail();
-                    d.draw(new Canvas(first));
-                }
+                Bitmap first = firstTask.getThumbnail();
                 final Resources res = mContext.getResources();
 
                 float thumbWidth = res
