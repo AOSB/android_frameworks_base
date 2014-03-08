@@ -262,7 +262,6 @@ public class RecentController implements RecentPanelView.OnExitListener,
         if (mRecentPanelView != null) {
             mRecentPanelView.setCancelledByUser(true);
         }
-        hideRecents(false);
     }
 
     public void closeRecents() {
@@ -313,6 +312,7 @@ public class RecentController implements RecentPanelView.OnExitListener,
             mIsPreloaded = false;
             mIsToggled = false;
             mRecentPanelView.setTasksLoaded(false);
+            mRecentPanelView.dismissPopup();
             if (forceHide) {
                 if (DEBUG) Log.d(TAG, "force hide recent window");
                 mIsShowing = false;
@@ -463,7 +463,6 @@ public class RecentController implements RecentPanelView.OnExitListener,
 
             // Gesture was detected and activated. Prepare and play the animations.
             if (mActionDetected) {
-                mRecentPanelView.removeAllApplications();
 
                 // Setup animation for warning content - fade out.
                 ValueAnimator animation1 = ValueAnimator.ofFloat(1.0f, 0.0f);
@@ -520,8 +519,11 @@ public class RecentController implements RecentPanelView.OnExitListener,
                         // Prepare listview for next recent call.
                         mCardListView.setVisibility(View.GONE);
                         mCardListView.setAlpha(1.0f);
-                        // Finally hide our recents screen.
-                        hideRecents(false);
+                        // Remove all tasks now.
+                        if (mRecentPanelView.removeAllApplications()) {
+                            // Finally hide our recents screen.
+                            hideRecents(false);
+                        }
                     }
                 });
                 animationSet.start();
