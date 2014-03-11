@@ -15,6 +15,9 @@ import android.os.UserHandle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
+import java.io.IOException;
 
 import com.android.internal.telephony.PhoneConstants;
 
@@ -87,5 +90,25 @@ public class QSUtils {
 
         public static boolean adbEnabled(ContentResolver resolver) {
             return (Settings.Global.getInt(resolver, Settings.Global.ADB_ENABLED, 0)) == 1;
+        }
+
+        public static boolean deviceSupportsFastcharge() {
+            return new File("/sys/kernel/fast_charge/force_fast_charge").exists();
+        }
+
+        public static boolean deviceSupportsOtouch() {
+            return new File("/proc/touchpad/enable").exists();
+        }
+
+        public static void setKernelFeatureEnabled(String feature, boolean enabled) {
+            try {
+                BufferedWriter writer = new BufferedWriter(new FileWriter(new File(feature)));
+                String output = "" + (enabled ? "1" : "0");
+                writer.write(output.toCharArray(), 0, output.toCharArray().length);
+                writer.close();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
 }

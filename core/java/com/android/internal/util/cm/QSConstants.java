@@ -36,6 +36,8 @@ public class QSConstants {
         public static final String TILE_MUSIC = "toggleMusic";
         public static final String TILE_ONTHEGO = "toggleOnTheGo";
         public static final String TILE_BATTERYSAVER = "toggleBatterySaver";
+        public static final String TILE_FASTCHARGE = "toggleFastCharge";
+        public static final String TILE_OTOUCH = "toggleOtouch";
 
         public static final String TILE_DELIMITER = "|";
         public static ArrayList<String> TILES_DEFAULT = new ArrayList<String>();

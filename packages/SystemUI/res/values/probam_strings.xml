@@ -122,4 +122,10 @@ wn on the screen). [CHAR LIMIT=NONE] -->
     <string name="quick_settings_reminder_help_message">Touch the empty space above to set or change the reminder. Long-press to clear the current reminder.</string>
     <string name="quick_settings_reminder_noti_later">Update Time</string>
 
+    <!-- two-state kernel -->
+    <string name="quick_settings_fcharge_on_label">F-Charge On</string>
+    <string name="quick_settings_fcharge_off_label">F-Charge Off</string>
+    <string name="quick_settings_otouch_on_label">O-Touch On</string>
+    <string name="quick_settings_otouch_off_label">O-Touch Off</string>
+
 </resources>

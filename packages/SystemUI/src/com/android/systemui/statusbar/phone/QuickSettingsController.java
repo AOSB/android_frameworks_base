@@ -50,6 +50,8 @@ import static com.android.internal.util.cm.QSConstants.TILE_WIFIAP;
 import static com.android.internal.util.cm.QSConstants.TILE_WIMAX;
 import static com.android.internal.util.cm.QSConstants.TILE_ONTHEGO;
 import static com.android.internal.util.cm.QSConstants.TILE_BATTERYSAVER;
+import static com.android.internal.util.cm.QSConstants.TILE_FASTCHARGE;
+import static com.android.internal.util.cm.QSConstants.TILE_OTOUCH;
 
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
@@ -106,6 +108,8 @@ import com.android.systemui.quicksettings.WiFiTile;
 import com.android.systemui.quicksettings.WifiAPTile;
 import com.android.systemui.quicksettings.OnTheGoTile;
 import com.android.systemui.quicksettings.BatterySaverTile;
+import com.android.systemui.quicksettings.FastChargeTile;
+import com.android.systemui.quicksettings.OtouchTile;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -176,6 +180,8 @@ public class QuickSettingsController {
         boolean lteSupported = QSUtils.deviceSupportsLte(mContext);
         boolean gpsSupported = QSUtils.deviceSupportsGps(mContext);
         boolean torchSupported = QSUtils.deviceSupportsTorch(mContext);
+        boolean fastChargeSupported = QSUtils.deviceSupportsFastcharge();
+        boolean otouchSupported = QSUtils.deviceSupportsOtouch();
 
         if (!bluetoothSupported) {
             TILES_DEFAULT.remove(TILE_BLUETOOTH);
@@ -308,6 +314,14 @@ public class QuickSettingsController {
                 qs = new OnTheGoTile(mContext, this);
             } else if (tile.equals(TILE_BATTERYSAVER)) {
                 qs = new BatterySaverTile(mContext, this);
+            } else if (tile.equals(TILE_FASTCHARGE)) {
+                if (fastChargeSupported) {
+                qs = new FastChargeTile(mContext, this);
+                }
+            } else if (tile.equals(TILE_OTOUCH)) {
+                if (otouchSupported) {
+                qs = new OtouchTile(mContext, this);
+                }
             }
 
             if (qs != null) {
