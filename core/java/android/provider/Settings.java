@@ -4401,11 +4401,16 @@ public final class Settings {
                 "navring_icon_4",
         };
 
-
         /**
          * @hide
          */
         public static final String NAVIGATION_BAR_BUTTONS = "navigation_bar_buttons";
+
+	/**
+	* Whether to enable the navbar for hw key devices
+	* @hide
+	*/
+	public static final String ENABLE_NAVIGATION_BAR = "enable_navigation_bar";
 
         /**
 	* Electronic beam animation mode
