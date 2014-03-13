@@ -521,4 +521,7 @@
     <string name="network_2G">2G Only</string>
     <string name="quick_settings_network_unknown">Unknown</string>
 
+    <!-- On-The-Go Mode -->
+    <string name="quick_settings_onthego_back">Rear Camera</string>
+    <string name="quick_settings_onthego_front">Front Camera</string>
 </resources>
