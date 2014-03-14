@@ -2951,6 +2951,10 @@ public final class Settings {
 	*/
         public static final String SCREEN_ON_NOTIFICATION_LED = "screen_on_notification_led";
 
+
+        public static final String NFC_POLLING_MODE = "nfc_polling_mode";
+
+
         /**
          * Whether to use gesture anywhere feature.
          * @hide
