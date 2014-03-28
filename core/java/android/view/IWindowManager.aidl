@@ -231,11 +231,6 @@ interface IWindowManager
     boolean hasMenuKeyEnabled();
 
     /**
-     * Device wants a navigation bar (becuase it has hardware keys)
-     */
-    boolean wantsNavigationBar();
-
-    /**
      * Lock the device immediately with the specified options (can be null).
      */
     void lockNow(in Bundle options);

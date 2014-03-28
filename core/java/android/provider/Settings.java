@@ -4366,31 +4366,6 @@ public final class Settings {
                 "navring_icon_4",
         };
 
-        /**
-	* Wether navigation bar is enabled or not
-	* @hide
-	*/
-        public static final String NAVIGATION_BAR_SHOW = "navigation_bar_show";
-
-        /**
-	* Navigation bar height when it is on protrait
-	* @hide
-	*/
-        public static final String NAVIGATION_BAR_HEIGHT = "navigation_bar_height";
-
-        /**
-	*
-	* Navigation bar height when it is on landscape at the bottom
-	* @hide
-	*/
-        public static final String NAVIGATION_BAR_HEIGHT_LANDSCAPE = "navigation_bar_height_landscape";
-
-        /**
-	* Navigation bar height when it is on landscape at the right
-	* @hide
-	*/
-        public static final String NAVIGATION_BAR_WIDTH = "navigation_bar_width";
-
 
         /**
          * @hide
