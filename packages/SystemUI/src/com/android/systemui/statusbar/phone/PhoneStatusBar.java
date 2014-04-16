@@ -692,6 +692,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 	    removeSidebarView();
         } else {
             addActiveDisplayView();
+            addAppCircleSidebar();
             /* ChaosLab: GestureAnywhere - BEGIN */
             addGestureAnywhereView();
             /* ChaosLab: GestureAnywhere - END */
