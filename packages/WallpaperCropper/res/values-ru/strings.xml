@@ -16,6 +16,6 @@
 -->
 <resources>
   <string name="crop_wallpaper">Обрезка изображения</string>
-  <string name="wallpaper_instructions">Установить как обои</string>
+  <string name="wallpaper_instructions">Установить обои</string>
   <string name="wallpaper_load_fail">Не удалось загрузить изображение</string>
 </resources>
