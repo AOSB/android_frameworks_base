@@ -51,6 +51,10 @@ wn on the screen). [CHAR LIMIT=NONE] -->
     <!-- Title shown in recents popup for unlocking an app from being cleared -->
     <string name="status_bar_recent_unlock_item_title">Unlock</string>
 
+    <!-- Power Saver Tile -->
+    <string name="quick_settings_battery_saver_label">Battery saver on</string>
+    <string name="quick_settings_battery_saver_off_label">Battery saver off</string>
+
     <!-- battery saver mode -->
     <string name="battery_saver_start">Battery Saver Enabled</string>
     <string name="battery_saver_stop">Battery Saver Disabled</string>
