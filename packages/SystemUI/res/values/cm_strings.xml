@@ -114,7 +114,7 @@
     <string name="screenshot_delete_confirmation">Screenshot deleted.</string>
 
     <!-- Sim Slot number -->
-    <string name="sim_slot">1</string>
-    <string name="sim_slot_2">2</string>
-    <string name="sim_slot_3">3</string>
+    <string name="sim_slot" translatable="false">1</string>
+    <string name="sim_slot_2" translatable="false">2</string>
+    <string name="sim_slot_3" translatable="false">3</string>
 </resources>
