@@ -1619,6 +1619,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         if (upgradeVersion == 99 || upgradeVersion == 100) {
+            if (mUserHandle == UserHandle.USER_OWNER) {
+                loadScreenAnimationStyle(db);
+            }
             upgradeVersion = 101;
         }
 
@@ -2073,6 +2076,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             loadSetting(stmt, Settings.System.HEADS_UP_NOTIFICATION, "0");
             loadSetting(stmt, Settings.System.HEADS_UP_CUSTOM_VALUES, dndValues);
             loadSetting(stmt, Settings.System.HEADS_UP_BLACKLIST_VALUES, blackListValues);
+        }
+    }
+
+    private void loadScreenAnimationStyle(SQLiteDatabase db) {
+        db.beginTransaction();
+        SQLiteStatement stmt = null;
+        try {
+            stmt = db.compileStatement("INSERT OR REPLACE INTO system(name,value)"
+                    + " VALUES(?,?);");
+            loadIntegerSetting(stmt, Settings.System.SCREEN_ANIMATION_STYLE,
+                    R.integer.def_screen_animation_style);
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+            if (stmt != null) stmt.close();
         }
     }
 
