@@ -221,13 +221,13 @@
     <style name="card.header_button_base">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_alignParentRight">true</item>
-        <item name="android:paddingLeft">@dimen/card_header_button_padding_left</item>
+        <item name="android:layout_alignParentEnd">true</item>
+        <item name="android:paddingStart">@dimen/card_header_button_padding_start</item>
         <item name="android:focusable">false</item>
         <item name="android:focusableInTouchMode">false</item>
         <item name="android:clickable">true</item>
         <item name="android:layout_centerVertical">true</item>
-        <item name="android:layout_marginRight">0dp</item>
+        <item name="android:layout_marginEnd">0dp</item>
     </style>
 
     <style name="RecentBaseStyle"  parent="@*android:style/Theme.Holo.Light">
