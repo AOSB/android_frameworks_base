@@ -925,7 +925,7 @@ public class BatteryMeterView extends View implements DemoMode {
         public void onSizeChanged(int w, int h, int oldw, int oldh) {
             BatteryTracker tracker = mDemoMode ? mDemoTracker : mTracker;
             Rect bounds = getBounds(tracker, tracker.level);
-            float onedp = mContext.getResources().getDisplayMetrics().density;
+            float onedp = mContext.getResources().getDisplayMetrics().density * 0.5f;
             float height = h - getPaddingBottom() - getPaddingTop();
 
             mTextX = w;

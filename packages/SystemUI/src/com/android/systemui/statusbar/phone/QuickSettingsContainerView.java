@@ -17,6 +17,7 @@
 package com.android.systemui.statusbar.phone;
 
 import android.animation.LayoutTransition;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -48,7 +49,17 @@ public class QuickSettingsContainerView extends FrameLayout {
     // The gap between tiles in the QuickSettings grid
     private float mCellGap;
 
+    private float mPadding4Tiles = -8.0f;
+    private float mPadding3Tiles = 0.0f;
+    private float mSize4Tiles = 10.0f;
+    private float mSize3Tiles = 12.0f;
+
+    private int mTextSize;
+    private int mTextPadding;
+
     private boolean mSingleRow;
+    private Context mContext;
+    private boolean mSmallIcons;
 
     private Context mContext;
     private Resources mResources;
@@ -62,7 +73,6 @@ public class QuickSettingsContainerView extends FrameLayout {
         a.recycle();
 
         mContext = context;
-        mResources = getContext().getResources();
 
         updateResources();
     }
@@ -76,15 +86,19 @@ public class QuickSettingsContainerView extends FrameLayout {
     }
 
     public void updateResources() {
-        mCellGap = mResources.getDimension(R.dimen.quick_settings_cell_gap);
-        mNumColumns = Settings.System.getIntForUser(mContext.getContentResolver(),
-                Settings.System.QUICK_TILES_PER_ROW, 3, UserHandle.USER_CURRENT);
-        // do not allow duplication on tablets or any device which do not have
-        // flipsettings
-        mDuplicateColumnsLandscape = Settings.System.getIntForUser(mContext.getContentResolver(),
-                Settings.System.QUICK_TILES_PER_ROW_DUPLICATE_LANDSCAPE,
-                1, UserHandle.USER_CURRENT) == 1
-                        && mResources.getBoolean(R.bool.config_hasFlipSettingsPanel);
+        Resources r = getContext().getResources();
+        ContentResolver resolver = mContext.getContentResolver();
+        mSmallIcons = Settings.System.getIntForUser(resolver,
+                Settings.System.QUICK_SETTINGS_SMALL_ICONS, 0, UserHandle.USER_CURRENT) == 1;
+        mCellGap = r.getDimension(R.dimen.quick_settings_cell_gap);
+        mNumColumns = r.getInteger(R.integer.quick_settings_num_columns);
+        mTextSize = (int) mSize3Tiles;
+        mTextPadding = (int) mPadding3Tiles;
+        if (mSmallIcons) {
+            mNumColumns = r.getInteger(R.integer.quick_settings_num_columns_small);
+            mTextSize = (int) mSize4Tiles;
+            mTextPadding = (int) mPadding4Tiles;
+        }
         requestLayout();
     }
 
@@ -215,29 +229,24 @@ public class QuickSettingsContainerView extends FrameLayout {
     }
 
     public int getTileTextSize() {
-        // get tile text size based on column count
-        switch (mNumColumns) {
-            case 5:
-                return mResources.getDimensionPixelSize(R.dimen.qs_5_column_text_size);
-            case 4:
-                return mResources.getDimensionPixelSize(R.dimen.qs_4_column_text_size);
-            case 3:
-            default:
-                return mResources.getDimensionPixelSize(R.dimen.qs_3_column_text_size);
+        ContentResolver resolver = mContext.getContentResolver();
+        mSmallIcons = Settings.System.getIntForUser(resolver,
+                Settings.System.QUICK_SETTINGS_SMALL_ICONS, 0, UserHandle.USER_CURRENT) == 1;
+        if (mSmallIcons) {
+            return mTextSize = (int) mSize4Tiles;
+        } else {
+            return mTextSize = (int) mSize3Tiles;
         }
     }
 
     public int getTileTextPadding() {
-        // get tile text padding based on column count
-        switch (mNumColumns) {
-            case 5:
-                return mResources.getDimensionPixelSize(R.dimen.qs_5_column_text_padding);
-            case 4:
-                return mResources.getDimensionPixelSize(R.dimen.qs_4_column_text_padding);
-            case 3:
-            default:
-                return mResources.getDimensionPixelSize(R.dimen.qs_tile_margin_below_icon);
+        ContentResolver resolver = mContext.getContentResolver();
+        mSmallIcons = Settings.System.getIntForUser(resolver,
+                Settings.System.QUICK_SETTINGS_SMALL_ICONS, 0, UserHandle.USER_CURRENT) == 1;
+        if (mSmallIcons) {
+            return mTextPadding = (int) mPadding4Tiles;
+        } else {
+            return mTextPadding = (int) mPadding3Tiles;
         }
     }
-
 }

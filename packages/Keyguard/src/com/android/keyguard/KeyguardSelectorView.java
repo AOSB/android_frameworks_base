@@ -84,7 +84,6 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
     private int mTargetOffset;
     private boolean mIsScreenLarge;
     private GestureDetector mDoubleTapGesture;
-
     private UnlockReceiver mUnlockReceiver;
     private IntentFilter mUnlockFilter;
 
