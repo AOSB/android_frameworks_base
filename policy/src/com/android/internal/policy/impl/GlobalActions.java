@@ -78,7 +78,7 @@ import android.widget.ImageView.ScaleType;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.internal.app.ThemeUtils;
+import android.content.pm.ThemeUtils;
 import com.android.internal.util.nameless.NamelessActions;
 
 import java.util.ArrayList;

@@ -17,8 +17,4 @@
     <item android:state_pressed="true"
         android:drawable="@drawable/ic_recents_clear_pressed" />
     <item android:drawable="@drawable/ic_recents_clear_normal" />
-<<<<<<< HEAD
 </selector>
-=======
-</selector>
->>>>>>> d043b6bfde7e75539e8a480b94a764b0f00d9889

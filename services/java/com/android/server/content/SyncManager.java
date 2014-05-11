@@ -224,10 +224,6 @@ public class SyncManager {
         }
     };
 
-            mSyncHandler.onBootCompleted();
-        }
-    };
-
     private BroadcastReceiver mBackgroundDataSettingChanged = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {

@@ -1639,7 +1639,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             upgradeVersion = 101;
         }
 
->>>>>>> d043b6bfde7e75539e8a480b94a764b0f00d9889
         // *** Remember to update DATABASE_VERSION above!
 
         if (upgradeVersion != currentVersion) {

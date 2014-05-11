@@ -3750,12 +3750,6 @@ public final class Settings {
         public static final String QUIET_HOURS_FORCED = "quiet_hours_forced";
 
         /**
-         * Whether to enforce quiet hours regardless of the timer.
-         * @hide
-         */
-        public static final String QUIET_HOURS_FORCED = "quiet_hours_forced";
-
-        /**
          * Whether to enable quiet hours.
          * @hide
          */
@@ -3927,34 +3921,6 @@ public final class Settings {
         public static final String QUIET_HOURS_DIM = "quiet_hours_dim";
 
         /**
-	      * Enable looking up of phone numbers of nearby places
-	      *
-	      * @hide
-	      */
-        public static final String ENABLE_FORWARD_LOOKUP = "enable_forward_lookup";
-
-        /**
-	      * Enable looking up of information of phone numbers not in the contacts
-	      *
-	      * @hide
-	      */
-        public static final String ENABLE_REVERSE_LOOKUP = "enable_reverse_lookup";
-
-        /**
-        * The forward lookup provider
-        *
-        * @hide
-        */
-        public static final String FORWARD_LOOKUP_PROVIDER = "forward_lookup_provider";
-
-        /**
-        * The reverse lookup provider
-        *
-        * @hide
-        */
-        public static final String REVERSE_LOOKUP_PROVIDER = "reverse_lookup_provider";
-
-        /**
          * Whether incomming call UI stays in background
          * @hide
          */
@@ -3983,12 +3949,6 @@ public final class Settings {
          * @hide
          */
         public static final String EXPANDED_DESKTOP_STYLE = "expanded_desktop_style";
-
-        /**
-         * Use EdgeGesture Service for system gestures in PhoneWindowManager
-         * @hide
-         */
-        public static final String USE_EDGE_SERVICE_FOR_GESTURES = "edge_service_for_gestures";
 
         /**
          * Show the pending notification counts as overlays on the status bar
@@ -4113,30 +4073,6 @@ public final class Settings {
          * @hide
          */
         public static final String POWER_MENU_USER_ENABLED = "power_menu_user_enabled";
-
-        /**
-         * Whether power menu silent mode is enabled
-         * @hide
-         */
-        public static final String POWER_MENU_SOUND_ENABLED = "power_menu_silent_enabled";
-
-        /**
-         * Swap volume buttons when the screen is rotated
-         * 0 - Disabled
-         * 1 - Enabled (screen is rotated by 90 or 180 degrees: phone, hybrid)
-         * 2 - Enabled (screen is rotated by 180 or 270 degrees: tablet)
-         * @hide
-         */
-        public static final String SWAP_VOLUME_KEYS_ON_ROTATION = "swap_volume_keys_on_rotation";
-
-        /**
-	* Volume keys control cursor in text fields (default is 0)
-	* 0 - Disabled
-	* 1 - Volume up/down moves cursor left/right
-	* 2 - Volume up/down moves cursor right/left
-	* @hide
-	*/
-        public static final String VOLUME_KEY_CURSOR_CONTROL = "volume_key_cursor_control";
 
         /**
 	* Override and forcefully disable the fullscreen keyboard
@@ -4345,24 +4281,6 @@ public final class Settings {
          * @hide
          */
         public static final String HALO_UNLOCK_PING = "halo_unlock_ping";
-
-         /**
-         * Action for long-pressing back button on lock screen
-         * @hide
-         */
-        public static final String LOCKSCREEN_LONG_BACK_ACTION = "lockscreen_long_back_action";
-
-        /**
-         * Action for long-pressing home button on lock screen
-         * @hide
-         */
-        public static final String LOCKSCREEN_LONG_HOME_ACTION = "lockscreen_long_home_action";
-
-        /**
-         * Action for long-pressing menu button on lock screen
-         * @hide
-         */
-        public static final String LOCKSCREEN_LONG_MENU_ACTION = "lockscreen_long_menu_action";
 
         /**
          * Performance profile

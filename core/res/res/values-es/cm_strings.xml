@@ -120,9 +120,5 @@
   <string name="app_ops_write_sms">escribir un mensaje SMS</string>
   <string name="privacy_guard_dialog_title">Privacidad</string>
   <string name="privacy_guard_dialog_summary"><xliff:g id="app">%1$s</xliff:g> quiere <xliff:g id="op">%2$s</xliff:g>.</string>
-  <string name="permission_remember_choice">Recordar mi elección</string>
-
-  <!-- AOSP/CAF -->
-  <string name="progress_nomediapresent" product="default">No hay medios extraíbles\u2026</string>
-  <string name="transient_navigation_confirmation_long">Deslizar hacia abajo desde el borde de la pantalla para mostrar la barra de estado</string>
+  <string name="permission_remember_choice">Recordar mi elección</string> 
 </resources>
