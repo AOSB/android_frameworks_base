@@ -100,15 +100,6 @@ public final class NavigationBarTransitions extends BarTransitions {
         applyLightsOut(mode == MODE_LIGHTS_OUT, animate, force);
     }
 
-    private void setKeyButtonViewQuiescentAlpha(ButtonInfo info, float alpha, boolean animate) {
-        for (View v : mView.mRotatedViews) {
-            View button = v == null ? null : v.findViewWithTag(info);
-            if (button != null) {
-                setKeyButtonViewQuiescentAlpha(button, alpha, animate);
-            }
-        }
-    }
-
     private float alphaForMode(int mode) {
         final boolean isOpaque = mode == MODE_OPAQUE || mode == MODE_LIGHTS_OUT;
         return isOpaque ? KeyButtonView.DEFAULT_QUIESCENT_ALPHA : 1f;

@@ -86,8 +86,8 @@ public class NavigationBarView extends LinearLayout {
     final static String NAVBAR_EDIT_ACTION = "android.intent.action.NAVBAR_EDIT";
 
     private boolean mInEditMode;
-    private NavbarEditor mEditBar;
-    private NavBarReceiver mNavBarReceiver;
+    //private NavbarEditor mEditBar;
+    //private NavBarReceiver mNavBarReceiver;
     private LockPatternUtils mLockUtils;
     private OnClickListener mRecentsClickListener;
     private OnTouchListener mRecentsPreloadListener;
@@ -356,7 +356,7 @@ public class NavigationBarView extends LinearLayout {
         return mCurrentView.findViewWithTag(AwesomeConstant.ACTION_HOME.value());
     }
 
-    protected void updateButtonListeners() {
+    /*protected void updateButtonListeners() {
         View recentView = findButton(NavbarEditor.NAVBAR_RECENT);
         if (recentView != null) {
             recentView.setOnClickListener(mRecentsClickListener);
@@ -373,7 +373,7 @@ public class NavigationBarView extends LinearLayout {
         if (findView != null) {
             findView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
         }
-    }
+    }*/
 
     // for when home is disabled, but search isn't
     public View getSearchLight() {
@@ -388,11 +388,6 @@ public class NavigationBarView extends LinearLayout {
     // used for lockscreen notifications
     public View getNotifsButton() {
         return mCurrentView.findViewById(R.id.show_notifs);
-    }
-
-    private void getIcons(Resources res) {
-        mRecentAltIcon = res.getDrawable(R.drawable.ic_sysbar_recent_clear);
-        mRecentAltLandIcon = res.getDrawable(R.drawable.ic_sysbar_recent_clear_land);
     }
 
     private void getIcons(Resources res) {
@@ -662,21 +657,6 @@ public class NavigationBarView extends LinearLayout {
         setDisabledFlags(mDisabledFlags);
     }
 
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-
-        mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor(Settings.System.NAVIGATION_BAR_BUTTONS),
-                false, mSettingsObserver);
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-
-        mContext.getContentResolver().unregisterContentObserver(mSettingsObserver);
-    }
-
     private void readUserConfig() {
         mNavButtons.clear();
         String buttons = Settings.System.getString(getContext().getContentResolver(), Settings.System.NAVIGATION_BAR_BUTTONS);
@@ -930,9 +910,9 @@ public class NavigationBarView extends LinearLayout {
         setNavigationIconHints(mNavigationIconHints, true);
     }
 
-    View findButton(NavbarEditor.ButtonInfo info) {
+    /*View findButton(NavbarEditor.ButtonInfo info) {
         return mCurrentView.findViewWithTag(info);
-    }
+    }*/
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {

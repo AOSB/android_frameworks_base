@@ -58,7 +58,6 @@ public class QuickSettingsContainerView extends FrameLayout {
     private int mTextPadding;
 
     private boolean mSingleRow;
-    private Context mContext;
     private boolean mSmallIcons;
 
     private Context mContext;
