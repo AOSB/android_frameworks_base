@@ -32,4 +32,6 @@
     <color name="person_bubble_status">#FFFFFF</color>
     <color name="person_bubble_shadow">#6d6e70</color>
 
+    <!--  network stats -->
+    <color name="status_bar_network_stats_color">#FFFFFFFF</color>
 </resources>
