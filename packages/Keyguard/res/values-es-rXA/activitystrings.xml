@@ -18,7 +18,6 @@
 */
  -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="app_name" msgid="3352888186674981593">KeyguardTestActivity</string>
     <string name="secure_app_name" msgid="7955498742816868049">UnifiedCamera</string>
     <string name="none_menu_item" msgid="6156747285687551424">Ensin seguridá</string>
     <string name="pin_menu_item" msgid="1179756433268962311">PIN</string>

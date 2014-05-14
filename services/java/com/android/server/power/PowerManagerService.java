@@ -29,8 +29,8 @@ import com.android.server.display.DisplayManagerService;
 import com.android.server.dreams.DreamManagerService;
 
 import android.Manifest;
-import android.app.AppOpsManager;
 import android.app.ActivityManager;
+import android.app.AppOpsManager;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -1530,7 +1530,7 @@ public final class PowerManagerService extends IPowerManager.Stub
             return false;
         }
 
-        if (SystemProperties.getInt("sys.quickboot.enable", 0) == 1) {
+       if (SystemProperties.getInt("sys.quickboot.enable", 0) == 1) {
             return false;
         }
 

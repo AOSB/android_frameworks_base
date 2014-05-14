@@ -23,11 +23,11 @@ public class GPSTile extends QuickSettingsTile implements LocationSettingsChange
     private LocationController mLocationController;
     private int mCurrentMode;
 
-    public GPSTile(Context context, QuickSettingsController qsc) {
+    public GPSTile(Context context, QuickSettingsController qsc, LocationController lc) {
         super(context, qsc);
 
         mContentResolver = mContext.getContentResolver();
-        mLocationController = new LocationController(mContext);
+        mLocationController = lc;
         mLocationController.addSettingsChangedCallback(this);
 
         mOnClick = new OnClickListener() {
@@ -47,6 +47,36 @@ public class GPSTile extends QuickSettingsTile implements LocationSettingsChange
                 return true;
             }
         };
+
+        mCurrentMode = Settings.Secure.getInt(mContext.getContentResolver(),
+                Settings.Secure.LOCATION_MODE, Settings.Secure.LOCATION_MODE_OFF);
+        updateTile();
+    }
+
+    private void changeLocationMode(){
+        int newMode;
+
+        switch(mCurrentMode){
+        case Settings.Secure.LOCATION_MODE_BATTERY_SAVING:
+            newMode = Settings.Secure.LOCATION_MODE_HIGH_ACCURACY;
+            break;
+        case Settings.Secure.LOCATION_MODE_HIGH_ACCURACY:
+            newMode = Settings.Secure.LOCATION_MODE_BATTERY_SAVING;
+            break;
+        case Settings.Secure.LOCATION_MODE_OFF:
+            newMode = Settings.Secure.LOCATION_MODE_SENSORS_ONLY;
+            break;
+        case Settings.Secure.LOCATION_MODE_SENSORS_ONLY:
+            newMode = Settings.Secure.LOCATION_MODE_OFF;
+            break;
+        default:
+            newMode = Settings.Secure.LOCATION_MODE_OFF;
+            break;
+        }
+
+        Settings.Secure.putInt(mContext.getContentResolver(),
+                Settings.Secure.LOCATION_MODE,
+                newMode);
     }
 
     private void changeLocationMode(){
@@ -79,6 +109,12 @@ public class GPSTile extends QuickSettingsTile implements LocationSettingsChange
     void onPostCreate() {
         updateTile();
         super.onPostCreate();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mLocationController.removeSettingsChangedCallback(this);
     }
 
     @Override
