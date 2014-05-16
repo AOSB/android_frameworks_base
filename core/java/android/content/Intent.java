@@ -1784,6 +1784,13 @@ public class Intent implements Parcelable, Cloneable {
         "android.intent.action.EXTERNAL_APPLICATIONS_UNAVAILABLE";
 
     /**
+     * Broadcast Action: The current keyguard wallpaper configuration
+     * has changed and should be re-read.
+     * {@hide}
+     */
+    public static final String ACTION_KEYGUARD_WALLPAPER_CHANGED =
+            "android.intent.action.KEYGUARD_WALLPAPER_CHANGED";
+    /**
      * Broadcast Action:  The current system wallpaper has changed.  See
      * {@link android.app.WallpaperManager} for retrieving the new wallpaper.
      * This should <em>only</em> be used to determine when the wallpaper
@@ -2632,6 +2639,19 @@ public class Intent implements Parcelable, Cloneable {
             "android.intent.action.QUICK_CLOCK";
 
     /**
+     * Broadcast Action: Indicate that unrecoverable error happened during app launch.
+     * Could indicate that curently applied theme is malicious.
+     * @hide
+     */
+    public static final String ACTION_APP_LAUNCH_FAILURE = "com.tmobile.intent.action.APP_LAUNCH_FAILURE";
+
+    /**
+     * Broadcast Action: Request to reset the unrecoverable errors count to 0.
+     * @hide
+     */
+    public static final String ACTION_APP_LAUNCH_FAILURE_RESET = "com.tmobile.intent.action.APP_LAUNCH_FAILURE_RESET";
+
+    /**
      * Broadcast Action: This is broadcast when a user action should request the
      * brightness setting dialog.
      * @hide
@@ -2721,19 +2741,6 @@ public class Intent implements Parcelable, Cloneable {
      */
     @SdkConstant(SdkConstantType.ACTIVITY_INTENT_ACTION)
     public static final String ACTION_CREATE_DOCUMENT = "android.intent.action.CREATE_DOCUMENT";
-
-    /**
-     * Broadcast Action: Indicate that unrecoverable error happened during app launch.
-     * Could indicate that curently applied theme is malicious.
-     * @hide
-     */
-    public static final String ACTION_APP_LAUNCH_FAILURE = "com.tmobile.intent.action.APP_LAUNCH_FAILURE";
-
-    /**
-     * Broadcast Action: Request to reset the unrecoverable errors count to 0.
-     * @hide
-     */
-    public static final String ACTION_APP_LAUNCH_FAILURE_RESET = "com.tmobile.intent.action.APP_LAUNCH_FAILURE_RESET";
 
     // ---------------------------------------------------------------------
     // ---------------------------------------------------------------------
@@ -6201,6 +6208,9 @@ public class Intent implements Parcelable, Cloneable {
      * @see #removeExtra
      */
     public Intent putExtras(Bundle extras) {
+        if (extras == null) {
+            return this;
+        }
         if (mExtras == null) {
             mExtras = new Bundle();
         }

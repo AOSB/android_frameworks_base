@@ -1,18 +1,18 @@
 /*
- * Copyright (C) 2010 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+* Copyright (C) 2010 The Android Open Source Project
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
 package com.android.server.wifi;
 
@@ -88,11 +88,11 @@ import static com.android.server.wifi.WifiController.CMD_SET_AP;
 import static com.android.server.wifi.WifiController.CMD_USER_PRESENT;
 import static com.android.server.wifi.WifiController.CMD_WIFI_TOGGLED;
 /**
- * WifiService handles remote WiFi operation requests by implementing
- * the IWifiManager interface.
- *
- * @hide
- */
+* WifiService handles remote WiFi operation requests by implementing
+* the IWifiManager interface.
+*
+* @hide
+*/
 public final class WifiService extends IWifiManager.Stub {
     private static final String TAG = "WifiService";
     private static final boolean DBG = false;
@@ -130,13 +130,13 @@ public final class WifiService extends IWifiManager.Stub {
     final boolean mBatchedScanSupported;
 
     /**
-     * Asynchronous channel to WifiStateMachine
-     */
+* Asynchronous channel to WifiStateMachine
+*/
     private AsyncChannel mWifiStateMachineChannel;
 
     /**
-     * Handles client connections
-     */
+* Handles client connections
+*/
     private class ClientHandler extends Handler {
 
         ClientHandler(android.os.Looper looper) {
@@ -183,7 +183,7 @@ public final class WifiService extends IWifiManager.Stub {
                             if (DBG) Slog.d(TAG, "Connect with config" + config);
                             mWifiStateMachine.sendMessage(Message.obtain(msg));
                         } else {
-                            Slog.e(TAG,  "ClientHandler.handleMessage cannot process msg with PAC");
+                            Slog.e(TAG, "ClientHandler.handleMessage cannot process msg with PAC");
                             if (msg.what == WifiManager.CONNECT_NETWORK) {
                                 replyFailed(msg, WifiManager.CONNECT_NETWORK_FAILED);
                             } else {
@@ -233,8 +233,8 @@ public final class WifiService extends IWifiManager.Stub {
     private ClientHandler mClientHandler;
 
     /**
-     * Handles interaction with WifiStateMachine
-     */
+* Handles interaction with WifiStateMachine
+*/
     private class WifiStateMachineHandler extends Handler {
         private AsyncChannel mWsmChannel;
 
@@ -277,7 +277,7 @@ public final class WifiService extends IWifiManager.Stub {
     public WifiService(Context context) {
         mContext = context;
 
-        mInterfaceName =  SystemProperties.get("wifi.interface", "wlan0");
+        mInterfaceName = SystemProperties.get("wifi.interface", "wlan0");
 
         mWifiStateMachine = new WifiStateMachine(mContext, mInterfaceName);
         mWifiStateMachine.enableRssiPolling(true);
@@ -319,11 +319,11 @@ public final class WifiService extends IWifiManager.Stub {
     private WifiController mWifiController;
 
     /**
-     * Check if Wi-Fi needs to be enabled and start
-     * if needed
-     *
-     * This function is used only at boot time
-     */
+* Check if Wi-Fi needs to be enabled and start
+* if needed
+*
+* This function is used only at boot time
+*/
     public void checkAndStartWifi() {
         /* Check if wi-fi needs to be enabled */
         boolean wifiEnabled = mSettingsStore.isWifiToggleEnabled();
@@ -332,7 +332,7 @@ public final class WifiService extends IWifiManager.Stub {
 
         // If we are already disabled (could be due to airplane mode), avoid changing persist
         // state here
-        if (wifiEnabled) setWifiEnabledInternal(mContext.getBasePackageName(), wifiEnabled);
+        if (wifiEnabled) setWifiEnabled(mContext.getBasePackageName(), wifiEnabled);
 
         mWifiWatchdogStateMachine = WifiWatchdogStateMachine.
                makeWifiWatchdogStateMachine(mContext);
@@ -340,9 +340,9 @@ public final class WifiService extends IWifiManager.Stub {
     }
 
     /**
-     * see {@link android.net.wifi.WifiManager#pingSupplicant()}
-     * @return {@code true} if the operation succeeds, {@code false} otherwise
-     */
+* see {@link android.net.wifi.WifiManager#pingSupplicant()}
+* @return {@code true} if the operation succeeds, {@code false} otherwise
+*/
     public boolean pingSupplicant() {
         enforceAccessPermission();
         if (mWifiStateMachineChannel != null) {
@@ -354,10 +354,10 @@ public final class WifiService extends IWifiManager.Stub {
     }
 
     /**
-     * see {@link android.net.wifi.WifiManager#startScan()}
-     *
-     * <p>If workSource is null, all blame is given to the calling uid.
-     */
+* see {@link android.net.wifi.WifiManager#startScan()}
+*
+* <p>If workSource is null, all blame is given to the calling uid.
+*/
     public void startScan(WorkSource workSource) {
         enforceChangePermission();
         if (workSource != null) {
@@ -407,8 +407,8 @@ public final class WifiService extends IWifiManager.Stub {
     }
 
     /**
-     * see {@link android.net.wifi.WifiManager#requestBatchedScan()}
-     */
+* see {@link android.net.wifi.WifiManager#requestBatchedScan()}
+*/
     public boolean requestBatchedScan(BatchedScanSettings requested, IBinder binder,
             WorkSource workSource) {
         enforceChangePermission();
@@ -584,13 +584,16 @@ public final class WifiService extends IWifiManager.Stub {
     }
 
     /**
-     * @hide
-     */
-    public synchronized boolean setWifiEnabledInternal(String callingPackage, boolean enable) {
+* see {@link android.net.wifi.WifiManager#setWifiEnabled(boolean)}
+* @param enable {@code true} to enable, {@code false} to disable.
+* @return {@code true} if the enable/disable operation was
+* started or is already in the queue.
+*/
+    public synchronized boolean setWifiEnabled(String callingPackage, boolean enable) {
         enforceChangePermission();
 
         int uid = Binder.getCallingUid();
-        if (callingPackage != null && mAppOps.noteOp(AppOpsManager.OP_WIFI_CHANGE, uid, callingPackage)
+        if (mAppOps.noteOp(AppOpsManager.OP_WIFI_CHANGE, uid, callingPackage)
                 != AppOpsManager.MODE_ALLOWED) {
             return false;
         }
@@ -602,9 +605,9 @@ public final class WifiService extends IWifiManager.Stub {
         }
 
         /*
-        * Caller might not have WRITE_SECURE_SETTINGS,
-        * only CHANGE_WIFI_STATE is enforced
-        */
+* Caller might not have WRITE_SECURE_SETTINGS,
+* only CHANGE_WIFI_STATE is enforced
+*/
 
         long ident = Binder.clearCallingIdentity();
         try {
@@ -621,34 +624,24 @@ public final class WifiService extends IWifiManager.Stub {
     }
 
     /**
-     * see {@link android.net.wifi.WifiManager#setWifiEnabled(boolean)}
-     * @param enable {@code true} to enable, {@code false} to disable.
-     * @return {@code true} if the enable/disable operation was
-     *         started or is already in the queue.
-     */
-    public boolean setWifiEnabled(boolean enable) {
-        return setWifiEnabledInternal(null, enable);
-    }
-
-    /**
-     * see {@link WifiManager#getWifiState()}
-     * @return One of {@link WifiManager#WIFI_STATE_DISABLED},
-     *         {@link WifiManager#WIFI_STATE_DISABLING},
-     *         {@link WifiManager#WIFI_STATE_ENABLED},
-     *         {@link WifiManager#WIFI_STATE_ENABLING},
-     *         {@link WifiManager#WIFI_STATE_UNKNOWN}
-     */
+* see {@link WifiManager#getWifiState()}
+* @return One of {@link WifiManager#WIFI_STATE_DISABLED},
+* {@link WifiManager#WIFI_STATE_DISABLING},
+* {@link WifiManager#WIFI_STATE_ENABLED},
+* {@link WifiManager#WIFI_STATE_ENABLING},
+* {@link WifiManager#WIFI_STATE_UNKNOWN}
+*/
     public int getWifiEnabledState() {
         enforceAccessPermission();
         return mWifiStateMachine.syncGetWifiState();
     }
 
     /**
-     * see {@link android.net.wifi.WifiManager#setWifiApEnabled(WifiConfiguration, boolean)}
-     * @param wifiConfig SSID, security and channel details as
-     *        part of WifiConfiguration
-     * @param enabled true to enable and false to disable
-     */
+* see {@link android.net.wifi.WifiManager#setWifiApEnabled(WifiConfiguration, boolean)}
+* @param wifiConfig SSID, security and channel details as
+* part of WifiConfiguration
+* @param enabled true to enable and false to disable
+*/
     public void setWifiApEnabled(WifiConfiguration wifiConfig, boolean enabled) {
         enforceChangePermission();
         // null wifiConfig is a meaningful input for CMD_SET_AP
@@ -660,31 +653,31 @@ public final class WifiService extends IWifiManager.Stub {
     }
 
     /**
-     * see {@link WifiManager#getWifiApState()}
-     * @return One of {@link WifiManager#WIFI_AP_STATE_DISABLED},
-     *         {@link WifiManager#WIFI_AP_STATE_DISABLING},
-     *         {@link WifiManager#WIFI_AP_STATE_ENABLED},
-     *         {@link WifiManager#WIFI_AP_STATE_ENABLING},
-     *         {@link WifiManager#WIFI_AP_STATE_FAILED}
-     */
+* see {@link WifiManager#getWifiApState()}
+* @return One of {@link WifiManager#WIFI_AP_STATE_DISABLED},
+* {@link WifiManager#WIFI_AP_STATE_DISABLING},
+* {@link WifiManager#WIFI_AP_STATE_ENABLED},
+* {@link WifiManager#WIFI_AP_STATE_ENABLING},
+* {@link WifiManager#WIFI_AP_STATE_FAILED}
+*/
     public int getWifiApEnabledState() {
         enforceAccessPermission();
         return mWifiStateMachine.syncGetWifiApState();
     }
 
     /**
-     * see {@link WifiManager#getWifiApConfiguration()}
-     * @return soft access point configuration
-     */
+* see {@link WifiManager#getWifiApConfiguration()}
+* @return soft access point configuration
+*/
     public WifiConfiguration getWifiApConfiguration() {
         enforceAccessPermission();
         return mWifiStateMachine.syncGetWifiApConfiguration();
     }
 
     /**
-     * see {@link WifiManager#setWifiApConfiguration(WifiConfiguration)}
-     * @param wifiConfig WifiConfiguration details for soft access point
-     */
+* see {@link WifiManager#setWifiApConfiguration(WifiConfiguration)}
+* @param wifiConfig WifiConfiguration details for soft access point
+*/
     public void setWifiApConfiguration(WifiConfiguration wifiConfig) {
         enforceChangePermission();
         if (wifiConfig == null)
@@ -697,43 +690,43 @@ public final class WifiService extends IWifiManager.Stub {
     }
 
     /**
-     * @param enable {@code true} to enable, {@code false} to disable.
-     * @return {@code true} if the enable/disable operation was
-     *         started or is already in the queue.
-     */
+* @param enable {@code true} to enable, {@code false} to disable.
+* @return {@code true} if the enable/disable operation was
+* started or is already in the queue.
+*/
     public boolean isScanAlwaysAvailable() {
         enforceAccessPermission();
         return mSettingsStore.isScanAlwaysAvailable();
     }
 
     /**
-     * see {@link android.net.wifi.WifiManager#disconnect()}
-     */
+* see {@link android.net.wifi.WifiManager#disconnect()}
+*/
     public void disconnect() {
         enforceChangePermission();
         mWifiStateMachine.disconnectCommand();
     }
 
     /**
-     * see {@link android.net.wifi.WifiManager#reconnect()}
-     */
+* see {@link android.net.wifi.WifiManager#reconnect()}
+*/
     public void reconnect() {
         enforceChangePermission();
         mWifiStateMachine.reconnectCommand();
     }
 
     /**
-     * see {@link android.net.wifi.WifiManager#reassociate()}
-     */
+* see {@link android.net.wifi.WifiManager#reassociate()}
+*/
     public void reassociate() {
         enforceChangePermission();
         mWifiStateMachine.reassociateCommand();
     }
 
     /**
-     * see {@link android.net.wifi.WifiManager#getConfiguredNetworks()}
-     * @return the list of configured networks
-     */
+* see {@link android.net.wifi.WifiManager#getConfiguredNetworks()}
+* @return the list of configured networks
+*/
     public List<WifiConfiguration> getConfiguredNetworks() {
         enforceAccessPermission();
         if (mWifiStateMachineChannel != null) {
@@ -745,10 +738,10 @@ public final class WifiService extends IWifiManager.Stub {
     }
 
     /**
-     * see {@link android.net.wifi.WifiManager#addOrUpdateNetwork(WifiConfiguration)}
-     * @return the supplicant-assigned identifier for the new or updated
-     * network if the operation succeeds, or {@code -1} if it fails
-     */
+* see {@link android.net.wifi.WifiManager#addOrUpdateNetwork(WifiConfiguration)}
+* @return the supplicant-assigned identifier for the new or updated
+* network if the operation succeeds, or {@code -1} if it fails
+*/
     public int addOrUpdateNetwork(WifiConfiguration config) {
         enforceChangePermission();
         if (config.proxySettings == ProxySettings.PAC) {
@@ -768,11 +761,11 @@ public final class WifiService extends IWifiManager.Stub {
     }
 
      /**
-     * See {@link android.net.wifi.WifiManager#removeNetwork(int)}
-     * @param netId the integer that identifies the network configuration
-     * to the supplicant
-     * @return {@code true} if the operation succeeded
-     */
+* See {@link android.net.wifi.WifiManager#removeNetwork(int)}
+* @param netId the integer that identifies the network configuration
+* to the supplicant
+* @return {@code true} if the operation succeeded
+*/
     public boolean removeNetwork(int netId) {
         enforceChangePermission();
         if (mWifiStateMachineChannel != null) {
@@ -784,12 +777,12 @@ public final class WifiService extends IWifiManager.Stub {
     }
 
     /**
-     * See {@link android.net.wifi.WifiManager#enableNetwork(int, boolean)}
-     * @param netId the integer that identifies the network configuration
-     * to the supplicant
-     * @param disableOthers if true, disable all other networks.
-     * @return {@code true} if the operation succeeded
-     */
+* See {@link android.net.wifi.WifiManager#enableNetwork(int, boolean)}
+* @param netId the integer that identifies the network configuration
+* to the supplicant
+* @param disableOthers if true, disable all other networks.
+* @return {@code true} if the operation succeeded
+*/
     public boolean enableNetwork(int netId, boolean disableOthers) {
         enforceChangePermission();
         if (mWifiStateMachineChannel != null) {
@@ -802,11 +795,11 @@ public final class WifiService extends IWifiManager.Stub {
     }
 
     /**
-     * See {@link android.net.wifi.WifiManager#disableNetwork(int)}
-     * @param netId the integer that identifies the network configuration
-     * to the supplicant
-     * @return {@code true} if the operation succeeded
-     */
+* See {@link android.net.wifi.WifiManager#disableNetwork(int)}
+* @param netId the integer that identifies the network configuration
+* to the supplicant
+* @return {@code true} if the operation succeeded
+*/
     public boolean disableNetwork(int netId) {
         enforceChangePermission();
         if (mWifiStateMachineChannel != null) {
@@ -818,23 +811,23 @@ public final class WifiService extends IWifiManager.Stub {
     }
 
     /**
-     * See {@link android.net.wifi.WifiManager#getConnectionInfo()}
-     * @return the Wi-Fi information, contained in {@link WifiInfo}.
-     */
+* See {@link android.net.wifi.WifiManager#getConnectionInfo()}
+* @return the Wi-Fi information, contained in {@link WifiInfo}.
+*/
     public WifiInfo getConnectionInfo() {
         enforceAccessPermission();
         /*
-         * Make sure we have the latest information, by sending
-         * a status request to the supplicant.
-         */
+* Make sure we have the latest information, by sending
+* a status request to the supplicant.
+*/
         return mWifiStateMachine.syncRequestConnectionInfo();
     }
 
     /**
-     * Return the results of the most recent access point scan, in the form of
-     * a list of {@link ScanResult} objects.
-     * @return the list of results
-     */
+* Return the results of the most recent access point scan, in the form of
+* a list of {@link ScanResult} objects.
+* @return the list of results
+*/
     public List<ScanResult> getScanResults(String callingPackage) {
         enforceAccessPermission();
         int userId = UserHandle.getCallingUserId();
@@ -857,11 +850,11 @@ public final class WifiService extends IWifiManager.Stub {
     }
 
     /**
-     * Tell the supplicant to persist the current list of configured networks.
-     * @return {@code true} if the operation succeeded
-     *
-     * TODO: deprecate this
-     */
+* Tell the supplicant to persist the current list of configured networks.
+* @return {@code true} if the operation succeeded
+*
+* TODO: deprecate this
+*/
     public boolean saveConfiguration() {
         boolean result = true;
         enforceChangePermission();
@@ -874,14 +867,14 @@ public final class WifiService extends IWifiManager.Stub {
     }
 
     /**
-     * Set the country code
-     * @param countryCode ISO 3166 country code.
-     * @param persist {@code true} if the setting should be remembered.
-     *
-     * The persist behavior exists so that wifi can fall back to the last
-     * persisted country code on a restart, when the locale information is
-     * not available from telephony.
-     */
+* Set the country code
+* @param countryCode ISO 3166 country code.
+* @param persist {@code true} if the setting should be remembered.
+*
+* The persist behavior exists so that wifi can fall back to the last
+* persisted country code on a restart, when the locale information is
+* not available from telephony.
+*/
     public void setCountryCode(String countryCode, boolean persist) {
         Slog.i(TAG, "WifiService trying to set country code to " + countryCode +
                 " with persist set to " + persist);
@@ -895,8 +888,8 @@ public final class WifiService extends IWifiManager.Stub {
     }
 
     /**
-     * Get the operational country code
-     */
+* Get the operational country code
+*/
     public String getCountryCode() {
         enforceAccessPermission();
         return mWifiStateMachine.getCountryCode();
@@ -904,14 +897,14 @@ public final class WifiService extends IWifiManager.Stub {
 
 
     /**
-     * Set the operational frequency band
-     * @param band One of
-     *     {@link WifiManager#WIFI_FREQUENCY_BAND_AUTO},
-     *     {@link WifiManager#WIFI_FREQUENCY_BAND_5GHZ},
-     *     {@link WifiManager#WIFI_FREQUENCY_BAND_2GHZ},
-     * @param persist {@code true} if the setting should be remembered.
-     *
-     */
+* Set the operational frequency band
+* @param band One of
+* {@link WifiManager#WIFI_FREQUENCY_BAND_AUTO},
+* {@link WifiManager#WIFI_FREQUENCY_BAND_5GHZ},
+* {@link WifiManager#WIFI_FREQUENCY_BAND_2GHZ},
+* @param persist {@code true} if the setting should be remembered.
+*
+*/
     public void setFrequencyBand(int band, boolean persist) {
         enforceChangePermission();
         if (!isDualBandSupported()) return;
@@ -927,8 +920,8 @@ public final class WifiService extends IWifiManager.Stub {
 
 
     /**
-     * Get the operational frequency band
-     */
+* Get the operational frequency band
+*/
     public int getFrequencyBand() {
         enforceAccessPermission();
         return mWifiStateMachine.getFrequencyBand();
@@ -941,10 +934,10 @@ public final class WifiService extends IWifiManager.Stub {
     }
 
     /**
-     * Is Ad-Hoc (IBSS) mode supported by the driver?
-     * Will only return correct results when we have reached WIFI_STATE_ENABLED
-     * @return {@code true} if IBSS mode is supported, {@code false} if not
-     */
+* Is Ad-Hoc (IBSS) mode supported by the driver?
+* Will only return correct results when we have reached WIFI_STATE_ENABLED
+* @return {@code true} if IBSS mode is supported, {@code false} if not
+*/
     public boolean isIbssSupported() {
         enforceAccessPermission();
         if (mWifiStateMachineChannel != null) {
@@ -966,11 +959,11 @@ public final class WifiService extends IWifiManager.Stub {
     }
 
     /**
-     * Return the DHCP-assigned addresses from the last successful DHCP request,
-     * if any.
-     * @return the DHCP information
-     * @deprecated
-     */
+* Return the DHCP-assigned addresses from the last successful DHCP request,
+* if any.
+* @return the DHCP information
+* @deprecated
+*/
     public DhcpInfo getDhcpInfo() {
         enforceAccessPermission();
         DhcpResults dhcpResults = mWifiStateMachine.syncGetDhcpResults();
@@ -1019,15 +1012,15 @@ public final class WifiService extends IWifiManager.Stub {
     }
 
     /**
-     * see {@link android.net.wifi.WifiManager#startWifi}
-     *
-     */
+* see {@link android.net.wifi.WifiManager#startWifi}
+*
+*/
     public void startWifi() {
         enforceConnectivityInternalPermission();
         /* TODO: may be add permissions for access only to connectivity service
-         * TODO: if a start issued, keep wifi alive until a stop issued irrespective
-         * of WifiLock & device idle status unless wifi enabled status is toggled
-         */
+* TODO: if a start issued, keep wifi alive until a stop issued irrespective
+* of WifiLock & device idle status unless wifi enabled status is toggled
+*/
 
         mWifiStateMachine.setDriverStart(true);
         mWifiStateMachine.reconnectCommand();
@@ -1039,22 +1032,22 @@ public final class WifiService extends IWifiManager.Stub {
     }
 
     /**
-     * see {@link android.net.wifi.WifiManager#stopWifi}
-     *
-     */
+* see {@link android.net.wifi.WifiManager#stopWifi}
+*
+*/
     public void stopWifi() {
         enforceConnectivityInternalPermission();
         /*
-         * TODO: if a stop is issued, wifi is brought up only by startWifi
-         * unless wifi enabled status is toggled
-         */
+* TODO: if a stop is issued, wifi is brought up only by startWifi
+* unless wifi enabled status is toggled
+*/
         mWifiStateMachine.setDriverStart(false);
     }
 
     /**
-     * see {@link android.net.wifi.WifiManager#addToBlacklist}
-     *
-     */
+* see {@link android.net.wifi.WifiManager#addToBlacklist}
+*
+*/
     public void addToBlacklist(String bssid) {
         enforceChangePermission();
 
@@ -1062,9 +1055,9 @@ public final class WifiService extends IWifiManager.Stub {
     }
 
     /**
-     * see {@link android.net.wifi.WifiManager#clearBlacklist}
-     *
-     */
+* see {@link android.net.wifi.WifiManager#clearBlacklist}
+*
+*/
     public void clearBlacklist() {
         enforceChangePermission();
 
@@ -1072,10 +1065,10 @@ public final class WifiService extends IWifiManager.Stub {
     }
 
     /**
-     * enable TDLS for the local NIC to remote NIC
-     * The APPs don't know the remote MAC address to identify NIC though,
-     * so we need to do additional work to find it from remote IP address
-     */
+* enable TDLS for the local NIC to remote NIC
+* The APPs don't know the remote MAC address to identify NIC though,
+* so we need to do additional work to find it from remote IP address
+*/
 
     class TdlsTaskParams {
         public String remoteIpAddress;
@@ -1158,9 +1151,9 @@ public final class WifiService extends IWifiManager.Stub {
     }
 
     /**
-     * Get a reference to handler. This is used by a client to establish
-     * an AsyncChannel communication with WifiService
-     */
+* Get a reference to handler. This is used by a client to establish
+* an AsyncChannel communication with WifiService
+*/
     public Messenger getWifiServiceMessenger() {
         enforceAccessPermission();
         enforceChangePermission();
@@ -1175,8 +1168,8 @@ public final class WifiService extends IWifiManager.Stub {
     }
 
     /**
-     * Get the IP and proxy configuration file
-     */
+* Get the IP and proxy configuration file
+*/
     public String getConfigFile() {
         enforceAccessPermission();
         return mWifiStateMachine.getConfigFile();
@@ -1207,8 +1200,8 @@ public final class WifiService extends IWifiManager.Stub {
     };
 
     /**
-     * Observes settings changes to scan always mode.
-     */
+* Observes settings changes to scan always mode.
+*/
     private void registerForScanModeChange() {
         ContentObserver contentObserver = new ContentObserver(null) {
             @Override
@@ -1258,9 +1251,9 @@ public final class WifiService extends IWifiManager.Stub {
         pw.println("Latest scan results:");
         List<ScanResult> scanResults = mWifiStateMachine.syncGetScanResultsList();
         if (scanResults != null && scanResults.size() != 0) {
-            pw.println("  BSSID              Frequency   RSSI  Flags             SSID");
+            pw.println(" BSSID Frequency RSSI Flags SSID");
             for (ScanResult r : scanResults) {
-                pw.printf("  %17s  %9d  %5d  %-16s  %s%n",
+                pw.printf(" %17s %9d %5d %-16s %s%n",
                                          r.BSSID,
                                          r.frequency,
                                          r.level,
@@ -1362,7 +1355,7 @@ public final class WifiService extends IWifiManager.Stub {
 
         private void dump(PrintWriter pw) {
             for (WifiLock l : mList) {
-                pw.print("    ");
+                pw.print(" ");
                 pw.println(l);
             }
         }

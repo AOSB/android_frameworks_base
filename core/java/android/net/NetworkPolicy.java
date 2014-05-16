@@ -167,8 +167,8 @@ public class NetworkPolicy implements Parcelable, Comparable<NetworkPolicy> {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(template, cycleDay, cycleLength, cycleTimezone, warningBytes, limitBytes,
-                lastWarningSnooze, lastLimitSnooze, metered, inferred);
+        return Objects.hashCode(template, cycleDay, cycleLength, cycleTimezone, warningBytes,
+                limitBytes, lastWarningSnooze, lastLimitSnooze, metered, inferred);
     }
 
     @Override

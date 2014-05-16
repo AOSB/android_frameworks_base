@@ -143,6 +143,9 @@ public class LocationManagerService extends ILocationManager.Stub {
     private LocationFudger mLocationFudger;
     private GeofenceManager mGeofenceManager;
     private String mGeoFencerPackageName;
+    private String mComboNlpPackageName;
+    private String mComboNlpReadyMarker;
+    private String mComboNlpScreenMarker;
     private GeoFencerBase mGeoFencer;
     private boolean mGeoFencerEnabled;
     private PackageManager mPackageManager;
@@ -434,7 +437,7 @@ public class LocationManagerService extends ILocationManager.Stub {
                 mContext,
                 mLocationHandler,
                 flpHardwareProvider.getLocationHardware(),
-                com.android.internal.R.bool.config_enableFusedLocationOverlay,
+                com.android.internal.R.bool.config_enableHwFlpOverlay,
                 com.android.internal.R.string.config_fusedLocationProviderPackageName,
                 com.android.internal.R.array.config_locationProviderPackageNames);
         if(fusedProxy == null) {
@@ -454,7 +457,7 @@ public class LocationManagerService extends ILocationManager.Stub {
         }
 
         mGeoFencerPackageName = resources.getString(
-                com.android.internal.R.string.config_geofenceProvider);
+                com.android.internal.R.string.config_geofenceServicesProvider);
         if (mGeoFencerPackageName != null &&
                 mPackageManager.resolveService(new Intent(mGeoFencerPackageName), 0) != null) {
             mGeoFencer = GeoFencerProxy.getGeoFencerProxy(mContext, mGeoFencerPackageName);
@@ -463,6 +466,14 @@ public class LocationManagerService extends ILocationManager.Stub {
             mGeoFencer = null;
             mGeoFencerEnabled = false;
         }
+
+        mComboNlpPackageName = resources.getString(
+                com.android.internal.R.string.config_comboNetworkLocationProvider);
+        if (mComboNlpPackageName != null) {
+            mComboNlpReadyMarker = mComboNlpPackageName + ".nlp:ready";
+            mComboNlpScreenMarker = mComboNlpPackageName + ".nlp:screen";
+        }
+
     }
 
     /**
@@ -637,8 +648,13 @@ public class LocationManagerService extends ILocationManager.Stub {
                             == AppOpsManager.MODE_ALLOWED;
                 }
             } else {
-                if (!allowMonitoring || mAppOps.checkOpNoThrow(op, mUid, mPackageName)
-                        != AppOpsManager.MODE_ALLOWED) {
+                int mode =  mAppOps.checkOpNoThrow(op, mUid, mPackageName);
+
+                if(allowMonitoring && mode == AppOpsManager.MODE_ASK) {
+                    return true;
+                }
+
+                if (!allowMonitoring || mode != AppOpsManager.MODE_ALLOWED) {
                     mAppOps.finishOp(op, mUid, mPackageName);
                     return false;
                 }
@@ -1040,7 +1056,8 @@ public class LocationManagerService extends ILocationManager.Stub {
     boolean checkLocationAccess(int uid, String packageName, int allowedResolutionLevel) {
         int op = resolutionLevelToOp(allowedResolutionLevel);
         if (op >= 0) {
-            if (mAppOps.checkOp(op, uid, packageName) != AppOpsManager.MODE_ALLOWED) {
+            int mode = mAppOps.checkOp(op, uid, packageName);
+            if (mode != AppOpsManager.MODE_ALLOWED && mode != AppOpsManager.MODE_ASK ) {
                 return false;
             }
         }
@@ -2127,24 +2144,40 @@ public class LocationManagerService extends ILocationManager.Stub {
 
     private Location screenLocationLocked(Location location, String provider) {
 
-        if (false == provider.equals(LocationManager.NETWORK_PROVIDER)) {
+        if (isMockProvider(LocationManager.NETWORK_PROVIDER)) {
+            return location;
+        }
+
+        LocationProviderProxy providerProxy =
+                (LocationProviderProxy)mProvidersByName.get(LocationManager.NETWORK_PROVIDER);
+        if (mComboNlpPackageName == null || providerProxy == null ||
+            false == provider.equals(LocationManager.NETWORK_PROVIDER)) {
+            return location;
+        }
+
+        String connectedNlpPackage = providerProxy.getConnectedPackageName();
+        if (connectedNlpPackage == null || !connectedNlpPackage.equals(mComboNlpPackageName)) {
             return location;
         }
 
         Bundle extras = location.getExtras();
+        boolean isBeingScreened = false;
         if (extras == null) {
             extras = new Bundle();
         }
 
-        if (!extras.containsKey("com.qualcomm.location.nlp:ready")) {
-            // see if com.qualcomm.location is a passive listener
+        if (!extras.containsKey(mComboNlpReadyMarker)) {
+            // see if Combo Nlp is a passive listener
             ArrayList<UpdateRecord> records =
                 mRecordsByProvider.get(LocationManager.PASSIVE_PROVIDER);
             if (records != null) {
                 for (UpdateRecord r : records) {
-                    if (r.mReceiver.mPackageName.equals("com.qualcomm.location")) {
-                        extras.putBoolean("com.qualcomm.location.nlp:screen", true);
-                        // send location to com.qualcomm.location for screening
+                    if (r.mReceiver.mPackageName.equals(mComboNlpPackageName)) {
+                        if (!isBeingScreened) {
+                            isBeingScreened = true;
+                            extras.putBoolean(mComboNlpScreenMarker, true);
+                        }
+                        // send location to Combo Nlp for screening
                         if (!r.mReceiver.callLocationChangedLocked(location)) {
                             Slog.w(TAG, "RemoteException calling onLocationChanged on "
                                    + r.mReceiver);
@@ -2153,9 +2186,11 @@ public class LocationManagerService extends ILocationManager.Stub {
                                 Log.d(TAG, "Sending location for screening");
                             }
                         }
-                        return null;
                     }
                 }
+            }
+            if (isBeingScreened) {
+                return null;
             }
             if (D) {
                 Log.d(TAG, "Not screening locations");
@@ -2165,7 +2200,7 @@ public class LocationManagerService extends ILocationManager.Stub {
                 Log.d(TAG, "This location is marked as ready for broadcast");
             }
             // clear the ready marker
-            extras.remove("com.qualcomm.location.nlp:ready");
+            extras.remove(mComboNlpReadyMarker);
         }
 
         return location;

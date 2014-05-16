@@ -40,10 +40,7 @@ public class LteTile extends QuickSettingsTile {
         mOnLongClick = new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.setClassName("com.android.phone", "com.android.phone.Settings");
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startSettingsActivity(intent);
+                startSettingsActivity(Settings.ACTION_DATA_ROAMING_SETTINGS);
                 return true;
             }
         };
@@ -77,6 +74,8 @@ public class LteTile extends QuickSettingsTile {
             case Phone.NT_MODE_LTE_CMDA_EVDO_GSM_WCDMA:
             case Phone.NT_MODE_LTE_ONLY:
             case Phone.NT_MODE_LTE_WCDMA:
+            case Phone.NT_MODE_TD_SCDMA_GSM_WCDMA_LTE:
+            case Phone.NT_MODE_TD_SCDMA_WCDMA_LTE:
                 mDrawable = R.drawable.ic_qs_lte_on;
                 mLabel = mContext.getString(R.string.quick_settings_lte);
                 break;
@@ -89,8 +88,8 @@ public class LteTile extends QuickSettingsTile {
 
     private void toggleLteState() {
         TelephonyManager tm = (TelephonyManager)
-                mContext.getSystemService(Context.TELEPHONY_SERVICE);
-        tm.toggleLTE();
+            mContext.getSystemService(Context.TELEPHONY_SERVICE);
+        tm.toggleLTE(true);
     }
 
     private static int getCurrentPreferredNetworkMode(Context context) {

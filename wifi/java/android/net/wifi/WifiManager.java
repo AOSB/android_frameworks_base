@@ -1055,7 +1055,7 @@ public class WifiManager {
             AppOpsManager.MODE_ALLOWED)
             return false;
         try {
-            return mService.setWifiEnabledInternal(mContext.getBasePackageName(), enabled);
+            return mService.setWifiEnabled(mContext.getBasePackageName(), enabled);
         } catch (RemoteException e) {
             return false;
         }

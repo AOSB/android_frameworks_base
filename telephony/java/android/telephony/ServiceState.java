@@ -539,7 +539,14 @@ public class ServiceState implements Parcelable {
                 rtString = "LTE";
                 break;
             case RIL_RADIO_TECHNOLOGY_HSPAP:
+<<<<<<< HEAD
                 rtString = "HSPAP";
+=======
+                rtString = "HSPA+";
+                break;
+            case RIL_RADIO_TECHNOLOGY_DCHSPAP:
+                rtString = "DC-HSPA+";
+>>>>>>> upstream/android-4.4
                 break;
             case RIL_RADIO_TECHNOLOGY_DCHSPAP:
                 rtString = "DCHSPAP";
@@ -823,6 +830,8 @@ public class ServiceState implements Parcelable {
             return TelephonyManager.NETWORK_TYPE_GSM;
         case ServiceState.RIL_RADIO_TECHNOLOGY_TD_SCDMA:
             return TelephonyManager.NETWORK_TYPE_TD_SCDMA;
+        case ServiceState.RIL_RADIO_TECHNOLOGY_DCHSPAP:
+            return TelephonyManager.NETWORK_TYPE_DCHSPAP;
         default:
             return TelephonyManager.NETWORK_TYPE_UNKNOWN;
         }

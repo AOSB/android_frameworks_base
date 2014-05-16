@@ -25,9 +25,13 @@ import android.app.ActivityManagerNative;
 import android.app.StatusBarManager;
 import android.app.admin.DevicePolicyManager;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.ContentObserver;
@@ -38,6 +42,8 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
+import android.os.Bundle;
+import android.os.UserHandle;
 import android.provider.Settings;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -77,7 +83,15 @@ public class NavigationBarView extends LinearLayout {
     // slippery nav bar when everything is disabled, e.g. during setup
     final static boolean SLIPPERY_WHEN_DISABLED = true;
 
+    final static String NAVBAR_EDIT_ACTION = "android.intent.action.NAVBAR_EDIT";
+
+    private boolean mInEditMode;
+    //private NavbarEditor mEditBar;
+    //private NavBarReceiver mNavBarReceiver;
     private LockPatternUtils mLockUtils;
+    private OnClickListener mRecentsClickListener;
+    private OnTouchListener mRecentsPreloadListener;
+    private OnTouchListener mHomeSearchActionListener;
 
     final Display mDisplay;
     View mCurrentView = null;
@@ -118,6 +132,9 @@ public class NavigationBarView extends LinearLayout {
     private DelegateViewHelper mDelegateHelper;
     private DeadZone mDeadZone;
     private final NavigationBarTransitions mBarTransitions;
+
+    private boolean mModLockDisabled = true;
+    private SettingsObserver mObserver;
 
     // workaround for LayoutTransitions leaving the nav buttons in a weird state (bug 5549288)
     final static boolean WORKAROUND_INVALID_LAYOUT = true;
@@ -264,7 +281,13 @@ public class NavigationBarView extends LinearLayout {
         mCameraDisabledByDpm = isCameraDisabledByDpm();
         watchForDevicePolicyChanges();
 
+        mNavBarReceiver = new NavBarReceiver();
+        mContext.registerReceiverAsUser(mNavBarReceiver, UserHandle.ALL,
+                new IntentFilter(NAVBAR_EDIT_ACTION), null, null);
+
         mLockUtils = new LockPatternUtils(context);
+
+        mObserver = new SettingsObserver(new Handler());
     }
 
     private void watchForDevicePolicyChanges() {
@@ -333,6 +356,25 @@ public class NavigationBarView extends LinearLayout {
         return mCurrentView.findViewWithTag(AwesomeConstant.ACTION_HOME.value());
     }
 
+    /*protected void updateButtonListeners() {
+        View recentView = findButton(NavbarEditor.NAVBAR_RECENT);
+        if (recentView != null) {
+            recentView.setOnClickListener(mRecentsClickListener);
+            recentView.setOnTouchListener(mRecentsPreloadListener);
+        }
+        View homeView = findButton(NavbarEditor.NAVBAR_HOME);
+        if (homeView != null) {
+            homeView.setOnTouchListener(mHomeSearchActionListener);
+        }
+    }
+
+    private void setButtonVisibility(NavbarEditor.ButtonInfo info, boolean visible) {
+        View findView = findButton(info);
+        if (findView != null) {
+            findView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        }
+    }*/
+
     // for when home is disabled, but search isn't
     public View getSearchLight() {
         return mCurrentView.findViewById(R.id.search_light);
@@ -349,8 +391,62 @@ public class NavigationBarView extends LinearLayout {
     }
 
     private void getIcons(Resources res) {
-        mRecentAltIcon = res.getDrawable(R.drawable.ic_sysbar_recent_clear);
-        mRecentAltLandIcon = res.getDrawable(R.drawable.ic_sysbar_recent_clear_land);
+        mBackIcon = res.getDrawable(R.drawable.ic_sysbar_back);
+        mBackLandIcon = res.getDrawable(R.drawable.ic_sysbar_back_land);
+        mBackAltIcon = res.getDrawable(R.drawable.ic_sysbar_back_ime);
+        mBackAltLandIcon = res.getDrawable(R.drawable.ic_sysbar_back_ime_land);
+        mRecentIcon = res.getDrawable(R.drawable.ic_sysbar_recent);
+        mRecentLandIcon = res.getDrawable(R.drawable.ic_sysbar_recent_land);
+    }
+
+    public void updateResources() {
+        getIcons(mContext.getResources());
+        for (int i = 0; i < mRotatedViews.length; i++) {
+            ViewGroup container = (ViewGroup) mRotatedViews[i];
+            if (container != null) {
+                updateKeyButtonViewResources(container);
+                updateLightsOutResources(container);
+            }
+        }
+    }
+
+    private void updateKeyButtonViewResources(ViewGroup container) {
+        ViewGroup midNavButtons = (ViewGroup) container.findViewById(R.id.mid_nav_buttons);
+        if (midNavButtons != null) {
+            final int nChildren = midNavButtons.getChildCount();
+            for (int i = 0; i < nChildren; i++) {
+                final View child = midNavButtons.getChildAt(i);
+                if (child instanceof KeyButtonView) {
+                    ((KeyButtonView) child).updateResources();
+                }
+            }
+        }
+        KeyButtonView kbv = (KeyButtonView) findViewById(R.id.one);
+        if (kbv != null) {
+            kbv.updateResources();
+        }
+        kbv = (KeyButtonView) findViewById(R.id.six);
+        if (kbv != null) {
+            kbv.updateResources();
+        }
+    }
+
+    private void updateLightsOutResources(ViewGroup container) {
+        ViewGroup lightsOut = (ViewGroup) container.findViewById(R.id.lights_out);
+        if (lightsOut != null) {
+            final int nChildren = lightsOut.getChildCount();
+            for (int i = 0; i < nChildren; i++) {
+                final View child = lightsOut.getChildAt(i);
+                if (child instanceof ImageView) {
+                    final ImageView iv = (ImageView) child;
+                    // clear out the existing drawable, this is required since the
+                    // ImageView keeps track of the resource ID and if it is the same
+                    // it will not update the drawable.
+                    iv.setImageDrawable(null);
+                    iv.setImageResource(R.drawable.ic_sysbar_lights_out_dot_large);
+                }
+            }
+        }
     }
 
     @Override
@@ -382,10 +478,17 @@ public class NavigationBarView extends LinearLayout {
 
         mNavigationIconHints = hints;
 
-        if (getBackButton() != null) {
-            ((ImageView) getBackButton()).setImageResource(backAlt
-                    ? R.drawable.ic_sysbar_back_ime
-                    : R.drawable.ic_sysbar_back);
+        ImageView backView = (ImageView) findButton(NavbarEditor.NAVBAR_BACK);
+        ImageView recentView = (ImageView) findButton(NavbarEditor.NAVBAR_RECENT);
+
+        if (backView != null) {
+            backView.setImageDrawable(backAlt
+                    ? (mVertical ? mBackAltLandIcon : mBackAltIcon)
+                    : (mVertical ? mBackLandIcon : mBackIcon));
+        }
+
+        if (recentView != null) {
+            recentView.setImageDrawable(mVertical ? mRecentLandIcon : mRecentIcon);
         }
 
         setDisabledFlags(mDisabledFlags, true);
@@ -554,21 +657,6 @@ public class NavigationBarView extends LinearLayout {
         setDisabledFlags(mDisabledFlags);
     }
 
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-
-        mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor(Settings.System.NAVIGATION_BAR_BUTTONS),
-                false, mSettingsObserver);
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-
-        mContext.getContentResolver().unregisterContentObserver(mSettingsObserver);
-    }
-
     private void readUserConfig() {
         mNavButtons.clear();
         String buttons = Settings.System.getString(getContext().getContentResolver(), Settings.System.NAVIGATION_BAR_BUTTONS);
@@ -714,6 +802,26 @@ public class NavigationBarView extends LinearLayout {
         invalidate();
     }
 
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+
+        final String keyguardPackage = mContext.getString(
+                com.android.internal.R.string.config_keyguardPackage);
+        final Bundle keyguard_metadata = NavigationBarView
+                .getApplicationMetadata(mContext, keyguardPackage);
+        if (null != keyguard_metadata &&
+                keyguard_metadata.getBoolean("com.cyanogenmod.keyguard", false)) {
+            mObserver.observe();
+        }
+    }
+
+    @Override
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mObserver.unobserve();
+    }
+
     private void watchForAccessibilityChanges() {
         final AccessibilityManager am =
                 (AccessibilityManager) mContext.getSystemService(Context.ACCESSIBILITY_SERVICE);
@@ -771,9 +879,17 @@ public class NavigationBarView extends LinearLayout {
     }
 
     public void reorient() {
-        final int rot = mDisplay.getRotation();
-        for (int i = 0; i < 4; i++) {
-            mRotatedViews[i].setVisibility(View.GONE);
+        int orientation = mContext.getResources().getConfiguration().orientation;
+        mRotatedViews[Configuration.ORIENTATION_PORTRAIT].setVisibility(View.GONE);
+        mRotatedViews[Configuration.ORIENTATION_LANDSCAPE].setVisibility(View.GONE);
+        mCurrentView = mRotatedViews[orientation];
+        mCurrentView.setVisibility(View.VISIBLE);
+        if (NavbarEditor.isDevicePhone(mContext)) {
+            int rotation = mDisplay.getRotation();
+            mVertical = rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270;
+            mDelegateHelper.setSwapXY(mVertical);
+        } else {
+            mVertical = getWidth() > 0 && getHeight() > getWidth();
         }
 
         mCurrentView = mRotatedViews[rot];
@@ -793,6 +909,10 @@ public class NavigationBarView extends LinearLayout {
 
         setNavigationIconHints(mNavigationIconHints, true);
     }
+
+    /*View findButton(NavbarEditor.ButtonInfo info) {
+        return mCurrentView.findViewWithTag(info);
+    }*/
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
@@ -995,4 +1115,50 @@ public class NavigationBarView extends LinearLayout {
         return tablet;
     }
 
+    private static Bundle getApplicationMetadata(Context context, String pkg) {
+        if (pkg != null) {
+            try {
+                ApplicationInfo ai = context.getPackageManager().
+                    getApplicationInfo(pkg, PackageManager.GET_META_DATA);
+                return ai.metaData;
+            } catch (NameNotFoundException e) {
+                return null;
+            }
+        }
+
+        return null;
+    }
+
+    private class SettingsObserver extends ContentObserver {
+        private boolean mObserving = false;
+
+        SettingsObserver(Handler handler) {
+            super(handler);
+        }
+
+        void observe() {
+            mObserving = true;
+            ContentResolver resolver = mContext.getContentResolver();
+            resolver.registerContentObserver(
+                Settings.System.getUriFor(Settings.System.LOCKSCREEN_MODLOCK_ENABLED),
+                false, this);
+
+            // intialize mModlockDisabled
+            onChange(false);
+        }
+
+        void unobserve() {
+            if (mObserving) {
+                mContext.getContentResolver().unregisterContentObserver(this);
+                mObserving = false;
+            }
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            mModLockDisabled = Settings.System.getInt(mContext.getContentResolver(),
+                    Settings.System.LOCKSCREEN_MODLOCK_ENABLED, 1) == 0;
+            setDisabledFlags(mDisabledFlags, true /* force */);
+        }
+    }
 }
