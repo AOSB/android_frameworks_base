@@ -227,8 +227,12 @@
     <style name="card.header_button_base">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+<<<<<<< HEAD
+        <item name="android:layout_alignParentRight">true</item>
+=======
         <item name="android:layout_alignParentEnd">true</item>
         <item name="android:paddingStart">@dimen/card_header_button_padding_start</item>
+>>>>>>> upstream/android-4.4
         <item name="android:focusable">false</item>
         <item name="android:focusableInTouchMode">false</item>
         <item name="android:clickable">true</item>

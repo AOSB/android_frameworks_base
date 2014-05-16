@@ -674,6 +674,8 @@ public class TelephonyManager {
     public static final int NETWORK_TYPE_EHRPD = 14;
     /** Current network is HSPA+ */
     public static final int NETWORK_TYPE_HSPAP = 15;
+    /** Current network is DC-HSPAP */
+    public static final int NETWORK_TYPE_DCHSPAP = 30;
     /** Current network is GSM {@hide} */
     public static final int NETWORK_TYPE_GSM = 16;
     /** Current network is TD_SCDMA {@hide} */
@@ -803,6 +805,7 @@ public class TelephonyManager {
             case NETWORK_TYPE_EVDO_B:
             case NETWORK_TYPE_EHRPD:
             case NETWORK_TYPE_HSPAP:
+            case NETWORK_TYPE_DCHSPAP:
             case NETWORK_TYPE_TD_SCDMA:
             case NETWORK_TYPE_DCHSPAP:
                 return NETWORK_CLASS_3_G;
@@ -858,6 +861,8 @@ public class TelephonyManager {
                 return "iDEN";
             case NETWORK_TYPE_HSPAP:
                 return "HSPA+";
+            case NETWORK_TYPE_DCHSPAP:
+                return "DCHSPAP";
             case NETWORK_TYPE_GSM:
                 return "GSM";
             case NETWORK_TYPE_TD_SCDMA:

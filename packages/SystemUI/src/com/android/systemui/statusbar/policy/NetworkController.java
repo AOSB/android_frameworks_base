@@ -772,8 +772,12 @@ public class NetworkController extends BroadcastReceiver implements DemoMode {
                     break;
                 case TelephonyManager.NETWORK_TYPE_DCHSPAP:
                     mDataIconList = TelephonyIcons.DATA_DC[mInetCondition];
+<<<<<<< HEAD
+                    mDataTypeIconId = R.drawable.stat_sys_data_connected_dc;
+=======
                     mDataTypeIconId = R.drawable.stat_sys_data_fully_connected_dc;
                     mQSDataTypeIconId = TelephonyIcons.QS_DATA_DC[mInetCondition];
+>>>>>>> upstream/android-4.4
                     mContentDescriptionDataType = mContext.getString(
                             R.string.accessibility_data_connection_DC);
                     break;
