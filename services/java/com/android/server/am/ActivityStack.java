@@ -72,10 +72,8 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.RemoteException;
 import android.os.SystemClock;
-import android.os.SystemProperties;
 import android.os.Trace;
 import android.os.UserHandle;
-import android.text.TextUtils;
 import android.provider.Settings;
 import android.util.EventLog;
 import android.util.Log;
@@ -84,7 +82,6 @@ import android.view.ContextThemeWrapper;
 import android.view.Display;
 import android.view.IWindowManager;
 import android.view.WindowManagerGlobal;
-import com.android.internal.app.ActivityTrigger;
 
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
@@ -262,16 +259,6 @@ final class ActivityStack {
     }
 
     final Handler mHandler;
-
-    static final ActivityTrigger mActivityTrigger;
-
-    static {
-        if (!TextUtils.isEmpty(SystemProperties.get("ro.vendor.extension_library"))) {
-            mActivityTrigger = new ActivityTrigger();
-        } else {
-            mActivityTrigger = null;
-        }
-    }
 
     final class ActivityStackHandler extends Handler {
 
@@ -1381,10 +1368,6 @@ final class ActivityStack {
 
         if (DEBUG_SWITCH) Slog.v(TAG, "Resuming " + next);
 
-        if (mActivityTrigger != null) {
-            mActivityTrigger.activityResumeTrigger(next.intent);
-        }
-
         // If we are currently pausing an activity, then don't do anything
         // until that is done.
         if (!mStackSupervisor.allPausedActivitiesComplete()) {
@@ -1822,9 +1805,6 @@ final class ActivityStack {
 
         r.putInHistory();
         r.frontOfTask = newTask;
-        if (mActivityTrigger != null) {
-            mActivityTrigger.activityStartTrigger(r.intent);
-        }
         if (!isHomeStack() || numActivities() > 0) {
             // We want to show the starting preview window if we are
             // switching to a new task, or the next activity's process is
