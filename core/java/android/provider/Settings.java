@@ -4294,6 +4294,11 @@ public final class Settings {
          */
         public static final String PERFORMANCE_PROFILE = "performance_profile";
 
+        /**
+	* App-based performance profile selection
+	* @hide
+	*/
+        public static final String APP_PERFORMANCE_PROFILES_ENABLED = "app_perf_profiles_enabled";
 
         /**
          * Whether to unlock the screen with the home key.  The value is boolean (1 or 0).
