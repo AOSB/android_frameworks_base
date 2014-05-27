@@ -3352,7 +3352,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             }
         }
         mStatusBarContainer.removeAllViews();
-        removeAllViews(mStatusBarWindow);
 
         // extract icons from the soon-to-be recreated viewgroup.
         int nIcons = mStatusIcons.getChildCount();
@@ -3398,17 +3397,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 	updateSettings();
 
         mRecreating = false;
-    }
-
-    private void removeAllViews(ViewGroup parent) {
-        int N = parent.getChildCount();
-        for (int i = 0; i < N; i++) {
-            View child = parent.getChildAt(i);
-            if (child instanceof ViewGroup) {
-                removeAllViews((ViewGroup) child);
-            }
-        }
-        parent.removeAllViews();
     }
 
     /**
