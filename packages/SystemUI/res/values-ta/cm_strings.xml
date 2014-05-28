@@ -16,5 +16,7 @@
      limitations under the License.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-  <string name="quick_settings_camera_label">Kamera</string>
+  <string name="quick_settings_profile_label">சுயவிவரம்</string>
+  <string name="quick_settings_network_adb_disabled_label">முடக்கப்பட்டது</string>
+  <string name="quick_settings_network_adb_enabled_label">இயக்கப்பட்டது</string>
 </resources>
