@@ -16,5 +16,6 @@
      limitations under the License.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-  <string name="keyguard_discharging">Заряд батареи: <xliff:g id="number">%d</xliff:g><xliff:g id="percent">%%</xliff:g></string>
+  <string name="pinpuk_attempts">\nமீதமுள்ள முயற்சிகள்:</string>
+  <string name="lockscreen_sim_error_message_short">செல்லுபடியாகாத அட்டை.</string>
 </resources>
