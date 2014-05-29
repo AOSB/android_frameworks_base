@@ -207,6 +207,7 @@ public class RecentsActivity extends Activity {
             Log.e("RecentUI", "Error get Navbar status");
 	}
 	if (hasNavBar && orientation == 1) {
+/**
         LinearLayout testbottom = (LinearLayout)findViewById(R.id.recents_bottom);
 	com.android.systemui.recent.RecentsPanelView.LayoutParams testparam = (com.android.systemui.recent.RecentsPanelView.LayoutParams) testbottom.getLayoutParams();
 	int navheightdp = Settings.System.getInt(getContentResolver(), Settings.System.NAVIGATION_BAR_HEIGHT, 48);
@@ -214,6 +215,7 @@ public class RecentsActivity extends Activity {
         int navheightpx = (int) (navheightdp * (metrics.densityDpi / 160f));
 	testparam.bottomMargin=navheightpx;
 	testbottom.setLayoutParams(testparam);
+*/
 	}
 	mRecentsPanel = (RecentsPanelView) findViewById(R.id.recents_root);
         mRecentsPanel.setOnTouchListener(new TouchOutsideListener(mRecentsPanel));
