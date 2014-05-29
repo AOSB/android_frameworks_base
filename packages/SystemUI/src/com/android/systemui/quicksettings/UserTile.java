@@ -114,15 +114,18 @@ public class UserTile extends QuickSettingsTile {
         queryForUserInformation();
     }
 
-    @Override
-    void updateQuickSettings() {
+    void updateQuickSettings(Drawable userAvatar) {
         ImageView iv = (ImageView) mTile.findViewById(R.id.user_imageview);
         TextView tv = (TextView) mTile.findViewById(R.id.user_textview);
         if (tv != null) {
-            tv.setText(mLabel);
+            if(mLabel != null){
+                tv.setText(mLabel);
+            }
             tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTileTextSize);
         }
-        iv.setImageDrawable(userAvatar);
+        if(iv != null){
+            iv.setImageDrawable(userAvatar);
+        }
     }
 
     private void queryForUserInformation() {
@@ -226,7 +229,7 @@ public class UserTile extends QuickSettingsTile {
     void setUserTileInfo(String name, Drawable avatar) {
         mLabel = name;
         userAvatar = avatar;
-        updateQuickSettings();
+        updateQuickSettings(userAvatar);
     }
 
     void reloadUserInfo() {
