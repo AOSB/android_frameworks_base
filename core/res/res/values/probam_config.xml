@@ -20,5 +20,14 @@
 <!-- These resources are around just to allow their values to be customized
      for different hardware and product builds.  Do not translate. -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-
+    <!-- SmoothProgressBar -->
+    <color name="spb_default_color">#33b5e5</color>
+    <dimen name="spb_default_stroke_separator_length">4dp</dimen>
+    <dimen name="spb_default_stroke_width">4dp</dimen>
+    <integer name="spb_default_sections_count">4</integer>
+    <integer name="spb_default_interpolator">0</integer>
+    <item name="spb_default_speed" format="float" type="string">1.0</item>
+    <bool name="spb_default_reversed">false</bool>
+    <bool name="spb_default_mirror_mode">false</bool>
+    <bool name="spb_default_progressiveStart_activated">false</bool>
 </resources>

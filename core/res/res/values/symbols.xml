@@ -2098,4 +2098,9 @@
 
   <!-- Array of default activities with custom power management -->
   <java-symbol type="array" name="config_auto_perf_activities" />
+
+  <!-- SmoothProgressBar -->
+  <java-symbol type="bool" name="spb_default_reversed" />
+  <java-symbol type="bool" name="spb_default_mirror_mode" />
+  <java-symbol type="bool" name="spb_default_progressiveStart_activated" />
 </resources>
