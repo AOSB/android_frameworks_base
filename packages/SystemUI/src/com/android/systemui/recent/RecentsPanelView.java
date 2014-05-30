@@ -349,6 +349,8 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
         mRecentItemLayoutId = a.getResourceId(R.styleable.RecentsPanelView_recentItemLayout, 0);
         mRecentTasksLoader = RecentTasksLoader.getInstance(context);
         a.recycle();
+
+        mHighEndGfx = ActivityManager.isHighEndGfx();
     }
 
     public int numItemsInOneScreenful() {
@@ -630,7 +632,6 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
         }
 
         if (mRecentsScrim != null) {
-            mHighEndGfx = ActivityManager.isHighEndGfx();
             if (!mHighEndGfx) {
                 mRecentsScrim.setBackground(null);
             } else if (mRecentsScrim.getBackground() instanceof BitmapDrawable) {
