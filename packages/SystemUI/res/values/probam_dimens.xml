@@ -94,4 +94,7 @@
     <dimen name="recent_app_icon_size">48dp</dimen>
     <dimen name="recent_thumbnail_width">198dp</dimen>
     <dimen name="recent_thumbnail_height">140dp</dimen>
+
+    <!-- Constant for hidden ribbon drag handle -->
+    <dimen name="ribbon_drag_handle_height">25dp</dimen>
 </resources>
