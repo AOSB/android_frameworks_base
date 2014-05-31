@@ -559,8 +559,18 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
 
     public void updateValuesFromResources() {
         final Resources res = mContext.getResources();
-        mThumbnailWidth = Math.round(res.getDimension(R.dimen.status_bar_recents_thumbnail_width));
-        mFitThumbnailToXY = res.getBoolean(R.bool.config_recents_thumbnail_image_fits_to_xy);
+        boolean recent_style = Settings.System.getBoolean(mContext.getContentResolver(), Settings.System.CUSTOM_RECENT, false);
+
+        if(recent_style == false) {
+        	mFitThumbnailToXY = res.getBoolean(R.bool.config_recents_thumbnail_image_fits_to_xy_sense);
+        	mThumbnailWidth = Math.round(res.getDimension(R.dimen.status_bar_recents_thumbnail_width_sense));
+        }
+        else {
+		mThumbnailWidth = Math.round(res.getDimension(R.dimen.status_bar_recents_thumbnail_width));
+		mFitThumbnailToXY = res.getBoolean(R.bool.config_recents_thumbnail_image_fits_to_xy);
+        }
+        if (DEBUG) Log.d(TAG, "mFitThumbnailToXY: " + mFitThumbnailToXY);
+        if (DEBUG) Log.d(TAG, "mThumbnailWidth: " + mThumbnailWidth);
     }
 
     @Override
@@ -706,28 +716,36 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
                 int width = thumbnail.getWidth();
                 int height = thumbnail.getHeight();
 
-                Matrix matrix = new Matrix();
-                matrix.preScale(1, -1);
+		try {
 
-                Bitmap reflectionImage = Bitmap.createBitmap(thumbnail, 0, height * 2 / 3, width, height/3, matrix, false);
-                Bitmap bitmapWithReflection = Bitmap.createBitmap(width, (height + height/3), Config.ARGB_8888);
+		        Matrix matrix = new Matrix();
+		        matrix.preScale(1, -1);
 
-                Canvas canvas = new Canvas(bitmapWithReflection);
-                canvas.drawBitmap(thumbnail, 0, 0, null);
-                Paint defaultPaint = new Paint();
-                canvas.drawRect(0, height, width, height + reflectionGap, defaultPaint);
-                canvas.drawBitmap(reflectionImage, 0, height + reflectionGap, null);
+		        Bitmap reflectionImage = Bitmap.createBitmap(thumbnail, 0, height * 2 / 3, width, height/3, matrix, false);
+		        Bitmap bitmapWithReflection = Bitmap.createBitmap(width, (height + height/3), Config.ARGB_8888);
 
-                Paint paint = new Paint();
-                LinearGradient shader = new LinearGradient(0, thumbnail.getHeight(), 0,
-                    bitmapWithReflection.getHeight() + reflectionGap, 0x70ffffff, 0x00ffffff,
-                    TileMode.CLAMP);
-                paint.setShader(shader);
-                paint.setXfermode(new PorterDuffXfermode(Mode.DST_IN));
-                canvas.drawRect(0, height, width,
-                    bitmapWithReflection.getHeight() + reflectionGap, paint);
+			Canvas canvas = new Canvas(bitmapWithReflection);
+			canvas.drawBitmap(thumbnail, 0, 0, null);
+			Paint defaultPaint = new Paint();
+			canvas.drawRect(0, height, width, height + reflectionGap, defaultPaint);
+			canvas.drawBitmap(reflectionImage, 0, height + reflectionGap, null);
 
-                h.thumbnailViewImage.setImageBitmap(bitmapWithReflection);
+			Paint paint = new Paint();
+			LinearGradient shader = new LinearGradient(0, thumbnail.getHeight(), 0,
+				bitmapWithReflection.getHeight() + reflectionGap, 0x70ffffff, 0x00ffffff,
+				TileMode.CLAMP);
+			paint.setShader(shader);
+			paint.setXfermode(new PorterDuffXfermode(Mode.DST_IN));
+			canvas.drawRect(0, height, width,
+					bitmapWithReflection.getHeight() + reflectionGap, paint);
+
+			h.thumbnailViewImage.setImageBitmap(bitmapWithReflection);
+
+		} catch (OutOfMemoryError e) {
+			//e.printStackTrace();
+			Log.e(TAG, "Recents OutOfMemoryError", e);
+		}
+                
             }
             else {
                 h.thumbnailViewImage.setImageBitmap(thumbnail);
