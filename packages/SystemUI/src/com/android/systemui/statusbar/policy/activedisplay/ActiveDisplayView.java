@@ -93,7 +93,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ActiveDisplayView extends FrameLayout
-               implements ProximitySensorManager.ProximityListener, LightSensorManager.LightListener {
+               implements ProximitySensorManager.ProximityListener, LightSensorManager.LightListener, GyroscopeSensorManager.GyroscopeListener {
     private static final boolean DEBUG = false;
     private static final String TAG = "ActiveDisplayView";
 
@@ -131,12 +131,17 @@ public class ActiveDisplayView extends FrameLayout
     private final int POCKET_MODE_NOTIFICATIONS_ONLY = 1;
     private final int POCKET_MODE_ALWAYS = 2;
 
+    // gyroscope mode
+    private final int TABLE_MODE_OFF = 0;
+
     /** Screen turned off because of power button */
     private final int OFF_BECAUSE_OF_USER = 2;
     /** Screen turned off because of timeout */
     private final int OFF_BECAUSE_OF_TIMEOUT = 3;
     /** Screen turned off because of proximity sensor */
     private final int OFF_BECAUSE_OF_PROX_SENSOR = 4;
+    /** Screen turned off because of gyro sensor */
+    private final int OFF_BECAUSE_OF_GYRO_SENSOR = 5;
 
     // Targets
     private static final int UNLOCK_TARGET = 0;
@@ -189,10 +194,14 @@ public class ActiveDisplayView extends FrameLayout
     // sensor
     private ProximitySensorManager mProximitySensorManager;
     private LightSensorManager mLightSensorManager;
+    //
+    private GyroscopeSensorManager mGyroscopeSensorManager; //mSensorHandler
 
     private boolean mProximityIsFar = true;
+    private boolean mGyroscopeIsFar = true; 
     private boolean mIsInBrightLight = false;
     private boolean mWakedByPocketMode = false;
+    private boolean mWakedByTableMode = false;
     private boolean mIsScreenOff = false;
     private boolean mCallbacksRegistered = false;
     private long mPocketTime = 0;
@@ -214,7 +223,9 @@ public class ActiveDisplayView extends FrameLayout
     private boolean mBatteryLockscreen = false;
     private boolean mShowNotificationCount = false;
     private boolean mEnableDoubleTap = false;
+    private boolean mOnTable;
     private int mPocketMode = POCKET_MODE_OFF;
+    private int mTableMode = TABLE_MODE_OFF;
     private int mBrightnessMode = -1;
     private int mUserBrightnessLevel = -1;
     private int mMinimumBacklight;
@@ -266,11 +277,13 @@ public class ActiveDisplayView extends FrameLayout
             if (target == UNLOCK_TARGET) {
                 mIsUnlockByUser = true;
                 disableProximitySensor();
+                disableGyroscopeSensor();
                 unlockKeyguardActivity();
                 launchFakeActivityIntent();
             } else if (target == OPEN_APP_TARGET) {
                 mIsUnlockByUser = true;
                 disableProximitySensor();
+                disableGyroscopeSensor();
                 unlockKeyguardActivity();
                 launchNotificationPendingIntent();
             } else if (target == DISMISS_TARGET) {
@@ -395,6 +408,11 @@ public class ActiveDisplayView extends FrameLayout
             mPocketMode = Settings.System.getIntForUser(
                     resolver, Settings.System.ACTIVE_DISPLAY_POCKET_MODE, POCKET_MODE_OFF,
                     UserHandle.USER_CURRENT_OR_SELF);
+            mTableMode = 1;
+           //mTableMode = Settings.System.getIntForUser(
+           //         resolver, Settings.System.ACTIVE_DISPLAY_TABLE_MODE, TABLE_MODE_OFF,
+           //         UserHandle.USER_CURRENT_OR_SELF);
+
             mRedisplayTimeout = Settings.System.getLongForUser(
                     resolver, Settings.System.ACTIVE_DISPLAY_REDISPLAY, 0L,
                     UserHandle.USER_CURRENT_OR_SELF);
@@ -510,6 +528,8 @@ public class ActiveDisplayView extends FrameLayout
         mProximitySensorManager = new ProximitySensorManager(context, this);
         mLightSensorManager = new LightSensorManager(context, this);
 
+        mGyroscopeSensorManager = new GyroscopeSensorManager(context, this);
+
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         mMinimumBacklight = pm.getMinimumScreenBrightnessSetting();
         mMaximumBacklight = pm.getMaximumScreenBrightnessSetting();
@@ -536,6 +556,15 @@ public class ActiveDisplayView extends FrameLayout
         mBaseStatusBar = bar;
     }
 
+    /**
+    @Override
+    public void onScreenStateChaged(boolean screenOn) {
+        if(!screenOn) {            
+            dismissNotification();
+        }
+    }
+    */
+
     @Override
     public synchronized void onNear() {
         if (mProximityIsFar) {
@@ -547,6 +576,24 @@ public class ActiveDisplayView extends FrameLayout
             Log.i(TAG, "ActiveDisplay: sent to sleep by Pocketmode");
             turnScreenOffbySensor();
         }
+
+        /**
+        * check when table mode changed
+        * if screen off and the device not on a table (near)
+        * turn screen on then show notifications
+        */
+        mGyroscopeIsFar = true;
+        if (!isScreenOn() && !isOnTable() && mTableMode != TABLE_MODE_OFF && !isOnCall() && mActiveDisplayEnabled) {
+
+            if (mNotification == null) {
+                mNotification = getNextAvailableNotification();
+            }
+            if (mNotification != null) {
+                turnScreenOn();
+                showNotification(mNotification, true);
+            }
+        }
+
     }
 
     @Override
@@ -570,6 +617,18 @@ public class ActiveDisplayView extends FrameLayout
                     }
                 }
             }
+        }
+
+
+        /**
+        * check device on the table
+        * if screen on and the device on a table (far)
+        * turn screen off
+        */
+        if (!isScreenOn() && isOnTable() && mTableMode != TABLE_MODE_OFF && !isOnCall() && mActiveDisplayEnabled) {
+                mWakedByTableMode = false;
+                Log.i(TAG, "ActiveDisplay: sent to sleep by Table mode");
+                turnScreenOffbyGyroSensor();
         }
     }
 
@@ -998,11 +1057,16 @@ public class ActiveDisplayView extends FrameLayout
         if (!mWakedByPocketMode) {
             disableProximitySensor();
         }
+        if (!mWakedByTableMode) {
+            disableGyroscopeSensor();
+        }
         mIsScreenOff = false;
+        mOnTable = false;
     }
 
     private void onScreenTurnedOff() {
         enableProximitySensor();
+        enableGyroscopeSensor();
         mWakedByPocketMode = false;
         hideNotificationView();
         cancelTimeoutTimer();
@@ -1014,6 +1078,7 @@ public class ActiveDisplayView extends FrameLayout
     private void turnScreenOff() {
         mHandler.removeCallbacks(runWakeDevice);
         mWakedByPocketMode = false;
+        mWakedByTableMode = false;
         mIsScreenOff = true;
         try {
             mPM.goToSleep(SystemClock.uptimeMillis(), GO_TO_SLEEP_REASON_USER);
@@ -1027,6 +1092,7 @@ public class ActiveDisplayView extends FrameLayout
         }
         Log.i(TAG, "ActiveDisplay: Screen Timeout");
         mWakedByPocketMode = false;
+        mWakedByTableMode = false;
         try {
             mPM.goToSleep(SystemClock.uptimeMillis(), GO_TO_SLEEP_REASON_TIMEOUT);
         } catch (RemoteException e) {
@@ -1039,12 +1105,23 @@ public class ActiveDisplayView extends FrameLayout
         turnScreenOff();
     }
 
+    private void turnScreenOffbyGyroSensor() {
+        mIsTurnOffBySensor = true;
+        KeyguardTouchDelegate.getInstance(mContext).onScreenTurnedOff(OFF_BECAUSE_OF_GYRO_SENSOR);
+        turnScreenOff();
+    }
+
     private void turnScreenOnbySensor() {
         if (mTurnOffModeEnabled && mActiveDisplayEnabled) {
             mWakedByPocketMode = true;
         }
     }
 
+    /**
+    * TODO:
+    * now we should check if screen is turned off by gyro sensor
+    * then set the delay time for next check
+    */
     private void turnScreenOn() {
         if (mIsTurnOffBySensor) {
             mIsTurnOffBySensor = false;
@@ -1090,10 +1167,25 @@ public class ActiveDisplayView extends FrameLayout
         }
     }
 
+    private void enableGyroscopeSensor() {
+        if (mTableMode != TABLE_MODE_OFF && mPocketMode == POCKET_MODE_OFF && mActiveDisplayEnabled) {
+            Log.i(TAG, "ActiveDisplay: enable Gyroscope");
+            //mProximityIsFar = true;
+            mGyroscopeSensorManager.enable();
+        }
+    }
+
     private void disableProximitySensor() {
         if (mPocketMode != POCKET_MODE_OFF && mActiveDisplayEnabled) {
             Log.i(TAG, "ActiveDisplay: disable ProximitySensor");
             mProximitySensorManager.disable(true);
+        }
+    }
+
+    private void disableGyroscopeSensor() {
+        if (mTableMode != TABLE_MODE_OFF && mPocketMode == POCKET_MODE_OFF && mActiveDisplayEnabled) {
+            Log.i(TAG, "ActiveDisplay: disable Gyroscope");
+            mGyroscopeSensorManager.disable(true);
         }
     }
 
@@ -1676,8 +1768,11 @@ public class ActiveDisplayView extends FrameLayout
                 }
             } else if (action.equals(Intent.ACTION_SCREEN_OFF)) {
                 onScreenTurnedOff();
+                //onScreenStateChaged(false);
+                
             } else if (action.equals(Intent.ACTION_SCREEN_ON)) {
-                onScreenTurnedOn();
+                onScreenTurnedOn();               
+                //onScreenStateChaged(true);
             } else if (action.equals(Intent.ACTION_USER_PRESENT)) {
                 if (!isLockScreenDisabled()) {
                     cancelAllState();
@@ -1703,7 +1798,9 @@ public class ActiveDisplayView extends FrameLayout
         setUserActivity();
         restoreBrightness();
         disableProximitySensor();
+        disableGyroscopeSensor();
         mWakedByPocketMode = false;
+        mWakedByTableMode = false;
     }
 
     /**
@@ -1790,5 +1887,14 @@ public class ActiveDisplayView extends FrameLayout
         LockPatternUtils utils = new LockPatternUtils(mContext);
         utils.setCurrentUser(UserHandle.USER_OWNER);
         return utils.isLockScreenDisabled();
+    }
+
+    @Override
+    public void onTableModeChanged(boolean onTable) {
+        mOnTable = onTable;
+    }
+
+    public boolean isOnTable() {
+        return mOnTable;
     }
 }
