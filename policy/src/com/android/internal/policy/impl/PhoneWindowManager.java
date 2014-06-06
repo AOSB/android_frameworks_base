@@ -4189,6 +4189,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                                 WindowManager.LayoutParams attrs) {
         if (DEBUG_LAYOUT) Slog.i(TAG, "Win " + win + ": isVisibleOrBehindKeyguardLw="
                 + win.isVisibleOrBehindKeyguardLw());
+        final int flags = updateWindowManagerVisibilityFlagsForExpandedDesktop(attrs.flags);
         if (mTopFullscreenOpaqueWindowState == null
                 && win.isVisibleLw() && attrs.type == TYPE_INPUT_METHOD) {
             mForcingShowNavBar = true;
@@ -4196,7 +4197,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         }
         if (mTopFullscreenOpaqueWindowState == null &&
                 win.isVisibleOrBehindKeyguardLw() && !win.isGoneForLayoutLw()) {
-            if ((attrs.flags & FLAG_FORCE_NOT_FULLSCREEN) != 0) {
+            if ((flags & FLAG_FORCE_NOT_FULLSCREEN) != 0) {
                 if (attrs.type == TYPE_KEYGUARD) {
                     mForceStatusBarFromKeyguard = true;
                 } else {
@@ -4206,7 +4207,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             if (attrs.type == TYPE_KEYGUARD) {
                 mShowingLockscreen = true;
             }
-           boolean appWindow = attrs.type >= FIRST_APPLICATION_WINDOW
+            boolean appWindow = attrs.type >= FIRST_APPLICATION_WINDOW
                     && attrs.type <= LAST_APPLICATION_WINDOW;
             if (attrs.type == TYPE_DREAM) {
                 // If the lockscreen was showing when the dream started then wait
@@ -4217,6 +4218,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     appWindow = true;
                 }
             }
+
             final boolean showWhenLocked = (flags & FLAG_SHOW_WHEN_LOCKED) != 0;
             final boolean dismissKeyguard = (flags & FLAG_DISMISS_KEYGUARD) != 0;
             if (appWindow) {

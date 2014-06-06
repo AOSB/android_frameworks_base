@@ -873,7 +873,7 @@ final class DisplayPowerController {
                                 if (mPowerState.getElectronBeamLevel() == 1.0f) {
                                     mPowerState.dismissElectronBeam();
                                 } else if (mPowerState.prepareElectronBeam(
-                                        mElectronBeamFadesConfig() ?
+                                        mElectronBeamFadesConfig ?
                                                 ElectronBeam.MODE_FADE :
                                                         ElectronBeam.MODE_WARM_UP)) {
                                     mElectronBeamOnAnimator.start();
@@ -897,7 +897,7 @@ final class DisplayPowerController {
                     if (mPowerState.getElectronBeamLevel() == 0.0f) {
                         setScreenOn(false);
                     } else if (mPowerState.prepareElectronBeam(
-                            mElectronBeamFadesConfig() ?
+                            mElectronBeamFadesConfig ?
                                     ElectronBeam.MODE_FADE :
                                             (mElectronBeamMode == 4
                                             ? ElectronBeam.MODE_SCALE_DOWN
