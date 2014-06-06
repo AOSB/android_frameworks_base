@@ -3607,17 +3607,14 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             addNotificationViews(createNotificationViews(notifData.first, notifData.second));
         }
 
-        updateSettings();
         setAreThereNotifications();
 
         mStatusBarContainer.addView(mStatusBarWindow);
 
         updateExpandedViewPos(EXPANDED_LEAVE_ALONE);
-
-	updateSettings();
-
+	    updateSettings();
         checkNavBar();
-
+        checkBarModes();
         mRecreating = false;
     }
 
