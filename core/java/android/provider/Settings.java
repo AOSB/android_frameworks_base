@@ -3223,7 +3223,9 @@ public final class Settings {
 
         /**
          * Custom Recent Control
-         *
+         * 0 = Stock
+         * 1 = AOSB
+         * 2 = Slim
          * @hide
          */
         public static final String CUSTOM_RECENT = "custom_recent";

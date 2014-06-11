@@ -212,9 +212,10 @@ public abstract class BaseStatusBar extends SystemUI implements
 
     private boolean mDeviceProvisioned = false;
     private int mAutoCollapseBehaviour;
-
+    private int mCustomRecent;
     private int mExpandedDesktopStyle = 0;
-    private boolean mCustomRecent = false;
+
+    final int CUSTOM_RECENT_ID = 2; // ID for custom recent current is slim
 
     public Ticker getTicker() {
         return mTicker;
@@ -291,7 +292,10 @@ public abstract class BaseStatusBar extends SystemUI implements
             ContentResolver resolver = mContext.getContentResolver();
             mAutoCollapseBehaviour = Settings.System.getIntForUser(resolver,
                     Settings.System.STATUS_BAR_COLLAPSE_ON_DISMISS,
-                    Settings.System.STATUS_BAR_COLLAPSE_IF_NO_CLEARABLE, UserHandle.USER_CURRENT);
+                    Settings.System.STATUS_BAR_COLLAPSE_IF_NO_CLEARABLE, UserHandle.USER_CURRENT); 
+            mCustomRecent = Settings.System.getIntForUser(resolver,
+                    Settings.System.CUSTOM_RECENT, 0, UserHandle.USER_CURRENT); 
+
             mExpandedDesktopStyle = 0;
             if (Settings.System.getIntForUser(resolver,
                     Settings.System.EXPANDED_DESKTOP_STATE, 0, UserHandle.USER_CURRENT) != 0) {
@@ -366,10 +370,7 @@ public abstract class BaseStatusBar extends SystemUI implements
         mBarService = IStatusBarService.Stub.asInterface(
                 ServiceManager.getService(Context.STATUS_BAR_SERVICE));
 
-        mCustomRecent = Settings.System.getBoolean(
-                        mContext.getContentResolver(), Settings.System.CUSTOM_RECENT, false);
-
-        if(mCustomRecent){
+        if(mCustomRecent == CUSTOM_RECENT_ID){
             cRecents = new RecentController(mContext);
         }else{
             mRecents = getComponent(RecentsComponent.class);
@@ -847,9 +848,7 @@ public abstract class BaseStatusBar extends SystemUI implements
 
     protected void toggleRecentsActivity() {
         if (mRecents != null || cRecents != null) {
-        mCustomRecent = Settings.System.getBoolean(mContext.getContentResolver(), 
-                        Settings.System.CUSTOM_RECENT, false);
-        if(mCustomRecent)
+        if(mCustomRecent == CUSTOM_RECENT_ID)
             cRecents.toggleRecents(mDisplay, mLayoutDirection, getStatusBarView());
         else
             mRecents.toggleRecents(mDisplay, mLayoutDirection, getStatusBarView(),mExpandedDesktopStyle);
@@ -858,9 +857,7 @@ public abstract class BaseStatusBar extends SystemUI implements
 
     protected void preloadRecentTasksList() {
         if (mRecents != null || cRecents != null) {
-        mCustomRecent = Settings.System.getBoolean(mContext.getContentResolver(), 
-                        Settings.System.CUSTOM_RECENT, false);
-        if(mCustomRecent)
+        if(mCustomRecent == CUSTOM_RECENT_ID)
             cRecents.preloadRecentTasksList();
         else
             mRecents.preloadRecentTasksList();
@@ -869,9 +866,7 @@ public abstract class BaseStatusBar extends SystemUI implements
 
     protected void cancelPreloadingRecentTasksList() {
         if (mRecents != null || cRecents != null) {
-        mCustomRecent = Settings.System.getBoolean(mContext.getContentResolver(), 
-                        Settings.System.CUSTOM_RECENT, false);
-        if(mCustomRecent)
+        if(mCustomRecent == CUSTOM_RECENT_ID)
             cRecents.cancelPreloadingRecentTasksList();
         else
             mRecents.cancelPreloadingRecentTasksList();            
@@ -880,9 +875,7 @@ public abstract class BaseStatusBar extends SystemUI implements
 
     protected void closeRecents() {
         if (mRecents != null || cRecents != null) {
-        mCustomRecent = Settings.System.getBoolean(mContext.getContentResolver(), 
-                        Settings.System.CUSTOM_RECENT, false);
-        if(mCustomRecent)
+        if(mCustomRecent == CUSTOM_RECENT_ID)
             cRecents.closeRecents();
         else
             mRecents.closeRecents();    
@@ -890,9 +883,7 @@ public abstract class BaseStatusBar extends SystemUI implements
     }
 
     protected void rebuildRecentsScreen() {
-        mCustomRecent = Settings.System.getBoolean(mContext.getContentResolver(), 
-                        Settings.System.CUSTOM_RECENT, false);   
-        if (cRecents != null && mCustomRecent)   
+        if (cRecents != null && mCustomRecent == CUSTOM_RECENT_ID)   
                 cRecents.rebuildRecentsScreen();
     }
 

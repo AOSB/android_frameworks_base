@@ -42,11 +42,16 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.Paint;
 import android.graphics.Shader.TileMode;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.PorterDuff.Mode;
+import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Bitmap.Config;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -164,6 +169,7 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
         View thumbnailView;
         ImageView thumbnailViewImage;
         Drawable thumbnailViewDrawable;
+        Drawable thumbnailDrawable;
         ImageView iconView;
         TextView labelView;
         TextView descriptionView;
@@ -554,8 +560,16 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
 
     public void updateValuesFromResources() {
         final Resources res = mContext.getResources();
-        mThumbnailWidth = Math.round(res.getDimension(R.dimen.status_bar_recents_thumbnail_width));
-        mFitThumbnailToXY = res.getBoolean(R.bool.config_recents_thumbnail_image_fits_to_xy);
+        int CUSTOM_RECENT = Settings.System.getInt(mContext.getContentResolver(), Settings.System.CUSTOM_RECENT, 0);
+
+        if(CUSTOM_RECENT == 1) {
+         mFitThumbnailToXY = res.getBoolean(R.bool.config_recents_thumbnail_image_fits_to_xy_sense);
+         mThumbnailWidth = Math.round(res.getDimension(R.dimen.status_bar_recents_thumbnail_width_sense));
+        }
+        else {
+	mThumbnailWidth = Math.round(res.getDimension(R.dimen.status_bar_recents_thumbnail_width));
+	mFitThumbnailToXY = res.getBoolean(R.bool.config_recents_thumbnail_image_fits_to_xy);
+        }
     }
 
     @Override
@@ -689,11 +703,69 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
         }
     }
 
+    /**
+    * Convert drawable to bitmap.
+    *
+    * @param drawable Drawable object to be converted.
+    * @return converted bitmap.
+    */
+    private Bitmap drawableToBitmap(Drawable drawable) {
+
+            Bitmap thumbnail;
+
+            if(drawable instanceof BitmapDrawable) {
+                thumbnail = ((BitmapDrawable) drawable).getBitmap();
+            }else{
+                Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),drawable.getIntrinsicHeight(), Config.ARGB_8888);
+                Canvas canvas = new Canvas(bitmap); 
+                drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+                drawable.draw(canvas);
+                thumbnail = bitmap;
+            }            
+             
+            final int reflectionGap = 4;
+            int width = thumbnail.getWidth();
+            int height = thumbnail.getHeight();
+
+            Matrix matrix = new Matrix();
+            matrix.preScale(1, -1);
+
+            Bitmap reflectionImage = Bitmap.createBitmap(thumbnail, 0, height * 2 / 3, width, height/3, matrix, false);
+            Bitmap bitmapWithReflection = Bitmap.createBitmap(width, (height + height/3), Config.ARGB_8888);
+
+            Canvas canvas = new Canvas(bitmapWithReflection);
+            canvas.drawBitmap(thumbnail, 0, 0, null);
+            Paint defaultPaint = new Paint();
+            canvas.drawRect(0, height, width, height + reflectionGap, defaultPaint);
+            canvas.drawBitmap(reflectionImage, 0, height + reflectionGap, null);
+
+            Paint paint = new Paint();
+            LinearGradient shader = new LinearGradient(0, thumbnail.getHeight(), 0,
+                bitmapWithReflection.getHeight() + reflectionGap, 0x70ffffff, 0x00ffffff,
+                TileMode.CLAMP);
+            paint.setShader(shader);
+            paint.setXfermode(new PorterDuffXfermode(Mode.DST_IN));
+            canvas.drawRect(0, height, width,
+                bitmapWithReflection.getHeight() + reflectionGap, paint);
+
+            return bitmapWithReflection;
+    }
+
     private void updateThumbnail(ViewHolder h, Drawable thumbnail, boolean show, boolean anim) {
         if (thumbnail != null) {
             // Should remove the default image in the frame
             // that this now covers, to improve scrolling speed.
             // That can't be done until the anim is complete though.
+
+            int CUSTOM_RECENT = Settings.System.getInt(
+                        mContext.getContentResolver(), Settings.System.CUSTOM_RECENT, 0);
+
+            if(CUSTOM_RECENT == 1){
+                h.thumbnailDrawable = new BitmapDrawable(drawableToBitmap(thumbnail));
+                if (h.thumbnailDrawable != null)
+                    thumbnail = h.thumbnailDrawable; 
+            }
+
             h.thumbnailViewImage.setImageDrawable(thumbnail);
 
             // scale the image to fill the full width of the ImageView. do this only if
@@ -703,12 +775,21 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
                 h.thumbnailViewDrawable.getIntrinsicHeight() != thumbnail.getIntrinsicHeight()) {
                 if (mFitThumbnailToXY) {
                     h.thumbnailViewImage.setScaleType(ScaleType.FIT_XY);
+                    if(CUSTOM_RECENT == 1) {
+                        h.thumbnailViewImage.setRotationY(25.0f);
+                    }
                 } else {
+                    if(CUSTOM_RECENT == 1) {
+                        h.thumbnailViewImage.setScaleType(ScaleType.FIT_CENTER);
+                        h.thumbnailViewImage.setRotationY(25.0f);
+                    }
+                    else {
                     Matrix scaleMatrix = new Matrix();
                     float scale = mThumbnailWidth / (float) thumbnail.getIntrinsicWidth();
                     scaleMatrix.setScale(scale, scale);
                     h.thumbnailViewImage.setScaleType(ScaleType.MATRIX);
                     h.thumbnailViewImage.setImageMatrix(scaleMatrix);
+                    }
                 }
             }
             if (show && h.thumbnailView.getVisibility() != View.VISIBLE) {

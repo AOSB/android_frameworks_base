@@ -54,6 +54,7 @@ public class RecentsActivity extends Activity {
     private IntentFilter mIntentFilter;
     private boolean mShowing;
     private boolean mForeground;
+    final int CUSTOM_RECENT_ID = 2; // ID for custom recent current is slim
 
     private BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
         @Override
@@ -197,7 +198,14 @@ public class RecentsActivity extends Activity {
                 WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
                 WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        setContentView(R.layout.status_bar_recent_panel);
+
+        int CUSTOM_RECENT = Settings.System.getInt(getContentResolver(), Settings.System.CUSTOM_RECENT, 0);
+        if(CUSTOM_RECENT == 1){
+            setContentView(R.layout.status_bar_recent_panel_aosb);
+        }else{
+            setContentView(R.layout.status_bar_recent_panel);
+        }
+
 	// Check NavBar -- Set layout bottom
 	boolean hasNavBar = false;
 	int orientation = this.getResources().getConfiguration().orientation;

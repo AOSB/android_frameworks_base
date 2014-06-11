@@ -1233,16 +1233,18 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 
     private void prepareNavigationBarView() {
         mNavigationBarView.reorient();
-        final boolean mCustomRecent = Settings.System.getBoolean(mContext.getContentResolver(), 
-                        Settings.System.CUSTOM_RECENT, false);
+        final int mCustomRecent = Settings.System.getInt(
+                                  mContext.getContentResolver(), Settings.System.CUSTOM_RECENT, 0);
+         // ID for custom recent current is slim
+        final int CUSTOM_RECENT_ID = 2;
         if (mNavigationBarView.getRecentsButton() != null) {
             mNavigationBarView.getRecentsButton().setOnClickListener(mRecentsClickListener);
-            if(!mCustomRecent) mNavigationBarView.getRecentsButton().setOnTouchListener(mRecentsPreloadOnTouchListener);
+            if(mCustomRecent != CUSTOM_RECENT_ID) mNavigationBarView.getRecentsButton().setOnTouchListener(mRecentsPreloadOnTouchListener);
         }
         if (mNavigationBarView.getHomeButton() != null) {
             mNavigationBarView.getHomeButton().setOnTouchListener(mHomeSearchActionListener);
         }
-        if (mNavigationBarView.getSearchLight() != null || mCustomRecent) {
+        if (mNavigationBarView.getSearchLight() != null || mCustomRecent == CUSTOM_RECENT_ID) {
             mNavigationBarView.getSearchLight().setOnTouchListener(mHomeSearchActionListener);
         }
         updateSearchPanel();
@@ -3350,7 +3352,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             //OH NO!
         }
         mWantsNavigationBar = Settings.System.getBoolean(resolver, Settings.System.ENABLE_NAVIGATION_BAR, hasNav);
-        mEnableNavring = Settings.System.getBoolean(mContext.getContentResolver(),
+        mEnableNavring = Settings.System.getBoolean(resolver,
                 Settings.System.ENABLE_NAVRING, true);
     }
 
