@@ -60,4 +60,9 @@ interface INotificationManager
     // Active display
     StatusBarNotification[] getActiveNotificationsFromSystemListener(in INotificationListener token);
     void cancelNotificationFromSystemListener(in INotificationListener token, String pkg, String tag, int id);
+
+    void setPeekBlacklistStatus(String pkg, boolean status);
+    void setFloatingModeBlacklistStatus(String pkg, boolean status);
+    boolean isPackageAllowedForPeek(String pkg);
+    boolean isPackageAllowedForFloatingMode(String pkg);
 }
