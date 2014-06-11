@@ -407,6 +407,8 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.STATUS_BAR_BATTERY), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.ENABLE_ACTIVE_DISPLAY), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.STATUS_BAR_BATTERY_SHOW_PERCENT), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.STATUS_BAR_CLOCK), false, this);
@@ -426,13 +428,31 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         }
 
         @Override
-        public void onChange(boolean selfChange) {
-            updateCustomHeaderStatus();
-            updateSettings();
-            checkNavBar();
-            toggleNavigationBarOrNavRing(mWantsNavigationBar, mEnableNavring);
+        public void onChange(boolean selfChange, Uri uri) {
+            if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.ENABLE_ACTIVE_DISPLAY))) {
+                updateActiveDisplayViewState();
+            }else{
+                updateCustomHeaderStatus();
+                updateSettings();
+                checkNavBar();
+                toggleNavigationBarOrNavRing(mWantsNavigationBar, mEnableNavring);
+            }
         }
     }
+
+	private void updateActiveDisplayViewState() {
+	    final ContentResolver resolver = mContext.getContentResolver();
+
+	    boolean enabled = Settings.System.getInt(
+			    resolver, Settings.System.ENABLE_ACTIVE_DISPLAY, 0) == 1;
+
+	    if (enabled) {
+		    addActiveDisplayView();
+	    } else {
+		    removeActiveDisplayView();
+	    }
+	}
 
     // ensure quick settings is disabled until the current user makes it through the setup wizard
     private boolean mUserSetup = false;
@@ -691,7 +711,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         if (mRecreating) {
 	    removeSidebarView();
         } else {
-            addActiveDisplayView();
+            updateActiveDisplayViewState();
             /* ChaosLab: GestureAnywhere - BEGIN */
             addGestureAnywhereView();
             /* ChaosLab: GestureAnywhere - END */
@@ -3499,7 +3519,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 
         updateExpandedViewPos(EXPANDED_LEAVE_ALONE);
 
-	    updateSettings();
+	updateSettings();
 
         checkNavBar();
 

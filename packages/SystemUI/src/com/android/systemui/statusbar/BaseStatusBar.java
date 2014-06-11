@@ -1646,15 +1646,21 @@ public abstract class BaseStatusBar extends SystemUI implements
 
     protected void addActiveDisplayView() {
         if (mActiveDisplayView == null) {
-            mActiveDisplayView = (ActiveDisplayView) View.inflate(mContext, R.layout.active_display, null);
-            mActiveDisplayView.setBar(this);
+            Log.v(TAG, "Adding active display view");
+            mActiveDisplayView = (ActiveDisplayView)View.inflate(mContext, R.layout.active_display, null);
+            mActiveDisplayView.setStatusBar(this);
             mWindowManager.addView(mActiveDisplayView, getActiveDisplayViewLayoutParams());
+        } else {
+            Log.v(TAG, "Re-adding (no-op) active display view");
         }
     }
 
     protected void removeActiveDisplayView() {
-        if (mActiveDisplayView != null) {
+        if (mActiveDisplayView != null)
+        {
+            Log.v(TAG, "Removing active display view");
             mWindowManager.removeView(mActiveDisplayView);
+            mActiveDisplayView = null;
         }
     }
 
@@ -1662,21 +1668,22 @@ public abstract class BaseStatusBar extends SystemUI implements
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams(
                 LayoutParams.MATCH_PARENT,
                 LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.TYPE_NAVIGATION_BAR_PANEL,
+                WindowManager.LayoutParams.TYPE_BOOT_PROGRESS,
                 0
                 | WindowManager.LayoutParams.FLAG_FULLSCREEN
                 | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
-                | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
                 | WindowManager.LayoutParams.FLAG_TOUCHABLE_WHEN_WAKING
                 | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                 | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                 | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
-                | WindowManager.LayoutParams.FLAG_SPLIT_TOUCH,
+                | WindowManager.LayoutParams.FLAG_SPLIT_TOUCH
+                | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+                | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED,
                 PixelFormat.OPAQUE);
         if (ActivityManager.isHighEndGfx()) {
             lp.flags |= WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED;
         }
-        lp.gravity = Gravity.BOTTOM | Gravity.START;
+        lp.gravity = Gravity.TOP | Gravity.FILL_VERTICAL | Gravity.FILL_HORIZONTAL;
         lp.setTitle("ActiveDisplayView");
 
         return lp;

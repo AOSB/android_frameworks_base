@@ -2752,19 +2752,12 @@ public final class Settings {
         public static final String ACTIVE_DISPLAY_REDISPLAY = "active_display_redisplay";
 
         /**
-         * Brightness of the display when displaying the active display view
-         * @hide
-         */
-        public static final String ACTIVE_DISPLAY_BRIGHTNESS = "active_display_brightness";
-
-        /**
          * Display active display view when device comes out of the user's pocket, etc...
          * @hide
          */
         public static final String ACTIVE_DISPLAY_POCKET_MODE = "active_display_pocket_mode";
 
         /**
-         * Whether to include ongoing/non-clearable notifications
          * @hide
          */
         public static final String ACTIVE_DISPLAY_ALL_NOTIFICATIONS = "active_display_all_notifications";
@@ -2773,14 +2766,7 @@ public final class Settings {
          * Whether to hide low priority notifications like those from google now
          * @hide
          */
-        public static final String ACTIVE_DISPLAY_HIDE_LOW_PRIORITY_NOTIFICATIONS =
-                "active_display_hide_low_priority_notifications";
-
-        /**
-         * Whether to display AM/PM after time when in 12h format
-         * @hide
-         */
-        public static final String ACTIVE_DISPLAY_SHOW_AMPM = "active_display_show_ampm";
+        public static final String ACTIVE_DISPLAY_HIDE_LOW_PRIORITY_NOTIFICATIONS = "active_display_hide_low_priority_notifications";
 
         /**
          * Whether to display the date above the time
@@ -2833,11 +2819,16 @@ public final class Settings {
         public static final String ACTIVE_DISPLAY_PRIVACY_APPS = "active_display_privacy_apps";
 
         /**
-         * allow bypass active display when lockscreen isSecure
-         * and there is no notifications
+         * A list of packages to exclude from being message displayed in active display.
+         * This should be a string of packages separated by |
          * @hide
          */
-        public static final String ACTIVE_DISPLAY_BYPASS = "active_display_bypass";
+        public static final String ACTIVE_DISPLAY_PRIVACY_MODE = "active_display_privacy_mode";
+
+        /**
+         * @hide
+         */
+        public static final String ACTIVE_DISPLAY_HIDE_NON_CLEARABLE = "active_display_hide_non_clearable";
 
         /**
          * Whether to not showing active display when there is annoying notifications.
@@ -2850,6 +2841,11 @@ public final class Settings {
          * @hide
          */
         public static final String ACTIVE_DISPLAY_DOUBLE_TAP = "active_display_double_tap";
+
+        /**
+         * @hide
+         */
+        public static final String ACTIVE_DISPLAY_QUIET_HOURS = "active_display_quiet_hours";
 
         /**
          * Stores values for custom lockscreen targets
