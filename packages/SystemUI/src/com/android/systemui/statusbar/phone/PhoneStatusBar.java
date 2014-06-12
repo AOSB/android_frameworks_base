@@ -3569,6 +3569,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         if (uiThemeMode != mCurrUiThemeMode) {
             mCurrUiThemeMode = uiThemeMode;
             recreateStatusBar();
+            rebuildRecentsScreen();
         }
 
         // Update the QuickSettings container
