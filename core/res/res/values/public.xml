@@ -2093,4 +2093,6 @@
   <public type="bool" name="config_useFixedVolume" id="0x1110056" />
   <public type="array" name="networkAttributes" id="0x107000b" />
 
+  <public type="color" name="trds_background" id="0x0106001c" />
+  <public type="color" name="trds_text" id="0x0106001d" />
 </resources>
