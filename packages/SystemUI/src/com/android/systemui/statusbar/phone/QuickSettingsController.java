@@ -304,6 +304,8 @@ public class QuickSettingsController {
                 }
             } else if (tile.equals(TILE_QUICKRECORD)) {
                 qs = new QuickRecordTile(mContext, this);
+            } else if (tile.equals(TILE_ONTHEGO)) {
+                qs = new OnTheGoTile(mContext, this);
             } else if (tile.equals(TILE_BATTERYSAVER)) {
                 qs = new BatterySaverTile(mContext, this);
             }
