@@ -6984,6 +6984,7 @@ public final class Settings {
 
         /**
          * Protected Components
+         * @hide
          */
         public static final String PROTECTED_COMPONENTS = "protected_components";
 
