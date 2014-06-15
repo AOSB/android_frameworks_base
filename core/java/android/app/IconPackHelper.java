@@ -543,6 +543,7 @@ public class IconPackHelper {
             }
             // Finally draw the foreground if one was supplied
             if (iconUpon != null) {
+                iconUpon.setBounds(icon.getBounds());
                 iconUpon.draw(canvas);
             }
             icon.setBounds(oldBounds);
