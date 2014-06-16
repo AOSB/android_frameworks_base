@@ -18,6 +18,7 @@ package com.android.systemui.recent;
 
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.view.ViewGroup;
 import android.app.WallpaperManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -37,6 +38,7 @@ import android.widget.LinearLayout;
 
 import com.android.systemui.R;
 import com.android.systemui.statusbar.StatusBarPanel;
+import com.android.systemui.recent.model.*;
 
 import java.util.List;
 
@@ -51,6 +53,7 @@ public class RecentsActivity extends Activity {
     private static final String WAS_SHOWING = "was_showing";
 
     private RecentsPanelView mRecentsPanel;
+    private ViewGroup people;
     private IntentFilter mIntentFilter;
     private boolean mShowing;
     private boolean mForeground;
@@ -153,6 +156,7 @@ public class RecentsActivity extends Activity {
     @Override
     public void onBackPressed() {
         dismissAndGoBack();
+        dismissiOSView();
     }
 
     public void dismissAndGoHome() {
@@ -188,8 +192,17 @@ public class RecentsActivity extends Activity {
     public void dismissAndDoNothing() {
         if (mRecentsPanel != null) {
             mRecentsPanel.show(false);
+            dismissiOSView();
         }
         finish();
+    }
+
+    public void dismissiOSView() {
+        if(people != null && people.getChildCount() > 0){
+		people.removeAllViews();
+		people.setOnClickListener(null);
+	}
+        //finish();// Finish Current Activity
     }
 
     @Override
@@ -205,10 +218,29 @@ public class RecentsActivity extends Activity {
         }else{
             setContentView(R.layout.status_bar_recent_panel);
         }
+        
+	// 1 is for Potrait and 2 for Landscape.
+	int orientation = this.getResources().getConfiguration().orientation;
+
+    	if(orientation == 1){
+		int IOS_RECENT_TYPE = 2;
+		List<Person> mPeople;
+		if(IOS_RECENT_TYPE == 1){
+		    mPeople = People.PEOPLE_STARRED(this);
+		}else{
+		    mPeople = People.PEOPLE_LOGS(this);
+		}
+		people = (ViewGroup) findViewById(R.id.people);
+		for (int i = 0; i < mPeople.size(); i++) {
+		    Person person = mPeople.get(i);
+		    people.addView(People.inflatePersonView(this, people, person));
+		}
+	}else{
+		people = null;
+	}
 
 	// Check NavBar -- Set layout bottom
 	boolean hasNavBar = false;
-	int orientation = this.getResources().getConfiguration().orientation;
 	try {
 		hasNavBar = WindowManagerGlobal.getWindowManagerService().hasNavigationBar();
 	} catch (RemoteException e) {
@@ -256,6 +288,7 @@ public class RecentsActivity extends Activity {
     protected void onDestroy() {
         RecentTasksLoader.getInstance(this).setRecentsPanel(null, mRecentsPanel);
         unregisterReceiver(mIntentReceiver);
+        dismissiOSView();
         super.onDestroy();
     }
 
@@ -271,6 +304,7 @@ public class RecentsActivity extends Activity {
             if (mRecentsPanel != null) {
                 if (mRecentsPanel.isShowing()) {
                     dismissAndGoBack();
+                    dismissiOSView();
                 } else {
                     final RecentTasksLoader recentTasksLoader = RecentTasksLoader.getInstance(this);
                     boolean waitingForWindowAnimation = checkWaitingForAnimationParam &&

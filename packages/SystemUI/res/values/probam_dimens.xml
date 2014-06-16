@@ -110,4 +110,8 @@
     <!-- Hover dimens -->
     <dimen name="hover_height">64dp</dimen>
     <dimen name="hover_cling_width">-1px</dimen>
+
+    <!-- iOS Recents -->
+    <dimen name="person_bubble_width">162dp</dimen>
+    <dimen name="person_bubble_corner">8dp</dimen>
 </resources>

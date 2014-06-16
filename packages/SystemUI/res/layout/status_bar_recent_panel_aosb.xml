@@ -18,6 +18,7 @@
 */
 -->
 
+
 <com.android.systemui.recent.RecentsPanelView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:systemui="http://schemas.android.com/apk/res/com.android.systemui"
@@ -119,6 +120,36 @@
 	            android:layout_height="wrap_content"
 	            android:layout_marginTop="16dip"
 	            android:layout_gravity="top|center" />
+
+		<TextView
+		    android:id="@+id/people_title"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content" 
+		    android:layout_marginTop="16dip"
+		    android:textAppearance="?android:attr/textAppearanceSmall"
+		    android:gravity="left" 
+		    android:layout_above="@+id/people"
+		    android:text="@string/whos_going_out" 
+		    android:paddingLeft="4dp"
+		    android:textSize="16sp"/>
+
+		<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			xmlns:tools="http://schemas.android.com/tools"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_centerHorizontal="true"
+			android:layout_gravity="center_horizontal"
+			android:layout_marginTop="30dp"
+			>	
+			<LinearLayout
+				android:id="@+id/people"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_centerInParent="true"
+				android:orientation="horizontal">	
+			</LinearLayout>
+
+		</RelativeLayout>
 
 		<include layout="@layout/status_bar_recent_bottom_aosb"
 	            android:id="@+id/recents_bottom"

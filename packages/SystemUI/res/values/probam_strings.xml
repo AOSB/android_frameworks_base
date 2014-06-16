@@ -97,4 +97,7 @@ wn on the screen). [CHAR LIMIT=NONE] -->
     <!-- First time run hover -->
     <string name="hover_cling_text">Hover is now enabled.\n\nWhen a new notification arrives, an overlay will show allowing you to respond to it without leaving current app.</string>
     <string name="status_bar_floating_no_interface">App provides no interface</string>
+
+    <!-- iOS Recents -->
+    <string name="whos_going_out">Favorites</string>
 </resources>
