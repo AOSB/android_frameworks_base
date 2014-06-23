@@ -3231,6 +3231,15 @@ public final class Settings {
         public static final String CUSTOM_RECENT = "custom_recent";
 
         /**
+         * iOS8 Bubble Recentes 
+         * 0 = Disabled 
+         * 1 = Favourite contacts
+         * 2 = Recent call contacts
+         * @hide
+         */
+        public static final String BUBBLE_RECENT = "bubble_recent";
+
+        /**
          * Wether to allow full screen swipe detection on notification drawer
          * for swipe to switch or not
          * @hide
