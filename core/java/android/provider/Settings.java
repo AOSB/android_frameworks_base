@@ -3240,6 +3240,15 @@ public final class Settings {
         public static final String BUBBLE_RECENT = "bubble_recent";
 
         /**
+         * it require AOSB recent enabled
+         * HTC Reflection Effect or iOS flat
+         * 0 = Disabled (iOS flat) 
+         * 1 = HTC Reflection Effect
+         * @hide
+         */
+        public static final String HTC_RECENT_STYLE = "htc_recent_style";
+
+        /**
          * Wether to allow full screen swipe detection on notification drawer
          * for swipe to switch or not
          * @hide

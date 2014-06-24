@@ -106,7 +106,7 @@
             android:shadowDx="0"
             android:shadowDy="2"
             android:shadowRadius="5"
-            android:textAppearance="@style/RecentsAppsLabel"
+            android:textColor="@color/status_bar_recents_app_label_color"
             android:importantForAccessibility="no"
         />
         </LinearLayout>

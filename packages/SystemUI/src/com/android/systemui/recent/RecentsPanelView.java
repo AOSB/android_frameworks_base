@@ -708,12 +708,12 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
     }
 
     /**
+    * HTC with Reflection Effect
     * Convert drawable to bitmap.
-    *
     * @param drawable Drawable object to be converted.
     * @return converted bitmap.
     */
-    private Bitmap drawableToBitmap(Drawable drawable) {
+    private Bitmap HTC_STYLE(Drawable drawable) {
 
             Bitmap thumbnail;
 
@@ -764,8 +764,12 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
             int CUSTOM_RECENT = Settings.System.getInt(
                         mContext.getContentResolver(), Settings.System.CUSTOM_RECENT, 0);
 
-            if(CUSTOM_RECENT == 1){
-                h.thumbnailDrawable = new BitmapDrawable(drawableToBitmap(thumbnail));
+	    //HTC with Reflection Effect or iOS flat
+            int HTC_RECENT_STYLE = Settings.System.getInt(
+                        mContext.getContentResolver(), Settings.System.HTC_RECENT_STYLE, 0);
+
+            if(CUSTOM_RECENT == 1 && HTC_RECENT_STYLE == 1){
+                h.thumbnailDrawable = new BitmapDrawable(HTC_STYLE(thumbnail));
                 if (h.thumbnailDrawable != null)
                     thumbnail = h.thumbnailDrawable; 
             }
@@ -779,13 +783,13 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
                 h.thumbnailViewDrawable.getIntrinsicHeight() != thumbnail.getIntrinsicHeight()) {
                 if (mFitThumbnailToXY) {
                     h.thumbnailViewImage.setScaleType(ScaleType.FIT_XY);
-                    if(CUSTOM_RECENT == 1) {
+                    if(CUSTOM_RECENT == 1 && HTC_RECENT_STYLE == 1) {
                         h.thumbnailViewImage.setRotationY(25.0f);
                     }
                 } else {
                     if(CUSTOM_RECENT == 1) {
                         h.thumbnailViewImage.setScaleType(ScaleType.FIT_CENTER);
-                        h.thumbnailViewImage.setRotationY(25.0f);
+			if(HTC_RECENT_STYLE == 1) h.thumbnailViewImage.setRotationY(25.0f);
                     }
                     else {
                     Matrix scaleMatrix = new Matrix();
