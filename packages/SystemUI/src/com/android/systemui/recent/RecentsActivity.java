@@ -59,6 +59,7 @@ public class RecentsActivity extends Activity {
     private boolean mShowing;
     private boolean mForeground;
     final int CUSTOM_RECENT_ID = 2; // ID for custom recent current is slim
+    int IOS_RECENT_TYPE = 0;
 
     private BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
         @Override
@@ -213,18 +214,18 @@ public class RecentsActivity extends Activity {
                 WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
         int CUSTOM_RECENT = Settings.System.getInt(getContentResolver(), Settings.System.CUSTOM_RECENT, 0);
+	// 1 is for Potrait and 2 for Landscape.
+	int orientation = this.getResources().getConfiguration().orientation;
+
         if(CUSTOM_RECENT == 1){
             setContentView(R.layout.status_bar_recent_panel_aosb);
+            IOS_RECENT_TYPE = Settings.System.getInt(getContentResolver(), Settings.System.BUBBLE_RECENT, 0);
+            mBubbleRecents = findViewById(R.id.bubble_recent_contacts);
         }else{
             setContentView(R.layout.status_bar_recent_panel);
         }
-        
-	// 1 is for Potrait and 2 for Landscape.
-	int orientation = this.getResources().getConfiguration().orientation;
-	int IOS_RECENT_TYPE = Settings.System.getInt(getContentResolver(), Settings.System.BUBBLE_RECENT, 0);
-	mBubbleRecents = findViewById(R.id.bubble_recent_contacts);
 
-    	if(orientation == 1 && IOS_RECENT_TYPE != 0){
+    	if(orientation == 1 && IOS_RECENT_TYPE != 0 && CUSTOM_RECENT == 1){
 
 		List<Person> mPeople;
 		if(IOS_RECENT_TYPE == 1){
@@ -241,7 +242,7 @@ public class RecentsActivity extends Activity {
 		    people.addView(People.inflatePersonView(this, people, person));
 		}
 	}else{
-		if(orientation == 1) mBubbleRecents.setVisibility(View.GONE);
+		if(orientation == 1 && CUSTOM_RECENT == 1) mBubbleRecents.setVisibility(View.GONE);
 		people = null;
 	}
 
