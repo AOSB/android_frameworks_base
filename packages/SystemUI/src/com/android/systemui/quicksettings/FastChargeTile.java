@@ -2,18 +2,14 @@ package com.android.systemui.quicksettings;
 
 import android.content.Context;
 import android.os.SystemProperties;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-
 import com.android.systemui.R;
 import com.android.systemui.statusbar.phone.QuickSettingsController;
+import com.android.internal.util.cm.QSUtils;
 
 public class FastChargeTile extends FileObserverTile {
 	protected static String TAG = FastChargeTile.class.getSimpleName();
 	public static final String FFC_PATH = "/sys/kernel/fast_charge/force_fast_charge";
+	private boolean mNeedsWriteOverride = false;
 
 	public FastChargeTile(Context context, QuickSettingsController qsc) {
 		super(context, qsc);
@@ -41,15 +37,7 @@ public class FastChargeTile extends FileObserverTile {
 
 	protected void setEnabled(boolean enabled) {
 		if (mNeedsWriteOverride) {
-		    try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(new File(FFC_PATH)));
-			String output = "" + (enabled ? "1\n" : "0\n");
-			writer.write(output.toCharArray(), 0, output.toCharArray().length);
-			writer.close();
-		    } catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		    }
+		     QSUtils.setKernelFeatureEnabled(FFC_PATH, enabled);
 		} else {
 		    super.setEnabled(enabled);
 		}

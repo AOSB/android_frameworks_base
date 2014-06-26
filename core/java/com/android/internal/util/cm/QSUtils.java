@@ -15,6 +15,7 @@ import android.os.UserHandle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -103,7 +104,7 @@ public class QSUtils {
         public static void setKernelFeatureEnabled(String feature, boolean enabled) {
             try {
                 BufferedWriter writer = new BufferedWriter(new FileWriter(new File(feature)));
-                String output = "" + (enabled ? "1" : "0");
+                String output = "" + (enabled ? "1\n" : "0\n");
                 writer.write(output.toCharArray(), 0, output.toCharArray().length);
                 writer.close();
             } catch (IOException e) {
