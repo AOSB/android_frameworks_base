@@ -4669,6 +4669,11 @@ public final class Settings {
         /**
          * @hide
          */
+        public static final String PROXIMITY_ON_WAKE = "proximity_on_wake";
+
+        /**
+         * @hide
+         */
         public static final String STATUSBAR_BATTERY_BAR_COLOR = "statusbar_battery_bar_color";
 
         /**
