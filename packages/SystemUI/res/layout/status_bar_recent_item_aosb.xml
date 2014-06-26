@@ -102,7 +102,7 @@
             android:singleLine="true"
             android:ellipsize="marquee"
             android:textSize="12sp"
-            android:shadowColor="#40000000"
+            android:shadowColor="#000000"
             android:shadowDx="0"
             android:shadowDy="2"
             android:shadowRadius="5"
