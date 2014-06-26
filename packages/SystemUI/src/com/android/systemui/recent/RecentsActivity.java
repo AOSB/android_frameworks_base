@@ -114,6 +114,7 @@ public class RecentsActivity extends Activity {
         if (mRecentsPanel != null) {
             mRecentsPanel.onUiHidden();
         }
+	dismissiOSView();
         super.onStop();
     }
 
@@ -146,6 +147,7 @@ public class RecentsActivity extends Activity {
             mRecentsPanel.refreshRecentTasksList();
             mRecentsPanel.refreshViews();
         }
+	handleBubble();
         super.onStart();
     }
 
@@ -158,6 +160,7 @@ public class RecentsActivity extends Activity {
     @Override
     public void onBackPressed() {
         dismissAndGoBack();
+	dismissiOSView();
     }
 
     public void dismissAndGoHome() {
@@ -199,11 +202,15 @@ public class RecentsActivity extends Activity {
 
     public void dismissiOSView() {
 	int orientation = this.getResources().getConfiguration().orientation;
-        if(orientation == 1 && people != null && people.getChildCount() > 0){
-		people.removeAllViews();
-		people.setOnClickListener(null);
+	if(orientation == 1 && people != null && people.getChildCount() > 0){
+		if (people instanceof ViewGroup) {
+			for (int i = 0; i < ((ViewGroup) people).getChildCount(); i++) {
+			View innerView = ((ViewGroup) people).getChildAt(i);
+			innerView.setOnClickListener(null);
+			}
+			people.removeAllViews();
+		}
 	}
-        //finish();// Finish Current Activity
     }
 
     @Override
@@ -214,38 +221,12 @@ public class RecentsActivity extends Activity {
                 WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
         int CUSTOM_RECENT = Settings.System.getInt(getContentResolver(), Settings.System.CUSTOM_RECENT, 0);
-	// 1 is for Potrait and 2 for Landscape.
-	int orientation = this.getResources().getConfiguration().orientation;
-
         if(CUSTOM_RECENT == 1){
             setContentView(R.layout.status_bar_recent_panel_aosb);
-            IOS_RECENT_TYPE = Settings.System.getInt(getContentResolver(), Settings.System.BUBBLE_RECENT, 0);
-            mBubbleRecents = findViewById(R.id.bubble_recent_contacts);
         }else{
             setContentView(R.layout.status_bar_recent_panel);
         }
-
-    	if(orientation == 1 && IOS_RECENT_TYPE != 0 && CUSTOM_RECENT == 1){
-
-		List<Person> mPeople;
-		if(IOS_RECENT_TYPE == 1){
-		    mPeople = People.PEOPLE_STARRED(this);
-		}else{
-		    mPeople = People.PEOPLE_LOGS(this);
-		}
-
-		mBubbleRecents.setVisibility(View.VISIBLE);
-
-		people = (ViewGroup) findViewById(R.id.people);
-		for (int i = 0; i < mPeople.size(); i++) {
-		    Person person = mPeople.get(i);
-		    people.addView(People.inflatePersonView(this, people, person));
-		}
-	}else{
-		if(orientation == 1 && CUSTOM_RECENT == 1) mBubbleRecents.setVisibility(View.GONE);
-		people = null;
-	}
-
+/**
 	// Check NavBar -- Set layout bottom
 	boolean hasNavBar = false;
 	try {
@@ -254,7 +235,7 @@ public class RecentsActivity extends Activity {
             Log.e("RecentUI", "Error get Navbar status");
 	}
 	if (hasNavBar && orientation == 1) {
-/**
+
         LinearLayout testbottom = (LinearLayout)findViewById(R.id.recents_bottom);
 	com.android.systemui.recent.RecentsPanelView.LayoutParams testparam = (com.android.systemui.recent.RecentsPanelView.LayoutParams) testbottom.getLayoutParams();
 	int navheightdp = Settings.System.getInt(getContentResolver(), Settings.System.NAVIGATION_BAR_HEIGHT, 48);
@@ -262,8 +243,8 @@ public class RecentsActivity extends Activity {
         int navheightpx = (int) (navheightdp * (metrics.densityDpi / 160f));
 	testparam.bottomMargin=navheightpx;
 	testbottom.setLayoutParams(testparam);
-*/
 	}
+*/
 	mRecentsPanel = (RecentsPanelView) findViewById(R.id.recents_root);
         mRecentsPanel.setOnTouchListener(new TouchOutsideListener(mRecentsPanel));
         mRecentsPanel.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -295,13 +276,42 @@ public class RecentsActivity extends Activity {
     protected void onDestroy() {
         RecentTasksLoader.getInstance(this).setRecentsPanel(null, mRecentsPanel);
         unregisterReceiver(mIntentReceiver);
-        dismissiOSView();
         super.onDestroy();
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         handleIntent(intent, true);
+    }
+
+    private void handleBubble(){
+
+	// 1 is for Potrait and 2 for Landscape.
+	int orientation = this.getResources().getConfiguration().orientation;
+	int CUSTOM_RECENT = Settings.System.getInt(getContentResolver(), Settings.System.CUSTOM_RECENT, 0);
+	IOS_RECENT_TYPE = Settings.System.getInt(getContentResolver(), Settings.System.BUBBLE_RECENT, 0);
+	mBubbleRecents = findViewById(R.id.bubble_recent_contacts);
+    	if(orientation == 1 && IOS_RECENT_TYPE != 0 && CUSTOM_RECENT == 1){
+
+		List<Person> mPeople;
+		if(IOS_RECENT_TYPE == 1){
+		    mPeople = People.PEOPLE_STARRED(this);
+		}else{
+		    mPeople = People.PEOPLE_LOGS(this);
+		}
+
+		mBubbleRecents.setVisibility(View.VISIBLE);
+
+		people = (ViewGroup) findViewById(R.id.people);
+		for (int i = 0; i < mPeople.size(); i++) {
+		    Person person = mPeople.get(i);
+		    people.addView(People.inflatePersonView(this, people, person));
+		}
+	}else{
+		if(orientation == 1 && CUSTOM_RECENT == 1) mBubbleRecents.setVisibility(View.GONE);
+		people = null;
+	}
+
     }
 
     private void handleIntent(Intent intent, boolean checkWaitingForAnimationParam) {

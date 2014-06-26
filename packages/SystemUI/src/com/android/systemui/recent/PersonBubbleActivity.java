@@ -136,6 +136,13 @@ public class PersonBubbleActivity extends Activity
 	{
 		finishAndAnimate();
 	}
+
+	@Override
+	protected void onStop() 
+	{
+		super.onStop();
+		finishAndAnimate();
+	}
 	
 	@Override
 	public void finish()
