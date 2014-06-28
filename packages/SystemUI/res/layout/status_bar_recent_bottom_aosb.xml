@@ -15,7 +15,7 @@
             android:scaleType="center"
 	        android:layout_gravity="center|bottom"
 	        android:gravity="bottom"
-	        android:src="@drawable/ic_recents_clear"
+	        android:src="@drawable/ic_recents_clear_aosb"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </LinearLayout>

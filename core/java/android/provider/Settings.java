@@ -3561,6 +3561,12 @@ public final class Settings {
          public static final String STATUSBAR_CLOCK_DATE_FORMAT = "statusbar_clock_date_format";
 
         /**
+         * Settings for clock font style
+         * @hide
+         */
+        public static final String STATUSBAR_CLOCK_FONT_STYLE = "statusbar_clock_font_style";
+
+        /**
          * Whether to show the signal text or signal bars.
          * default: 0
          * 0: show signal bars
@@ -4798,6 +4804,18 @@ public final class Settings {
         public static final String VOICE_LAUNCH_INTENT = "voice_launch_intent";
 
         /**
+         * Swipe recents for floating windows option
+         * @hide
+         */
+        public static final String RECENTS_SWIPE_FLOATING = "recents_swipe_floating";
+
+        /**
+         * Swipe notification for floating window option
+         * @hide
+         */
+        public static final String STATUS_BAR_NOTIFICATION_SWIPE_FLOATING = "status_bar_notification_swipe_floating";
+
+        /**
          * Hover: long fade out delay, default is 5000ms (5s).
          *
          * @hide
@@ -4941,6 +4959,8 @@ public final class Settings {
          */
         public static final String[] SETTINGS_TO_RESET = {
             QUICK_SETTINGS_QUICK_PULL_DOWN
+            RECENTS_SWIPE_FLOATING,
+            STATUS_BAR_NOTIFICATION_SWIPE_FLOATING
         };
 
         // Settings moved to Settings.Secure
