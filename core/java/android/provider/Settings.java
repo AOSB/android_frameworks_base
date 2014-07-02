@@ -4732,6 +4732,12 @@ public final class Settings {
 	*/
 	public static final String NAVIGATION_BAR_WIDTH = "navigation_bar_width";
 
+	/**
+	* Show arrow buttons as left and right dpad keys
+	* @hide
+	*/
+	public static final String NAVIGATION_BAR_DPAD_KEYS = "navigation_bar_dpad_keys";
+
         /**
 	* Electronic beam animation mode
 	* 0 = off,
