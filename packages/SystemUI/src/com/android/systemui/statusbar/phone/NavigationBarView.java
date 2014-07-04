@@ -124,6 +124,7 @@ public class NavigationBarView extends LinearLayout {
     private DeadZone mDeadZone;
     private final NavigationBarTransitions mBarTransitions;
 
+    private boolean mHasCmKeyguard = false;
     private boolean mModLockDisabled = true;
     private SettingsObserver mObserver;
 
@@ -274,7 +275,13 @@ public class NavigationBarView extends LinearLayout {
 
         mLockUtils = new LockPatternUtils(context);
         mObserver = new SettingsObserver(new Handler());
-    }
+
+        final String keyguardPackage = mContext.getString(
+                com.android.internal.R.string.config_keyguardPackage);
+        final Bundle keyguardMetadata = getApplicationMetadata(mContext, keyguardPackage);
+        mHasCmKeyguard = keyguardMetadata != null &&
+                keyguardMetadata.getBoolean("com.cyanogenmod.keyguard", false);
+     }
 
     private void watchForDevicePolicyChanges() {
         final IntentFilter filter = new IntentFilter();
@@ -623,14 +630,7 @@ public class NavigationBarView extends LinearLayout {
         mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor(Settings.System.NAVIGATION_BAR_BUTTONS),
                 false, mSettingsObserver);
 
-        final String keyguardPackage = mContext.getString(
-                com.android.internal.R.string.config_keyguardPackage);
-        final Bundle keyguard_metadata = NavigationBarView
-                .getApplicationMetadata(mContext, keyguardPackage);
-        if (null != keyguard_metadata &&
-                keyguard_metadata.getBoolean("com.cyanogenmod.keyguard", false)) {
-            mObserver.observe();
-        }
+        mObserver.observe();
     }
 
     @Override
@@ -1080,6 +1080,20 @@ public class NavigationBarView extends LinearLayout {
         return tablet;
     }
 
+    private static Bundle getApplicationMetadata(Context context, String pkg) {
+        if (pkg != null) {
+            try {
+                PackageManager pm = context.getPackageManager();
+                ApplicationInfo ai = pm.getApplicationInfo(pkg, PackageManager.GET_META_DATA);
+                return ai.metaData;
+            } catch (NameNotFoundException e) {
+                return null;
+            }
+        }
+
+        return null;
+    }
+
     private class SettingsObserver extends ContentObserver {
         private boolean mObserving = false;
 
@@ -1107,9 +1121,13 @@ public class NavigationBarView extends LinearLayout {
 
         @Override
         public void onChange(boolean selfChange) {
-            mModLockDisabled = Settings.System.getInt(mContext.getContentResolver(),
-                    Settings.System.LOCKSCREEN_MODLOCK_ENABLED, 1) == 0;
             setDisabledFlags(mDisabledFlags, true /* force */);
+            if (mHasCmKeyguard) {
+                mModLockDisabled = Settings.System.getInt(mContext.getContentResolver(),
+                        Settings.System.LOCKSCREEN_MODLOCK_ENABLED, 1) == 0;
+            } else {
+                mModLockDisabled = true;
+            }
         }
     }
 }
