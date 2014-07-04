@@ -3269,6 +3269,16 @@ public final class Settings {
         public static final String ALLOW_MULTIUSER = "allow_multiuser";
 
         /**
+	* @hide
+	*/
+        public static final String SYSTEMUI_WEATHER_HEADER_VIEW = "cfx_systemui_header_weather_view";
+
+        /**
+	* @hide
+	*/
+        public static final String SYSTEMUI_WEATHER_NOTIFICATION = "cfx_weather_notification";
+
+        /**
          * Navigation controls to Use
          *
          * @hide
