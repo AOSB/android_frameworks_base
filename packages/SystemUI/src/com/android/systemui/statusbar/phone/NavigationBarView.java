@@ -452,12 +452,9 @@ public class NavigationBarView extends LinearLayout {
         mNavigationIconHints = hints;
 
         if (getBackButton() != null) {
-            if (backAlt) {
-                ((ImageView) getBackButton()).setImageResource(R.drawable.ic_sysbar_back_ime);
-            } else {
-                ((KeyButtonView) getBackButton()).resetImage();
-            }
-
+            ((ImageView) getBackButton()).setImageResource(backAlt
+                    ? R.drawable.ic_sysbar_back_ime
+                    : R.drawable.ic_sysbar_back);
         }
 
         setDisabledFlags(mDisabledFlags, true);
@@ -1010,20 +1007,6 @@ public class NavigationBarView extends LinearLayout {
             }
         }
         pw.println();
-    }
-
-    private static Bundle getApplicationMetadata(Context context, String pkg) {
-        if (pkg != null) {
-            try {
-                ApplicationInfo ai = context.getPackageManager().
-                    getApplicationInfo(pkg, PackageManager.GET_META_DATA);
-                return ai.metaData;
-            } catch (NameNotFoundException e) {
-                return null;
-            }
-        }
-
-        return null;
     }
 
     private void addSeparator(LinearLayout layout, boolean landscape, int size, float weight) {

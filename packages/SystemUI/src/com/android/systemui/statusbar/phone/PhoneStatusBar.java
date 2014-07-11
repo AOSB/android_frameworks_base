@@ -16,6 +16,8 @@
  * limitations under the License.
  */
 
+package com.android.systemui.statusbar.phone;
+
 import static android.app.StatusBarManager.NAVIGATION_HINT_BACK_ALT;
 import static android.app.StatusBarManager.WINDOW_STATE_HIDDEN;
 import static android.app.StatusBarManager.WINDOW_STATE_SHOWING;
@@ -365,8 +367,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     private Runnable mStatusHeaderUpdater;
     private boolean mTickerInProgress = false;
     private final Object mLock = new Object();
-
-    private boolean mRecreating = false;
 
     // for disabling the status bar
     int mDisabled = 0;
