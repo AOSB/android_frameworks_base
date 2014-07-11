@@ -227,4 +227,7 @@ public class KeyguardTouchDelegate {
         }
     }
 
+    public boolean isServiceInitialized() {
+        return mService != null;
+    }
 }
