@@ -132,4 +132,7 @@
 
     <!-- Weather -->
     <dimen name="weather_text_margin">56dp</dimen>
+
+    <!-- Heads up -->
+    <dimen name="heads_up_bottom_gap">5dp</dimen>
 </resources>
