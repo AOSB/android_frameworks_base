@@ -4360,6 +4360,26 @@ public final class Settings {
 	*/
         public static final String PEEK_WAKE_TIMEOUT = "peek_wake_timeout";
 
+	/**
+	*
+	* OverScroll Glow Color
+	* @hide
+	*/
+	public static final String OVERSCROLL_GLOW_COLOR = "overscroll_glow_color";
+
+	/**
+	*
+	* OverScroll effects configuration
+	* @hide
+	*/
+	public static final String OVERSCROLL_EFFECT = "overscroll_effect";
+
+	/**
+	* Sets the overscroller weight (edge bounce effect on lists)
+	* @hide
+	*/
+	public static final String OVERSCROLL_WEIGHT = "overscroll_weight";
+
         /**
          * Action to perform when the menu key is long-pressed.
          * (Default is 0 on devices with a search key, 3 on devices without)
