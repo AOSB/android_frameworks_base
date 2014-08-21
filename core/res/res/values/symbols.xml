@@ -2112,4 +2112,8 @@
 
   <!-- External media format -->
   <java-symbol type="string" name="extmedia_format_message_cm" />
+
+  <!-- USB OTG Notification -->
+  <java-symbol type="string" name="usb_storage_notification_manage_message" />
+
 </resources>
