@@ -111,6 +111,8 @@ import com.android.systemui.quicksettings.OnTheGoTile;
 import com.android.systemui.quicksettings.BatterySaverTile;
 import com.android.systemui.quicksettings.FastChargeTile;
 import com.android.systemui.quicksettings.OtouchTile;
+import com.android.systemui.statusbar.phone.QuickSettingsContainerView.QSSize;
+import com.android.systemui.statusbar.policy.NetworkController;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -122,9 +124,9 @@ public class QuickSettingsController {
     // Stores the broadcast receivers and content observers
     // quick tiles register for.
     public HashMap<String, ArrayList<QuickSettingsTile>> mReceiverMap
-        = new HashMap<String, ArrayList<QuickSettingsTile>>();
+            = new HashMap<String, ArrayList<QuickSettingsTile>>();
     public HashMap<Uri, ArrayList<QuickSettingsTile>> mObserverMap
-        = new HashMap<Uri, ArrayList<QuickSettingsTile>>();
+            = new HashMap<Uri, ArrayList<QuickSettingsTile>>();
 
     // Uris that need to be monitored for updating tile status
     private HashSet<Uri> mTileStatusUris = new HashSet<Uri>();
@@ -220,6 +222,10 @@ public class QuickSettingsController {
 
         // Split out the tile names and add to the list
         boolean dockBatteryLoaded = false;
+        NetworkController networkController = MSimTelephonyManager.getDefault().isMultiSimEnabled()
+                ? mStatusBarService.mMSimNetworkController
+                : mStatusBarService.mNetworkController;
+
         for (String tile : tiles.split("\\|")) {
             QuickSettingsTile qs = null;
             if (tile.equals(TILE_USER)) {
@@ -229,11 +235,7 @@ public class QuickSettingsController {
             } else if (tile.equals(TILE_SETTINGS)) {
                 qs = new PreferencesTile(mContext, this);
             } else if (tile.equals(TILE_WIFI)) {
-                if (MSimTelephonyManager.getDefault().isMultiSimEnabled()) {
-                    qs = new WiFiTile(mContext, this, mStatusBarService.mMSimNetworkController);
-                } else {
-                    qs = new WiFiTile(mContext, this, mStatusBarService.mNetworkController);
-                }
+                qs = new WiFiTile(mContext, this, networkController);
             } else if (tile.equals(TILE_GPS)) {
                 qs = new GPSTile(mContext, this, mStatusBarService.mLocationController);
             } else if (tile.equals(TILE_BLUETOOTH) && bluetoothSupported) {
@@ -245,39 +247,28 @@ public class QuickSettingsController {
             } else if (tile.equals(TILE_RINGER)) {
                 qs = new RingerModeTile(mContext, this);
             } else if (tile.equals(TILE_SYNC)) {
-                qs = new SyncTile(mContext, this);
+                qs = new SyncTile(mContext, this, mHandler);
             } else if (tile.equals(TILE_WIFIAP) && mobileDataSupported) {
                 qs = new WifiAPTile(mContext, this);
             } else if (tile.equals(TILE_SCREENTIMEOUT)) {
                 qs = new ScreenTimeoutTile(mContext, this);
             } else if (tile.equals(TILE_MOBILEDATA) && mobileDataSupported) {
-                if (MSimTelephonyManager.getDefault().isMultiSimEnabled()) {
-                    qs = new MobileNetworkTile(mContext, this, mStatusBarService.mMSimNetworkController);
-                } else {
-                    qs = new MobileNetworkTile(mContext, this, mStatusBarService.mNetworkController);
-                }
+                qs = new MobileNetworkTile(mContext, this, networkController);
             } else if (tile.equals(TILE_LOCKSCREEN)) {
                 qs = new ToggleLockscreenTile(mContext, this);
             } else if (tile.equals(TILE_NETWORKMODE) && mobileDataSupported) {
-                if (MSimTelephonyManager.getDefault().isMultiSimEnabled()) {
-                    qs = new MobileNetworkTypeTile(mContext, this, mStatusBarService.mMSimNetworkController);
-                } else {
-                    qs = new MobileNetworkTypeTile(mContext, this, mStatusBarService.mNetworkController);
-                }
+                qs = new MobileNetworkTypeTile(mContext, this, networkController);
             } else if (tile.equals(TILE_AUTOROTATE)) {
-                qs = new AutoRotateTile(mContext, this, mHandler);
+                qs = new AutoRotateTile(mContext, this);
             } else if (tile.equals(TILE_AIRPLANE)) {
-                if (MSimTelephonyManager.getDefault().isMultiSimEnabled()) {
-                    qs = new AirplaneModeTile(mContext, this, mStatusBarService.mMSimNetworkController);
-                } else {
-                    qs = new AirplaneModeTile(mContext, this, mStatusBarService.mNetworkController);
-                }
+                qs = new AirplaneModeTile(mContext, this, networkController);
             } else if (tile.equals(TILE_TORCH)) {
-                qs = new TorchTile(mContext, this, mHandler);
+                qs = new TorchTile(mContext, this);
             } else if (tile.equals(TILE_SLEEP)) {
                 qs = new SleepScreenTile(mContext, this);
             } else if (tile.equals(TILE_PROFILE)) {
-                mTileStatusUris.add(Settings.System.getUriFor(Settings.System.SYSTEM_PROFILES_ENABLED));
+                mTileStatusUris.add(Settings.System.getUriFor(
+                        Settings.System.SYSTEM_PROFILES_ENABLED));
                 if (QSUtils.systemProfilesEnabled(resolver)) {
                     qs = new ProfileTile(mContext, this);
                 }
@@ -296,11 +287,12 @@ public class QuickSettingsController {
             } else if (tile.equals(TILE_QUIETHOURS)) {
                 qs = new QuietHoursTile(mContext, this);
             } else if (tile.equals(TILE_VOLUME)) {
-                qs = new VolumeTile(mContext, this, mHandler);
+                qs = new VolumeTile(mContext, this);
             } else if (tile.equals(TILE_EXPANDEDDESKTOP)) {
-                mTileStatusUris.add(Settings.System.getUriFor(Settings.System.EXPANDED_DESKTOP_STYLE));
+                mTileStatusUris.add(Settings.System.getUriFor(
+                            Settings.System.EXPANDED_DESKTOP_STYLE));
                 if (QSUtils.expandedDesktopEnabled(resolver)) {
-                    qs = new ExpandedDesktopTile(mContext, this, mHandler);
+                    qs = new ExpandedDesktopTile(mContext, this);
                 }
             } else if (tile.equals(TILE_MUSIC)) {
                 qs = new MusicTile(mContext, this);
@@ -346,7 +338,7 @@ public class QuickSettingsController {
         // only when they are needed
         if (Settings.System.getIntForUser(resolver,
                     Settings.System.QS_DYNAMIC_ALARM, 1, UserHandle.USER_CURRENT) == 1) {
-            QuickSettingsTile qs = new AlarmTile(mContext, this, mHandler);
+            QuickSettingsTile qs = new AlarmTile(mContext, this);
             qs.setupQuickSettingsTile(inflater, mContainerView);
             mQuickSettingsTiles.add(qs);
         }
