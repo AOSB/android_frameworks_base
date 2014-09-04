@@ -708,7 +708,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             boolean wasUsing = mUseHeadsUp;
             mUseHeadsUp = ENABLE_HEADS_UP && Settings.System.getIntForUser(
                     mContext.getContentResolver(),
-                    Settings.System.HEADS_UP_NOTIFICATION, 0, UserHandle.USER_CURRENT) == 1;
+                    Settings.System.HEADS_UP_NOTIFICATION, 0, UserHandle.USER_CURRENT) == 1;;
             Log.d(TAG, "heads up is " + (mUseHeadsUp ? "enabled" : "disabled"));
             if (wasUsing != mUseHeadsUp) {
                 if (!mUseHeadsUp) {
@@ -1706,9 +1706,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 
             final boolean sbVisible = (mSystemUiVisibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0
                     || (mStatusBarMode & View.STATUS_BAR_TRANSIENT) != 0;
-            final boolean userForcedExpandedDesktop =
-                    mExpandedDesktopStyle == 1 || mExpandedDesktopStyle == 2;
-            if (!sbVisible && !userForcedExpandedDesktop) {
+            if (!sbVisible) {
                 mHandler.removeMessages(MSG_HIDE_HEADS_UP);
                 mHandler.sendEmptyMessageDelayed(MSG_HIDE_HEADS_UP, 700);
             } else {

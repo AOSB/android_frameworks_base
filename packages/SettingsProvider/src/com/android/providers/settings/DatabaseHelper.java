@@ -2068,14 +2068,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     private void loadHeadsUpSetting(SQLiteStatement stmt) {
-        String dndValues = mContext.getResources()
-                .getString(R.string.def_heads_up_notification_dnd_values);
-        String blackListValues = mContext.getResources()
-                .getString(R.string.def_heads_up_notification_blacklist_values);
-        if (!TextUtils.isEmpty(dndValues)) {
+        String headsUpValues = mContext.getResources()
+                .getString(R.string.def_heads_up_notification_values);
+        if (!TextUtils.isEmpty(headsUpValues)) {
             loadSetting(stmt, Settings.System.HEADS_UP_NOTIFICATION, "0");
-            loadSetting(stmt, Settings.System.HEADS_UP_CUSTOM_VALUES, dndValues);
-            loadSetting(stmt, Settings.System.HEADS_UP_BLACKLIST_VALUES, blackListValues);
+            loadSetting(stmt, Settings.System.HEADS_UP_CUSTOM_VALUES, headsUpValues);
         }
     }
 
