@@ -207,11 +207,6 @@ public class HeadsUpNotificationView extends FrameLayout implements SwipeHelper.
     public void setUserLockedChild(View v, boolean userLocked) {
         if (mHeadsUp != null && mHeadsUp.row == v) {
             mHeadsUp.row.setUserLocked(userLocked);
-
-            setMinimumHeight(userLocked
-                    ? (int) mExpandHelper.getNaturalHeight() + mContentHolder.getPaddingTop()
-                            + mContentHolder.getPaddingBottom()
-                    : 0);
         }
     }
 
