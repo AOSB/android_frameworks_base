@@ -97,6 +97,39 @@ public class GPSTile extends QuickSettingsTile implements LocationSettingsChange
         updateQuickSettings();
     }
 
+    @Override
+    public void onLocationSettingsChanged(boolean locationEnabled) {
+        mCurrentMode = Settings.Secure.getIntForUser(mContext.getContentResolver(),
+                Settings.Secure.LOCATION_MODE, Settings.Secure.LOCATION_MODE_OFF,
+                UserHandle.USER_CURRENT);
+        updateResources();
+    }
+
+    private void changeLocationMode() {
+        int newMode;
+
+        switch (mCurrentMode) {
+            case Settings.Secure.LOCATION_MODE_OFF:
+                newMode = Settings.Secure.LOCATION_MODE_HIGH_ACCURACY;
+                break;
+            case Settings.Secure.LOCATION_MODE_HIGH_ACCURACY:
+                newMode = Settings.Secure.LOCATION_MODE_SENSORS_ONLY;
+                break;
+            case Settings.Secure.LOCATION_MODE_SENSORS_ONLY:
+                newMode = Settings.Secure.LOCATION_MODE_BATTERY_SAVING;
+                break;
+            case Settings.Secure.LOCATION_MODE_BATTERY_SAVING:
+                newMode = Settings.Secure.LOCATION_MODE_OFF;
+                break;
+            default:
+                newMode = Settings.Secure.LOCATION_MODE_OFF;
+                break;
+        }
+
+        Settings.Secure.putIntForUser(mContext.getContentResolver(),
+                Settings.Secure.LOCATION_MODE, newMode, UserHandle.USER_CURRENT);
+    }
+
     private synchronized void updateTile() {
         int textResId;
         switch(mCurrentMode) {
