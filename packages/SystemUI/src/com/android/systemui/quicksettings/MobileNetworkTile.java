@@ -132,12 +132,12 @@ public class MobileNetworkTile extends NetworkTile {
     }
 
     @Override
-    protected View getImageView() {
+    public View getImageView() {
         return mTile.findViewById(R.id.rssi_image);
     }
 
     @Override
-    void updateQuickSettings() {
+    public void updateQuickSettings() {
         super.updateQuickSettings();
 
         updateOverlayImage(mDataTypeIconId);

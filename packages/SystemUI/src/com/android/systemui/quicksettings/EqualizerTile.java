@@ -184,7 +184,7 @@ public class EqualizerTile extends QuickSettingsTile implements
     }
 
     @Override
-    void onPostCreate() {
+    public void onPostCreate() {
         mVisualizer = (QuickTileVisualizer) mTile.findViewById(R.id.visualizer_view);
         mVisualizer.setEnabled(false);
 
