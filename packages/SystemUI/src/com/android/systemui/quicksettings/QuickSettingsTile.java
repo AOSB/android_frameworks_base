@@ -25,6 +25,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.RemoteException;
 import android.os.UserHandle;
@@ -61,6 +62,69 @@ public class QuickSettingsTile implements View.OnClickListener {
     protected PhoneStatusBar mStatusbarService;
     protected QuickSettingsController mQsc;
     protected SharedPreferences mPrefs;
+    private final Handler mHandler;
+
+    private static SettingsObserver mObserver;
+
+    private class SettingsObserver extends ContentObserver {
+
+        private final ContentResolver mResolver;
+        private final Uri mFlipUri, mCollapseUri;
+        private boolean mFlip, shouldCollapse;
+        private int mCount;
+
+        public void incrementCount() {
+            synchronized(this) {
+                if (mCount+    == 0) {
+                    observe();
+                }
+            }
+        }
+
+        public boolean decrementCount() {
+            synchronized(this) {
+                if (--mCount == 0) {
+                    unobserve();
+                }
+            }
+            return mCount == 0;
+        }
+
+        public boolean getFlip() { return mFlip; }
+        public boolean getCollapse() { return shouldCollapse; }
+
+        public SettingsObserver(Context context, Handler handler) {
+            super(handler);
+            mResolver = context.getContentResolver();
+            mFlipUri = Settings.System.getUriFor(Settings.System.QUICK_SETTINGS_TILES_FLIP);
+            mCollapseUri = Settings.System.getUriFor(Settings.System.QS_COLLAPSE_PANEL);
+        }
+
+        private void observe() {
+            mResolver.registerContentObserver(mFlipUri, false, this);
+            mResolver.registerContentObserver(mCollapseUri, false, this);
+
+            mFlip = Settings.System.getInt(mResolver,
+                Settings.System.QUICK_SETTINGS_TILES_FLIP, 0) == 1;
+            shouldCollapse = Settings.System.getIntForUser(mResolver,
+                Settings.System.QS_COLLAPSE_PANEL, 0, UserHandle.USER_CURRENT) == 1;
+        }
+
+        private void unobserve() {
+            mResolver.unregisterContentObserver(this);
+        }
+
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            if (uri.equals(mFlipUri)) {
+                mFlip = Settings.System.getInt(mResolver,
+                        Settings.System.QUICK_SETTINGS_TILES_FLIP, 0) == 1;
+            } else {
+                shouldCollapse = Settings.System.getIntForUser(mResolver,
+                        Settings.System.QS_COLLAPSE_PANEL, 0, UserHandle.USER_CURRENT) == 1;
+            }
+        }
+    }
 
     private final boolean mFlipRight;
 
@@ -136,9 +200,15 @@ public class QuickSettingsTile implements View.OnClickListener {
         }
     }
 
-    void onPostCreate() {}
+    void onPostCreate() {
+        mObserver.incrementCount();
+    }
 
-    public void onDestroy() {}
+    public void onDestroy() {
+        if (mObserver.decrementCount()) {
+            mObserver = null;
+        }
+    }
 
     public void onReceive(Context context, Intent intent) {
     }
@@ -253,10 +323,7 @@ public class QuickSettingsTile implements View.OnClickListener {
             mOnClick.onClick(mTile);
         }
 
-        ContentResolver resolver = mContext.getContentResolver();
-        boolean shouldCollapse = Settings.System.getIntForUser(resolver,
-                Settings.System.QS_COLLAPSE_PANEL, 0, UserHandle.USER_CURRENT) == 1;
-        if (shouldCollapse) {
+        if (mObserver.getCollapse()) {
             mQsc.mBar.collapseAllPanels(true);
         }
 
