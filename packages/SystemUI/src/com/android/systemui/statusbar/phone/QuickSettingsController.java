@@ -111,7 +111,6 @@ import com.android.systemui.quicksettings.OnTheGoTile;
 import com.android.systemui.quicksettings.BatterySaverTile;
 import com.android.systemui.quicksettings.FastChargeTile;
 import com.android.systemui.quicksettings.OtouchTile;
-import com.android.systemui.statusbar.phone.QuickSettingsContainerView.QSSize;
 import com.android.systemui.statusbar.policy.NetworkController;
 
 import java.util.ArrayList;

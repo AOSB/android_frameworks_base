@@ -21,8 +21,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
-import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.ImageView;
@@ -62,9 +60,6 @@ public class MobileNetworkTile extends NetworkTile {
                     updateOverlayImage(DISABLED_OVERLAY);
                     mCm.setMobileDataEnabled(false);
                 }
-                if (isFlipTilesEnabled()) {
-                    flipTile(0);
-                }
             }
         };
         mOnLongClick = new View.OnLongClickListener() {
@@ -72,8 +67,8 @@ public class MobileNetworkTile extends NetworkTile {
             public boolean onLongClick(View v) {
                 Intent intent = new Intent();
                 intent.setComponent(new ComponentName(
-                        "com.android.phone",
-                        "com.android.phone.MobileNetworkSettings"));
+                        "com.android.settings",
+                        "com.android.settings.Settings$DataUsageSummaryActivity"));
                 startSettingsActivity(intent);
                 return true;
             }
