@@ -75,7 +75,7 @@ public class QuickSettingsTile implements View.OnClickListener {
 
         public void incrementCount() {
             synchronized(this) {
-                if (mCount+    == 0) {
+                if (mCount++ == 0) {
                     observe();
                 }
             }
