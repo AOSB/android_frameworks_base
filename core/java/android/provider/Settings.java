@@ -3179,7 +3179,7 @@ public final class Settings {
          */
         public static final String EGG_MODE = "egg_mode";
 
-        /**
+       /**
 	* Global stats collection
 	*
 	* @hide
@@ -3191,6 +3191,13 @@ public final class Settings {
          * @hide
          */
         public static final String CLOCK_USE_SECOND = "clock_use_second";
+
+        /**
+         * Animate-flip Quick Settings Panel Tiles on click
+         *
+         * @hide
+         */
+        public static final String QUICK_SETTINGS_TILES_FLIP = "quick_settings_tiles_flip";
 
         /**
          * Allows to show the background activity back the lockscreen
