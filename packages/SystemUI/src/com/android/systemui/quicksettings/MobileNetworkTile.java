@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.systemui.R;
 import com.android.systemui.statusbar.phone.QuickSettingsController;
