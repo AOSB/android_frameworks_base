@@ -44,9 +44,6 @@ public class UsbTetherTile extends QuickSettingsTile {
                 if (mUsbConnected) {
                     mCm.setUsbTethering(!mUsbTethered);
                 }
-                if (isFlipTilesEnabled()) {
-                    flipTile(0);
-                }
             }
         };
         mOnLongClick = new View.OnLongClickListener() {
