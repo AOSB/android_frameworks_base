@@ -3,6 +3,7 @@ package com.android.systemui.quicksettings;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.UserHandle;
 import android.location.LocationManager;
 import android.provider.Settings;
 import android.view.LayoutInflater;
@@ -48,35 +49,6 @@ public class GPSTile extends QuickSettingsTile implements LocationSettingsChange
             }
         };
 
-        mCurrentMode = Settings.Secure.getInt(mContext.getContentResolver(),
-                Settings.Secure.LOCATION_MODE, Settings.Secure.LOCATION_MODE_OFF);
-        updateTile();
-    }
-
-    private void changeLocationMode(){
-        int newMode;
-
-        switch(mCurrentMode){
-        case Settings.Secure.LOCATION_MODE_BATTERY_SAVING:
-            newMode = Settings.Secure.LOCATION_MODE_HIGH_ACCURACY;
-            break;
-        case Settings.Secure.LOCATION_MODE_HIGH_ACCURACY:
-            newMode = Settings.Secure.LOCATION_MODE_BATTERY_SAVING;
-            break;
-        case Settings.Secure.LOCATION_MODE_OFF:
-            newMode = Settings.Secure.LOCATION_MODE_SENSORS_ONLY;
-            break;
-        case Settings.Secure.LOCATION_MODE_SENSORS_ONLY:
-            newMode = Settings.Secure.LOCATION_MODE_OFF;
-            break;
-        default:
-            newMode = Settings.Secure.LOCATION_MODE_OFF;
-            break;
-        }
-
-        Settings.Secure.putInt(mContext.getContentResolver(),
-                Settings.Secure.LOCATION_MODE,
-                newMode);
     }
 
     @Override
@@ -151,12 +123,5 @@ public class GPSTile extends QuickSettingsTile implements LocationSettingsChange
             break;
         }
         mLabel = mContext.getText(textResId).toString();
-    }
-
-    @Override
-    public void onLocationSettingsChanged(boolean locationEnabled) {
-        mCurrentMode = Settings.Secure.getInt(mContext.getContentResolver(),
-                Settings.Secure.LOCATION_MODE, Settings.Secure.LOCATION_MODE_OFF);
-        updateResources();
     }
 }
