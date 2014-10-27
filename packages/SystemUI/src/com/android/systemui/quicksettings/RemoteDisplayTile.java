@@ -97,6 +97,12 @@ public class RemoteDisplayTile extends QuickSettingsTile{
         });
 
         updateRemoteDisplays();
+    @Override
+    public void onUnprepare() {
+        if (!mExecutor.isTerminated()) {
+            mExecutor.submit(mUnRegisterRunnable);
+        }
+    }
 
         super.onPostCreate();
     }
