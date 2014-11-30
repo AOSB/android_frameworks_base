@@ -44,6 +44,11 @@ import android.os.Parcelable;
 import android.provider.Settings;
 import android.util.AttributeSet;
 import android.util.Pools.SynchronizedPool;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
 import android.view.Gravity;
 import android.view.RemotableViewMethod;
 import android.view.View;
@@ -58,6 +63,7 @@ import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.Transformation;
 import android.widget.RemoteViews.RemoteView;
+import android.widget.SmoothProgressDrawable.Builder;
 
 import java.util.ArrayList;
 
@@ -324,7 +330,7 @@ public class ProgressBar extends View {
             int Color4 = Settings.System.getInt(mContext.getContentResolver(),
                    Settings.System.PROGRESSBAR_COLOR_4, -1);
 
-            int Colors[] = { Color1, Color2, Color3, Color4 }
+            int Colors[] = { Color1, Color2, Color3, Color4 };
             Builder abc = new SmoothProgressDrawable.Builder(context);
             indeterminateDrawable = (abc
                         .colors(Colors)
